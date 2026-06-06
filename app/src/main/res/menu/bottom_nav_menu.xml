@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_beranda"
+        android:icon="@drawable/beranda"
+        android:title="@string/title_beranda" />
+
+    <item
+        android:id="@+id/navigation_herbal"
+        android:icon="@drawable/herbal"
+        android:title="@string/title_herbal" />
+
+    <item
+        android:id="@+id/navigation_identifikasi"
+        android:icon="@drawable/kamera"
+        android:title="@string/title_identifikasi" />
+
+    <item
+        android:id="@+id/navigation_resep"
+        android:icon="@drawable/dokumen"
+        android:title="@string/title_resep" />
+
+    <item
+        android:id="@+id/navigation_setelan"
+        android:icon="@drawable/setelan"
+        android:title="@string/title_setelan" />
+
+</menu>

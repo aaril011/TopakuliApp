@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_beranda">
+
+    <fragment
+        android:id="@+id/navigation_beranda"
+        android:name="com.project.topakuli.ui.beranda.BerandaFragment"
+        android:label="@string/title_beranda"
+        tools:layout="@layout/fragment_beranda" />
+
+    <fragment
+        android:id="@+id/navigation_herbal"
+        android:name="com.project.topakuli.ui.herbal.HerbalFragment"
+        android:label="@string/title_herbal"
+        tools:layout="@layout/fragment_herbal" />
+
+    <fragment
+        android:id="@+id/navigation_identifikasi"
+        android:name="com.project.topakuli.ui.identifikasi.IdentifikasiFragment"
+        android:label="@string/title_identifikasi"
+        tools:layout="@layout/fragment_identifikasi">
+
+        <action
+            android:id="@+id/action_identifikasi_to_petunjuk"
+            app:destination="@id/petunjukFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/petunjukFragment"
+        android:name="com.project.topakuli.ui.identifikasi.PetunjukFragment"
+        android:label="Petunjuk Pengambilan Gambar"
+        tools:layout="@layout/fragment_petunjuk" />
+
+    <fragment
+        android:id="@+id/navigation_resep"
+        android:name="com.project.topakuli.ui.resep.ResepFragment"
+        android:label="@string/title_resep"
+        tools:layout="@layout/fragment_resep" />
+
+    <fragment
+        android:id="@+id/navigation_setelan"
+        android:name="com.project.topakuli.ui.Setelan.SetelanFragment"
+        android:label="@string/title_setelan"
+        tools:layout="@layout/fragment_setelan">
+        <action
+            android:id="@+id/action_setelan_to_tipsAman"
+            app:destination="@id/tipsAmanFragment" />
+        <action
+            android:id="@+id/action_setelan_to_tentang"
+            app:destination="@id/tentangFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tipsAmanFragment"
+        android:name="com.project.topakuli.ui.Setelan.TipsAmanFragment"
+        android:label="Tips Herbal Aman"
+        tools:layout="@layout/fragment_tips_aman" />
+
+    <fragment
+        android:id="@+id/tentangFragment"
+        android:name="com.project.topakuli.ui.Setelan.TentangFragment"
+        android:label="@string/tentang_title"
+        tools:layout="@layout/fragment_tentang" />
+
+</navigation>

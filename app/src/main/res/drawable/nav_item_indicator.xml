@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- State when the item is selected/checked -->
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- Solid line at the top -->
+            <item android:gravity="top" android:left="12dp" android:right="12dp">
+                <shape android:shape="rectangle">
+                    <size android:height="3dp" />
+                    <solid android:color="@color/navbar_item_active" />
+                    <corners android:bottomLeftRadius="3dp" android:bottomRightRadius="3dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Explicitly transparent for pressed and default states to avoid any highlight -->
+    <item android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:drawable="@android:color/transparent" />
+</selector>

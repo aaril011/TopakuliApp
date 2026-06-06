@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    tools:context=".ui.identifikasi.PetunjukFragment">
+
+    <!-- Header -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/hijau_topakuli"
+        android:paddingTop="48dp"
+        android:paddingBottom="16dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="@string/petunjuk_textbar"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tips tentang pengambilan gambar :"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Bidikan tanaman obat yang jelas dengan sudut dan jarak yang tepat akan membantu Topakuli mengidentifikasi tanaman obat dengan lebih akurat"
+                android:textColor="#555555"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="#DDDDDD" />
+
+            <!-- Row 1: Focus -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_salah_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/fokus_salah" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_salah"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Salah"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_salah_1"
+                        app:layout_constraintEnd_toEndOf="@id/card_salah_1"
+                        app:layout_constraintStart_toStartOf="@id/card_salah_1"
+                        app:layout_constraintTop_toBottomOf="@id/card_salah_1" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_benar_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/fokus_benar" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_benar"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Benar"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_benar_1"
+                        app:layout_constraintEnd_toEndOf="@id/card_benar_1"
+                        app:layout_constraintStart_toStartOf="@id/card_benar_1"
+                        app:layout_constraintTop_toBottomOf="@id/card_benar_1" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Fokuskan tanaman di tengah bingkai, hindari gambar gelap atau buram."
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular" />
+
+            <!-- Row 2: Scale -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_salah_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ukuran_salah" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_salah"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Salah"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_salah_2"
+                        app:layout_constraintEnd_toEndOf="@id/card_salah_2"
+                        app:layout_constraintStart_toStartOf="@id/card_salah_2"
+                        app:layout_constraintTop_toBottomOf="@id/card_salah_2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_benar_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ukuran_benar" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_benar"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Benar"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_benar_2"
+                        app:layout_constraintEnd_toEndOf="@id/card_benar_2"
+                        app:layout_constraintStart_toStartOf="@id/card_benar_2"
+                        app:layout_constraintTop_toBottomOf="@id/card_benar_2" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Jika tanaman terlalu besar untuk bingkai, pastikan untuk memfokuskan pada satu daun."
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular" />
+
+            <!-- Add more rows as needed to match the screenshot -->
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_salah_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/jarak_salah" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_salah"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Salah"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_salah_4"
+                        app:layout_constraintEnd_toEndOf="@id/card_salah_4"
+                        app:layout_constraintStart_toStartOf="@id/card_salah_4"
+                        app:layout_constraintTop_toBottomOf="@id/card_salah_4" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_benar_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/jarak_benar" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_benar"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Benar"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_benar_4"
+                        app:layout_constraintEnd_toEndOf="@id/card_benar_4"
+                        app:layout_constraintStart_toStartOf="@id/card_benar_4"
+                        app:layout_constraintTop_toBottomOf="@id/card_benar_4" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Hindari terlalu dekat, pastikan daun tanaman obat jernih dan lengkap."
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_salah_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/jumlah_salah" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_salah"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Salah"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_salah_3"
+                        app:layout_constraintEnd_toEndOf="@id/card_salah_3"
+                        app:layout_constraintStart_toStartOf="@id/card_salah_3"
+                        app:layout_constraintTop_toBottomOf="@id/card_salah_3" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_benar_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/jumlah_benar" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_label_benar"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="2dp"
+                        android:text="Benar"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="@id/card_benar_3"
+                        app:layout_constraintEnd_toEndOf="@id/card_benar_3"
+                        app:layout_constraintStart_toStartOf="@id/card_benar_3"
+                        app:layout_constraintTop_toBottomOf="@id/card_benar_3" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Hanya termasuk satu spesiel sekaligus dalam satu gambar."
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:fontFamily="@font/poppins_regular" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

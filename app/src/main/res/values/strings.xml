@@ -1,0 +1,134 @@
+<resources>
+    <string name="app_name">Topakuli</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_beranda">Beranda</string>
+    <string name="title_herbal">Herbal</string>
+    <string name="title_identifikasi">Identifikasi</string>
+    <string name="title_resep">Resep</string>
+    <string name="title_setelan">Setelan</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="petunjuk_textbar">Memulai</string>
+
+    <!-- Setelan -->
+    <string name="topakuli_full">TANAMAN OBAT DESA PAKULI</string>
+    <string name="stats_spesies_count">40</string>
+    <string name="stats_spesies_label">Spesies Tanaman Obat</string>
+    <string name="stats_teridentifikasi_count">20</string>
+    <string name="stats_teridentifikasi_label">Tanaman Obat Teridentifikasi</string>
+    <string name="stats_resep_count">12</string>
+    <string name="stats_resep_label">Resep Obat Tradisional</string>
+    <string name="menu_notification">Dapatkan notifikasi</string>
+    <string name="menu_tips_aman">Tips aman</string>
+
+    <!-- Tips Aman Screen -->
+    <string name="tips_aman_title">Tips Herbal Aman</string>
+    <string name="tips_aman_subtitle">Sertifikasi Pedoman Masak Terbaik</string>
+    <string name="pedoman_klinis_title">Pedoman Klinis Aman</string>
+    <string name="pedoman_klinis_desc">Asuhan Penggunaan Obat Tradisional Oleh Puskesmas Desa Pakuli.</string>
+
+    <string name="tips_1_title">Cara Merebus yang Benar</string>
+    <string name="tips_1_desc">Selalu gunakan periuk stainless steel, enamel, porselen, atau kaca tanah liat asli. Hindari merebus herba di panci berbahan aluminium, besi cor, komposit tembaga karena zat kimianya bereaksi merusak senyawa daun herba.</string>
+
+    <string name="tips_2_title">Penyimpanan Tepat</string>
+    <string name="tips_2_desc">Simpan herba kering di toples kaca tertutup kedap udara yang dijauhkan dari sinar matahari langsung dan area lembap. Herba basah herba segar hanya tahan maks 2 hari di pendingin bersuhu normal.</string>
+
+    <string name="tips_3_title">Kebersihan Sempurna Alat</string>
+    <string name="tips_3_desc">Pastikan talenan, pisau perajang, blender, dan saringan dicuci steril. Jejak sisa bumbu dapur pedas di talenan dapat merusak formulasi khasiat resep obat.</string>
+
+    <string name="tips_4_title">Memilih Bahan Segar Terbaik</string>
+    <string name="tips_4_desc">Pilihlah daun herbal yang utuh bebas ulat, tidak layu menguning parah, dan rimpang jahe kencur kunyit yang keras padat ketika digenggam (bebas busuk berair).</string>
+
+    <string name="tips_5_title">Waktu Konsumsi Tepat</string>
+    <string name="tips_5_desc">Ramuan penghangat rematik disarankan sesudah makan. Ramuan ginjal peluruh batu disarankan pagi hari diiringi air mineral murni tinggi minimal 2.5 liter sehari.</string>
+
+    <string name="btn_whatsapp_puskesmas">Tanya Lewat WhatsApp Puskesmas</string>
+
+    <!-- Tentang Aplikasi Screen -->
+    <string name="tentang_title">Tentang Aplikasi</string>
+    <string name="tentang_app_desc">TOPAKULI adalah aplikasi pengelola data tanaman obat tradisional milik Desa Pakuli. Aplikasi ini dirancang untuk membantu pengelola mendokumentasikan, menyimpan, dan mengelola informasi tanaman herbal dan resep obat secara digital agar mudah diakses dan terawat.</string>
+    <string name="visi_title">Visi dan Misi</string>
+    <string name="visi_text">Menjadi pusat dokumentasi tanaman obat tradisional Desa Pakuli yang terpercaya dan berkelanjutan.</string>
+    <string name="misi_1">• Mendokumentasikan keanekaragaman tanaman obat lokal secara digital.</string>
+    <string name="misi_2">• Memudahkan pengelola dalam memperbarui dan menjaga akurasi data.</string>
+    <string name="misi_3">• Melestarikan pengetahuan tradisional masyarakat Desa Pakuli.</string>
+
+    <string name="stats_database_title">Statistik database</string>
+    <string name="stats_tanaman_herbal">Tanaman Herbal</string>
+    <string name="stats_resep_herbal">Resep Obat Herbal</string>
+    <string name="stats_pengelola_aktif">Pengelola Aktif</string>
+    <string name="stats_tanaman_teridentifikasi">Tanaman Herbal Teridentifikasi</string>
+
+    <string name="info_aplikasi_title">Informasi Aplikasi</string>
+    <string name="info_versi">Versi Aplikasi</string>
+    <string name="info_rilis">Tanggal Rilis</string>
+    <string name="info_update">Terakhir Diperbarui</string>
+    <string name="info_lokasi">Lokasi</string>
+
+    <string name="dev_title">Dikembangkan Oleh</string>
+    <string name="dev_1_name">Aril S.</string>
+    <string name="dev_1_role">Application Developer</string>
+    <string name="dev_2_name">Hairul</string>
+    <string name="dev_2_role">Model Developer</string>
+
+    <string name="copyright">© 2026 TOPAKULI — Desa Pakuli\nSeluruh hak cipta dilindungi</string>
+
+    <string name="menu_contribution">Kontribusi dan bantuan</string>
+    <string name="menu_contact">Hubungi kami</string>
+    <string name="menu_about">Tentang aplikasi</string>
+    <string name="menu_manager">Pengelola</string>
+    <string name="topakuli">TOPAKULI</string>
+
+    <!-- Contact Bottom Sheet -->
+    <string name="contact_title">Hubungi Kami</string>
+    <string name="contact_subtitle">Kami siap membantu kamu</string>
+    <string name="contact_whatsapp_label">WhatsApp</string>
+    <string name="contact_phone_label">Telepon</string>
+    <string name="contact_email_label">Email</string>
+    <string name="contact_whatsapp_val">+62 812 3456 7890</string>
+    <string name="contact_phone_val">+62 812 3456 7890</string>
+    <string name="contact_email_val">topakuli@desapakuli.id</string>
+    <string name="btn_send_message">Kirim Pesan</string>
+    <string name="btn_call">Hubungi</string>
+</resources>

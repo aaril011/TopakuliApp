@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="hijau_topakuli">#008F5B</color>
+    <color name="app_background">#F0F4EF</color>
+    <color name="navbar_background">#F5F6F7</color>
+    <color name="navbar_item_active">#00A86B</color>
+    <color name="navbar_item_inactive">#8E8E93</color>
+    <color name="switch_off_color">#818893</color>
+
+    <!-- Contact colors -->
+    <color name="whatsapp_green">#2ECC71</color>
+    <color name="whatsapp_bg">#E8F9F1</color>
+    <color name="phone_blue">#3498DB</color>
+    <color name="phone_bg">#EBF5FB</color>
+    <color name="email_orange">#F39C12</color>
+    <color name="email_bg">#FEF5E7</color>
+</resources>

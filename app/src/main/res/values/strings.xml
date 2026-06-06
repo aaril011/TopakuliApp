@@ -131,4 +131,13 @@
     <string name="contact_email_val">topakuli@desapakuli.id</string>
     <string name="btn_send_message">Kirim Pesan</string>
     <string name="btn_call">Hubungi</string>
+
+    <!-- Herbal & Resep -->
+    <string name="lihat">Lihat</string>
+    <string name="simpan">Simpan</string>
+    <string name="favorit">Favorit</string>
+    <string name="detail">Detail</string>
+    <string name="lihat_detail">Lihat Detail</string>
+    <string name="format_bahan">%1$d Bahan</string>
 </resources>
+

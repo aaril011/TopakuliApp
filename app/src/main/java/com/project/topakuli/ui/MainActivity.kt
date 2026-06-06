@@ -43,7 +43,9 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.navigation_identifikasi, R.id.petunjukFragment, R.id.tipsAmanFragment, R.id.tentangFragment -> {
+                R.id.navigation_identifikasi, R.id.petunjukFragment, 
+                R.id.tipsAmanFragment, R.id.tentangFragment,
+                R.id.detailTanamanFragment, R.id.detailResepFragment -> {
                     navView.visibility = View.GONE
                 }
                 else -> {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_tanaman"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Topakuli.TopRounded"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <ImageView
+            android:id="@+id/iv_favorite"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_circle_green"
+            android:contentDescription="@string/favorit"
+            android:elevation="4dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_heart"
+            app:layout_constraintEnd_toEndOf="@id/iv_tanaman"
+            app:layout_constraintTop_toTopOf="@id/iv_tanaman"
+            app:tint="@android:color/white" />
+
+        <TextView
+            android:id="@+id/tv_nama_tanaman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_bold"
+            android:maxLines="1"
+            android:textColor="#1F2937"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_tanaman"
+            tools:text="Mayana" />
+
+        <TextView
+            android:id="@+id/tv_nama_daerah"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_regular"
+            android:maxLines="1"
+            android:textColor="#9CA3AF"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_nama_tanaman"
+            app:layout_constraintStart_toStartOf="@id/tv_nama_tanaman"
+            app:layout_constraintTop_toBottomOf="@id/tv_nama_tanaman"
+            tools:text="Ati-ati" />
+
+        <TextView
+            android:id="@+id/tv_nama_latin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_italic"
+            android:maxLines="1"
+            android:textColor="#10B981"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_nama_tanaman"
+            app:layout_constraintStart_toStartOf="@id/tv_nama_tanaman"
+            app:layout_constraintTop_toBottomOf="@id/tv_nama_daerah"
+            tools:text="Coleus scutellarioides" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

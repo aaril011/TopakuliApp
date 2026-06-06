@@ -9,13 +9,40 @@
         android:id="@+id/navigation_beranda"
         android:name="com.project.topakuli.ui.beranda.BerandaFragment"
         android:label="@string/title_beranda"
-        tools:layout="@layout/fragment_beranda" />
+        tools:layout="@layout/fragment_beranda">
+        <action
+            android:id="@+id/action_navigation_beranda_to_detailTanamanFragment"
+            app:destination="@id/detailTanamanFragment" />
+        <action
+            android:id="@+id/action_navigation_beranda_to_detailResepFragment"
+            app:destination="@id/detailResepFragment" />
+        <action
+            android:id="@+id/action_navigation_beranda_to_tipsAmanFragment"
+            app:destination="@id/tipsAmanFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_herbal"
         android:name="com.project.topakuli.ui.herbal.HerbalFragment"
         android:label="@string/title_herbal"
-        tools:layout="@layout/fragment_herbal" />
+        tools:layout="@layout/fragment_herbal">
+        <action
+            android:id="@+id/action_navigation_herbal_to_detailTanamanFragment"
+            app:destination="@id/detailTanamanFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailTanamanFragment"
+        android:name="com.project.topakuli.ui.herbal.DetailTanamanFragment"
+        android:label="Detail Tanaman Obat"
+        tools:layout="@layout/fragment_detail_tanaman">
+        <argument
+            android:name="tanamanId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detailTanamanFragment_to_detailResepFragment"
+            app:destination="@id/detailResepFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_identifikasi"
@@ -38,7 +65,24 @@
         android:id="@+id/navigation_resep"
         android:name="com.project.topakuli.ui.resep.ResepFragment"
         android:label="@string/title_resep"
-        tools:layout="@layout/fragment_resep" />
+        tools:layout="@layout/fragment_resep">
+        <action
+            android:id="@+id/action_navigation_resep_to_detailResepFragment"
+            app:destination="@id/detailResepFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailResepFragment"
+        android:name="com.project.topakuli.ui.resep.DetailResepFragment"
+        android:label="Detail Resep Obat"
+        tools:layout="@layout/fragment_detail_resep">
+        <argument
+            android:name="resepId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detailResepFragment_to_detailTanamanFragment"
+            app:destination="@id/detailTanamanFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_setelan"

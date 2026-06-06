@@ -1,0 +1,57 @@
+package com.project.topakuli.ui.beranda
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.project.topakuli.R
+import com.project.topakuli.data.local.entity.ResepEntity
+import com.project.topakuli.databinding.ItemResepHomeBinding
+
+class ResepHomeAdapter(
+    private val onItemClick: (ResepEntity) -> Unit
+) : ListAdapter<ResepEntity, ResepHomeAdapter.ViewHolder>(DIFF_CALLBACK) {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemResepHomeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val resep = getItem(position)
+        holder.bind(resep)
+    }
+
+    inner class ViewHolder(private val binding: ItemResepHomeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(resep: ResepEntity) {
+            with(binding) {
+                tvJudulResep.text = resep.judul
+                tvTagKategori.text = resep.kategori
+                
+                val bahanCount = resep.bahan.split("\n").filter { it.isNotBlank() }.size
+                tvTagBahan.text = itemView.context.getString(R.string.format_bahan, bahanCount)
+
+                Glide.with(itemView.context)
+                    .load(resep.imageUrl)
+                    .into(ivResep)
+
+                root.setOnClickListener { onItemClick(resep) }
+            }
+        }
+    }
+
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ResepEntity>() {
+            override fun areItemsTheSame(oldItem: ResepEntity, newItem: ResepEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: ResepEntity, newItem: ResepEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+}

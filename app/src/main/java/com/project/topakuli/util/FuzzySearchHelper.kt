@@ -1,0 +1,57 @@
+package com.project.topakuli.util
+
+import kotlin.math.min
+
+object FuzzySearchHelper {
+
+    /**
+     * Menghitung Levenshtein Distance antara dua string.
+     * Semakin kecil nilainya, semakin mirip string tersebut.
+     */
+    fun levenshteinDistance(s1: String, s2: String): Int {
+        val dp = Array(s1.length + 1) { IntArray(s2.length + 1) }
+
+        for (i in 0..s1.length) {
+            for (j in 0..s2.length) {
+                when {
+                    i == 0 -> dp[i][j] = j
+                    j == 0 -> dp[i][j] = i
+                    else -> {
+                        val cost = if (s1[i - 1] == s2[j - 1]) 0 else 1
+                        dp[i][j] = min(
+                            min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
+                            dp[i - 1][j - 1] + cost
+                        )
+                    }
+                }
+            }
+        }
+        return dp[s1.length][s2.length]
+    }
+
+    /**
+     * Mengecek apakah string target mengandung atau mirip dengan query.
+     * Menggunakan threshold untuk menentukan tingkat kemiripan.
+     */
+    fun isSimilar(query: String, target: String, threshold: Double = 0.3): Boolean {
+        val q = query.lowercase().trim()
+        val t = target.lowercase().trim()
+
+        // Jika mengandung kata kunci secara langsung
+        if (t.contains(q)) return true
+
+        // Cek kemiripan per kata (untuk menangani kalimat seperti "sakit kepala")
+        val queryWords = q.split(" ").filter { it.length > 2 }
+        val targetWords = t.split(" ", ",", "\n").filter { it.length > 2 }
+
+        for (qw in queryWords) {
+            for (tw in targetWords) {
+                val distance = levenshteinDistance(qw, tw)
+                val similarity = 1.0 - (distance.toDouble() / maxOf(qw.length, tw.length))
+                if (similarity >= (1.0 - threshold)) return true
+            }
+        }
+
+        return false
+    }
+}

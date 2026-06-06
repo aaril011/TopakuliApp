@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F9FAFB"
     tools:context=".ui.resep.ResepFragment">
 
     <LinearLayout
@@ -109,5 +110,17 @@
         </com.google.android.material.tabs.TabLayout>
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_resep"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingTop="8dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_resep"
+        tools:listitem="@layout/item_resep" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

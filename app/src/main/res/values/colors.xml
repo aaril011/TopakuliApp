@@ -2,8 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="hijau_topakuli">#008F5B</color>
-    <color name="app_background">#F0F4EF</color>
+    <color name="hijau_topakuli">#00A86B</color>
+    <color name="app_background">#F5F8F6</color>
+    <color name="bg_accent_green">#E8F5E9</color>
+    <color name="bg_accent_blue">#E3F2FD</color>
+    <color name="bg_accent_orange">#FFF3E0</color>
+    <color name="bg_accent_teal">#E0F2F1</color>
     <color name="navbar_background">#F5F6F7</color>
     <color name="navbar_item_active">#00A86B</color>
     <color name="navbar_item_inactive">#8E8E93</color>

@@ -18,4 +18,15 @@
     <style name="CustomBottomSheetStyle" parent="Widget.Material3.BottomSheet">
         <item name="backgroundTint">@android:color/transparent</item>
     </style>
+
+    <style name="ShapeAppearance.Topakuli.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Topakuli.TopRounded" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSizeTopLeft">12dp</item>
+        <item name="cornerSizeTopRight">12dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
 </resources>

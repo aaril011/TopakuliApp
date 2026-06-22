@@ -19,6 +19,49 @@
         <action
             android:id="@+id/action_navigation_beranda_to_tipsAmanFragment"
             app:destination="@id/tipsAmanFragment" />
+        <action
+            android:id="@+id/action_navigation_beranda_to_historyFragment"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_navigation_beranda_to_historyDetailFragment"
+            app:destination="@id/historyDetailFragment" />
+        <action
+            android:id="@+id/action_navigation_beranda_to_kontribusi"
+            app:destination="@id/kontribusiFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.project.topakuli.ui.history.HistoryFragment"
+        android:label="Riwayat Identifikasi"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_historyDetailFragment"
+            app:destination="@id/historyDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailFragment"
+        android:name="com.project.topakuli.ui.history.HistoryDetailFragment"
+        android:label="Hasil Identifikasi"
+        tools:layout="@layout/fragment_history_detail">
+        <argument
+            android:name="nama"
+            app:argType="string" />
+        <argument
+            android:name="akurasi"
+            app:argType="float" />
+        <argument
+            android:name="imagePath"
+            app:argType="string" />
+        <argument
+            android:name="timestamp"
+            app:argType="long"
+            android:defaultValue="0L" />
+        <argument
+            android:name="tanamanId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
     <fragment
@@ -66,6 +109,10 @@
         android:name="com.project.topakuli.ui.resep.ResepFragment"
         android:label="@string/title_resep"
         tools:layout="@layout/fragment_resep">
+        <argument
+            android:name="showHistory"
+            app:argType="boolean"
+            android:defaultValue="false" />
         <action
             android:id="@+id/action_navigation_resep_to_detailResepFragment"
             app:destination="@id/detailResepFragment" />
@@ -95,7 +142,16 @@
         <action
             android:id="@+id/action_setelan_to_tentang"
             app:destination="@id/tentangFragment" />
+        <action
+            android:id="@+id/action_setelan_to_kontribusi"
+            app:destination="@id/kontribusiFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/kontribusiFragment"
+        android:name="com.project.topakuli.ui.kontribusi.KontribusiFragment"
+        android:label="Kontribusi &amp; Tanya"
+        tools:layout="@layout/fragment_kontribusi" />
 
     <fragment
         android:id="@+id/tipsAmanFragment"

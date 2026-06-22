@@ -129,6 +129,10 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun finishIntro() {
+        // Mark intro as completed
+        val sharedPref = getSharedPreferences("topakuli_pref", MODE_PRIVATE)
+        sharedPref.edit().putBoolean("is_first_install", false).apply()
+
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

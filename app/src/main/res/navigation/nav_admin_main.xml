@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_admin_main"
+    app:startDestination="@id/admin_navigation_beranda">
+
+    <fragment
+        android:id="@+id/admin_navigation_beranda"
+        android:name="com.project.topakuli.ui.admin.beranda.AdminBerandaFragment"
+        android:label="Beranda"
+        tools:layout="@layout/fragment_admin_beranda">
+        <action
+            android:id="@+id/action_admin_navigation_beranda_to_adminActivityListFragment"
+            app:destination="@id/adminActivityListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/adminActivityListFragment"
+        android:name="com.project.topakuli.ui.admin.beranda.AdminActivityListFragment"
+        android:label="Daftar Aktivitas"
+        tools:layout="@layout/fragment_admin_activity_list" />
+
+    <fragment
+        android:id="@+id/admin_navigation_herbal"
+        android:name="com.project.topakuli.ui.admin.herbal.AdminHerbalFragment"
+        android:label="Herbal"
+        tools:layout="@layout/fragment_admin_herbal" />
+
+    <fragment
+        android:id="@+id/admin_navigation_resep"
+        android:name="com.project.topakuli.ui.admin.resep.AdminResepFragment"
+        android:label="Resep"
+        tools:layout="@layout/fragment_admin_resep" />
+
+    <fragment
+        android:id="@+id/admin_navigation_survei"
+        android:name="com.project.topakuli.ui.admin.common.AdminMasukanListFragment"
+        android:label="Masukan"
+        tools:layout="@layout/fragment_admin_masukan_list">
+        <action
+            android:id="@+id/action_adminMasukanListFragment_to_adminMasukanChatFragment"
+            app:destination="@id/adminMasukanChatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/adminMasukanChatFragment"
+        android:name="com.project.topakuli.ui.admin.common.AdminMasukanChatFragment"
+        android:label="Detail Masukan"
+        tools:layout="@layout/fragment_admin_masukan_chat">
+        <argument
+            android:name="CONTRIBUTION_ID"
+            app:argType="string" />
+        <argument
+            android:name="USER_NAME"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/admin_navigation_setelan"
+        android:name="com.project.topakuli.ui.admin.setelan.AdminSetelanFragment"
+        android:label="Setelan"
+        tools:layout="@layout/fragment_admin_setelan">
+        <action
+            android:id="@+id/action_admin_setelan_to_tentang"
+            app:destination="@id/admin_navigation_tentang" />
+        <action
+            android:id="@+id/action_admin_setelan_to_manager_list"
+            app:destination="@id/admin_manager_list" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/admin_manager_list"
+        android:name="com.project.topakuli.ui.admin.setelan.AdminManagerListFragment"
+        android:label="Daftar Pengelola"
+        tools:layout="@layout/fragment_admin_manager_list">
+        <action
+            android:id="@+id/action_admin_manager_list_to_detail"
+            app:destination="@id/admin_manager_detail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/admin_manager_detail"
+        android:name="com.project.topakuli.ui.admin.setelan.AdminManagerDetailFragment"
+        android:label="Detail Pengelola"
+        tools:layout="@layout/fragment_admin_manager_detail">
+        <argument
+            android:name="manager_uid"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/admin_navigation_tentang"
+        android:name="com.project.topakuli.ui.Setelan.TentangFragment"
+        android:label="Tentang Aplikasi"
+        tools:layout="@layout/fragment_tentang" />
+
+    <fragment
+        android:id="@+id/admin_navigation_help"
+        android:name="com.project.topakuli.ui.admin.help.AdminHelpFragment"
+        android:label="Bantuan"
+        tools:layout="@layout/fragment_admin_help" />
+
+    <!-- Detail & Add Tanaman -->
+    <fragment
+        android:id="@+id/admin_detail_tanaman"
+        android:name="com.project.topakuli.ui.admin.herbal.AdminDetailTanamanFragment"
+        android:label="Detail Tanaman"
+        tools:layout="@layout/fragment_admin_detail_tanaman" />
+
+    <fragment
+        android:id="@+id/admin_add_tanaman"
+        android:name="com.project.topakuli.ui.admin.herbal.AdminAddTanamanFragment"
+        android:label="Tambah Tanaman"
+        tools:layout="@layout/fragment_admin_add_tanaman" />
+
+    <!-- Detail & Add Resep -->
+    <fragment
+        android:id="@+id/admin_detail_resep"
+        android:name="com.project.topakuli.ui.admin.resep.AdminDetailResepFragment"
+        android:label="Detail Resep"
+        tools:layout="@layout/fragment_admin_detail_resep" />
+
+    <fragment
+        android:id="@+id/admin_add_resep"
+        android:name="com.project.topakuli.ui.admin.resep.AdminAddResepFragment"
+        android:label="Tambah Resep"
+        tools:layout="@layout/fragment_admin_add_resep" />
+
+</navigation>

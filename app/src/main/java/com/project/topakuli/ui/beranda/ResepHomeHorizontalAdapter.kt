@@ -30,6 +30,9 @@ class ResepHomeHorizontalAdapter(
                 tvTagKategori.text = resep.kategori
                 tvTingkatKesulitan.text = resep.tingkatKesulitan
 
+                val ingredientsCount = resep.bahan.split("\n").filter { it.isNotBlank() }.size
+                tvTagBahan.text = "$ingredientsCount Bahan"
+
                 Glide.with(itemView.context)
                     .load(resep.imageUrl)
                     .into(ivResep)

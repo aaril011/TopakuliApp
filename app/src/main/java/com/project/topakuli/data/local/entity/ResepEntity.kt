@@ -17,8 +17,11 @@ data class ResepEntity(
     val frekuensi: String,
     val masaSimpan: String,
     val tingkatKesulitan: String,
-    val tanamanId: String? = null, // Relasi ke TanamanObat
+    val tanamanIds: String? = null, // Relasi ke beberapa TanamanObat (CSV)
     val imageUrl: String? = null,
     val catatan: String? = null,
-    var isSaved: Boolean = false
+    var isSaved: Boolean = false,
+    val lastReadAt: Long? = null,
+    val viewCount: Int = 0,
+    val createdAt: Long = System.currentTimeMillis()
 )

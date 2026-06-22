@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "760151089979",
-    "project_id": "topakuli-7f5d6",
-    "storage_bucket": "topakuli-7f5d6.firebasestorage.app"
+    "project_number": "654049872467",
+    "project_id": "topakuli-1998e",
+    "storage_bucket": "topakuli-1998e.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:760151089979:android:379d15f4d94e6b45c98d1e",
+        "mobilesdk_app_id": "1:654049872467:android:18ac09b14ab404bc4794a6",
         "android_client_info": {
           "package_name": "com.project.topakuli"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "654049872467-91i24o94og2qd9v3b2kete6vdpa588o7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.topakuli",
+            "certificate_hash": "0e295f9f3425918335e1347c945e9bb40ee8f603"
+          }
+        },
+        {
+          "client_id": "654049872467-i9kmtka335qeg0h8m0cun3bugb8nhhce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCIvCCypDoj0V_aR0nEsAOzDvNNvB8E-_U"
+          "current_key": "AIzaSyCVzksDYSkjzl-WVwUWIPhTge6msW9pn_0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654049872467-i9kmtka335qeg0h8m0cun3bugb8nhhce.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

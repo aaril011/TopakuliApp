@@ -77,6 +77,8 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_detail">
 
@@ -84,7 +86,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="40dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <!-- Main Image Card -->
             <com.google.android.material.card.MaterialCardView
@@ -331,7 +337,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Related Recipe Card Container -->
+            <!-- Related Recipe Section -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_related_resep_container"
                 android:layout_width="match_parent"
@@ -340,7 +346,9 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                android:visibility="gone"
+                tools:visibility="visible">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -354,93 +362,25 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/herbal"
+                            android:src="@drawable/dokumen"
                             app:tint="#10B981" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:fontFamily="@font/poppins_semibold"
+                            android:fontFamily="@font/poppins_bold"
                             android:text="Resep Pengolahan terkait"
                             android:textColor="#1F2937"
                             android:textSize="16sp" />
                     </LinearLayout>
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/card_related_resep"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_related_resep"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        app:cardBackgroundColor="#F0FDF4"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#DCFCE7"
-                        app:strokeWidth="1dp">
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="12dp">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/iv_related_resep"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
-                                android:scaleType="centerCrop"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:shapeAppearanceOverlay="@style/ShapeAppearance.Topakuli.MediumComponent"
-                                tools:src="@tools:sample/backgrounds/scenic" />
-
-                            <TextView
-                                android:id="@+id/tv_related_judul"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:fontFamily="@font/poppins_bold"
-                                android:textColor="#111827"
-                                android:textSize="14sp"
-                                app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
-                                app:layout_constraintStart_toEndOf="@id/iv_related_resep"
-                                app:layout_constraintTop_toTopOf="parent"
-                                tools:text="Ramuan Obat Batuk Berdahak" />
-
-                            <TextView
-                                android:id="@+id/tv_related_bahan_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:fontFamily="@font/poppins_regular"
-                                android:textColor="#6B7280"
-                                android:textSize="12sp"
-                                app:layout_constraintStart_toStartOf="@id/tv_related_judul"
-                                app:layout_constraintTop_toBottomOf="@id/tv_related_judul"
-                                tools:text="3 Bahan" />
-
-                            <TextView
-                                android:id="@+id/tv_related_kategori"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:fontFamily="@font/poppins_regular"
-                                android:textColor="#10B981"
-                                android:textSize="12sp"
-                                app:layout_constraintStart_toStartOf="@id/tv_related_judul"
-                                app:layout_constraintTop_toBottomOf="@id/tv_related_bahan_count"
-                                tools:text="Penyakit Dalam" />
-
-                            <ImageView
-                                android:id="@+id/iv_chevron"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_chevron_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="#9CA3AF" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                        android:layout_marginTop="8dp"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_resep_terkait_small" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

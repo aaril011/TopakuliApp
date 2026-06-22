@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ajukan Pertanyaan - Topakuli</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fbf9f8;
+        }
+        .chat-container {
+            height: calc(100vh - 64px - 80px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #dbe1dd;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#ffb77a",
+                      "tertiary-fixed": "#ffdcc2",
+                      "inverse-surface": "#303031",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-bright": "#fbf9f8",
+                      "primary-fixed-dim": "#5bde9b",
+                      "on-secondary-fixed": "#171d1b",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed-variant": "#424846",
+                      "on-error": "#ffffff",
+                      "primary": "#006d43",
+                      "on-surface": "#1b1c1c",
+                      "secondary-fixed": "#dee4e0",
+                      "on-surface-variant": "#3d4a41",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#5bde9b",
+                      "on-primary-container": "#00311c",
+                      "surface-container-low": "#f5f3f3",
+                      "surface": "#fbf9f8",
+                      "secondary": "#59605d",
+                      "surface-tint": "#006d43",
+                      "surface-dim": "#dbdad9",
+                      "on-background": "#1b1c1c",
+                      "surface-container-high": "#e9e8e7",
+                      "primary-container": "#00a669",
+                      "on-primary-fixed": "#002111",
+                      "on-secondary-container": "#5e6461",
+                      "background": "#fbf9f8",
+                      "tertiary-container": "#d37c21",
+                      "surface-variant": "#e4e2e2",
+                      "on-tertiary-container": "#432200",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#8f4e00",
+                      "on-tertiary-fixed-variant": "#6d3a00",
+                      "primary-fixed": "#79fbb5",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#c2c8c4",
+                      "surface-container-highest": "#e4e2e2",
+                      "on-tertiary-fixed": "#2e1500",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#dbe1dd",
+                      "inverse-on-surface": "#f2f0f0",
+                      "outline": "#6d7a70",
+                      "on-primary-fixed-variant": "#005231",
+                      "surface-container": "#efeded",
+                      "outline-variant": "#bccabe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "gutter": "12px",
+                      "unit": "4px",
+                      "container-margin": "20px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "sm": "8px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-lg": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-lg": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top Navigation Bar (JSON Anchor) -->
+<header class="fixed top-0 w-full z-50 flex items-center px-container-margin h-16 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<button class="mr-4 active:opacity-80 transition-opacity p-2 rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed">Ajukan Pertanyaan</h1>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-grow pt-16 pb-24 overflow-y-auto custom-scrollbar flex flex-col">
+<div class="px-container-margin py-lg space-y-lg flex flex-col max-w-2xl mx-auto w-full">
+<!-- Date Indicator -->
+<div class="flex justify-center">
+<span class="bg-surface-container text-secondary px-4 py-1 rounded-full font-label-sm text-label-sm">Hari Ini</span>
+</div>
+<!-- User Initial Choice Bubble -->
+<div class="flex justify-end w-full">
+<div class="bg-primary text-on-primary rounded-2xl rounded-tr-none px-md py-sm max-w-[85%] shadow-sm">
+<p class="font-body-md text-body-md">Ajukan Pertanyaan</p>
+</div>
+</div>
+<!-- System Response Bubble -->
+<div class="flex justify-start w-full items-start gap-gutter">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div class="bg-surface-container-highest text-on-surface rounded-2xl rounded-tl-none px-md py-sm max-w-[85%] border border-outline-variant/30">
+<p class="font-body-md text-body-md">Silakan tuliskan pertanyaan Anda di bawah ini. Tim ahli kami akan segera merespons.</p>
+</div>
+</div>
+<!-- Instructional Card -->
+<div class="bg-secondary-container/30 border border-outline-variant p-md rounded-xl space-y-xs">
+<div class="flex items-center gap-xs text-primary">
+<span class="material-symbols-outlined text-md">info</span>
+<h3 class="font-label-lg text-label-lg">Tips Bertanya</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    Berikan detail seperti nama tanaman (jika diketahui), gejala yang dialami, atau kegunaan yang ingin diketahui untuk hasil yang lebih akurat.
+                </p>
+</div>
+<!-- Chat History Area (Placeholder for dynamic content) -->
+<div class="space-y-lg flex flex-col" id="dynamic-chat-content">
+<!-- Messages will appear here -->
+</div>
+</div>
+</main>
+<!-- Bottom Input Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant p-4 z-50">
+<div class="max-w-2xl mx-auto flex items-center gap-gutter">
+<div class="flex-grow relative">
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-2xl px-4 py-3 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-body-md text-body-md resize-none max-h-32 transition-all" id="user-input" oninput="this.style.height = '';this.style.height = this.scrollHeight + 'px'" placeholder="Tulis pertanyaan Anda..." rows="1"></textarea>
+<button class="absolute right-2 bottom-2 p-2 text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary h-12 w-12 rounded-full flex items-center justify-center active:scale-95 transition-transform shadow-md" id="send-btn">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-primary/5 to-transparent"></div>
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="absolute bottom-1/4 -left-24 w-96 h-96 bg-tertiary-container/5 rounded-full blur-3xl"></div>
+</div>
+<script>
+        // Simple Interaction logic
+        const input = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatContent = document.getElementById('dynamic-chat-content');
+
+        sendBtn.addEventListener('click', () => {
+            const text = input.value.trim();
+            if (text) {
+                // User message
+                const userBubble = document.createElement('div');
+                userBubble.className = 'flex justify-end w-full animate-in slide-in-from-bottom-2 duration-300';
+                userBubble.innerHTML = `
+                    <div class="bg-primary text-on-primary rounded-2xl rounded-tr-none px-md py-sm max-w-[85%] shadow-sm">
+                        <p class="font-body-md text-body-md">${text}</p>
+                    </div>
+                `;
+                chatContent.appendChild(userBubble);
+                
+                input.value = '';
+                input.style.height = 'auto';
+                
+                // Scroll to bottom
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+                // Simulate Expert Typing
+                setTimeout(() => {
+                    const typing = document.createElement('div');
+                    typing.className = 'flex justify-start w-full items-start gap-gutter animate-pulse';
+                    typing.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined text-on-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">eco</span>
+                        </div>
+                        <div class="bg-surface-container-highest text-secondary rounded-2xl rounded-tl-none px-md py-sm border border-outline-variant/30">
+                            <p class="font-body-md text-body-md italic">Ahli sedang mengetik...</p>
+                        </div>
+                    `;
+                    chatContent.appendChild(typing);
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+                    // Final response simulation
+                    setTimeout(() => {
+                        typing.remove();
+                        const response = document.createElement('div');
+                        response.className = 'flex justify-start w-full items-start gap-gutter animate-in slide-in-from-left-2 duration-300';
+                        response.innerHTML = `
+                            <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-on-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">eco</span>
+                            </div>
+                            <div class="bg-surface-container-highest text-on-surface rounded-2xl rounded-tl-none px-md py-sm max-w-[85%] border border-outline-variant/30">
+                                <p class="font-body-md text-body-md">Terima kasih atas pertanyaannya. Pesan Anda telah kami terima dan sedang ditinjau oleh kurator pengetahuan lokal kami. Kami akan mengabari Anda dalam waktu maksimal 24 jam.</p>
+                            </div>
+                        `;
+                        chatContent.appendChild(response);
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    }, 2000);
+                }, 1000);
+            }
+        });
+
+        // Enter to send
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
+        });
+    </script>
+</body></html>

@@ -12,5 +12,6 @@ data class TanamanObatEntity(
     val deskripsi: String,
     val khasiat: String,
     val imageUrl: String? = null,
-    var isFavorit: Boolean = false
+    var isFavorit: Boolean = false,
+    val createdAt: Long = System.currentTimeMillis()
 )

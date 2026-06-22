@@ -88,7 +88,7 @@ object DataDummy {
                 frekuensi = "2 - 3X Sehari",
                 masaSimpan = "3 hari (kulkas)",
                 tingkatKesulitan = "Mudah",
-                tanamanId = "7",
+                tanamanIds = "7",
                 imageUrl = "https://img.freepik.com/free-photo/aloe-vera-gel-glass-jar_23-2148905217.jpg",
                 catatan = "Hanya untuk luka bakar ringan. Segera konsultasikan ke dokter jika luka semakin parah atau meluas."
             ),
@@ -105,7 +105,7 @@ object DataDummy {
                 frekuensi = "1 - 2X Sehari",
                 masaSimpan = "Langsung habis",
                 tingkatKesulitan = "Mudah",
-                tanamanId = null,
+                tanamanIds = null,
                 imageUrl = "https://img.freepik.com/free-photo/hot-ginger-tea-with-lemon-honey_23-2148293754.jpg"
             ),
             ResepEntity(
@@ -121,7 +121,7 @@ object DataDummy {
                 frekuensi = "1X Sehari",
                 masaSimpan = "1 hari",
                 tingkatKesulitan = "Sedang",
-                tanamanId = null,
+                tanamanIds = null,
                 imageUrl = "https://img.freepik.com/free-photo/turmeric-tea-with-cinnamon-sticks_23-2148293753.jpg"
             ),
             ResepEntity(
@@ -137,7 +137,7 @@ object DataDummy {
                 frekuensi = "2X Sehari",
                 masaSimpan = "1 hari",
                 tingkatKesulitan = "Mudah",
-                tanamanId = "1",
+                tanamanIds = "1",
                 imageUrl = "https://img.freepik.com/free-photo/green-leaves-nature_23-2148111661.jpg"
             )
         )

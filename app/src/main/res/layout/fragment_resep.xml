@@ -32,36 +32,9 @@
                 android:text="Daftar Resep" android:textColor="@android:color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/iv_history_resep"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/iv_search_resep"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/white" />
-
-            <ImageView
-                android:id="@+id/iv_history_resep"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/history"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_search_resep"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/white" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
@@ -69,22 +42,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
-            android:paddingBottom="12dp"
-            android:visibility="gone">
+            android:paddingBottom="4dp">
 
             <EditText
                 android:id="@+id/et_search_resep"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="42dp"
                 android:background="@drawable/bg_search_bar"
                 android:drawableStart="@drawable/search"
+                android:drawableTint="#9CA3AF"
                 android:drawablePadding="12dp"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="Cari resep pengolahan..." android:inputType="text"
                 android:paddingHorizontal="16dp"
                 android:textColor="#333333"
                 android:textColorHint="#9CA3AF"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -107,6 +80,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tersimpan" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Riwayat" />
         </com.google.android.material.tabs.TabLayout>
 
     </LinearLayout>
@@ -117,10 +95,21 @@
         android:layout_height="0dp"
         android:paddingTop="8dp"
         android:clipToPadding="false"
+        android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header_resep"
         tools:listitem="@layout/item_resep" />
+
+    <include
+        android:id="@+id/empty_state_resep"
+        layout="@layout/layout_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_resep" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

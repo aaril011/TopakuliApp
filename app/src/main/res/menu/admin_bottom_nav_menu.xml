@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/admin_navigation_beranda"
+        android:icon="@drawable/beranda"
+        android:title="Beranda" />
+    <item
+        android:id="@+id/admin_navigation_herbal"
+        android:icon="@drawable/herbal"
+        android:title="Herbal" />
+    <item
+        android:id="@+id/admin_navigation_resep"
+        android:icon="@drawable/icoon_book"
+        android:title="Resep" />
+    <item
+        android:id="@+id/admin_navigation_survei"
+        android:icon="@drawable/basil_edit_outline"
+        android:title="Masukan" />
+    <item
+        android:id="@+id/admin_navigation_setelan"
+        android:icon="@drawable/setelan"
+        android:title="Setelan" />
+</menu>

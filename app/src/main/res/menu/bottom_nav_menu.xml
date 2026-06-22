@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/navigation_resep"
-        android:icon="@drawable/dokumen"
+        android:icon="@drawable/icoon_book"
         android:title="@string/title_resep" />
 
     <item

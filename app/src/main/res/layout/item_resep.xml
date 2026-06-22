@@ -87,56 +87,41 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:contentDescription="Bahan"
-                        android:src="@drawable/ic_ingredients"
-                        app:tint="#4B5563" />
-
                     <TextView
                         android:id="@+id/tv_tag_bahan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:textColor="#4B5563"
+                        android:background="@drawable/bg_tag_home"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:textColor="@color/hijau_topakuli"
                         android:textSize="10sp"
-                        tools:text="2 Bahan" />
-
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="Kategori"
-                        android:src="@drawable/ic_category"
-                        app:tint="#4B5563" />
+                        tools:text="3 Bahan" />
 
                     <TextView
                         android:id="@+id/tv_tag_kategori"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:textColor="#4B5563"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_tag_home"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:textColor="@color/hijau_topakuli"
                         android:textSize="10sp"
                         tools:text="Kesehatan" />
-
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="Kesulitan"
-                        android:src="@drawable/ic_difficulty"
-                        app:tint="#4B5563" />
 
                     <TextView
                         android:id="@+id/tv_tingkat_kesulitan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:fontFamily="@font/poppins_semibold"
-                        android:textColor="#4B5563"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_tag_home"
+                        android:fontFamily="@font/poppins_regular"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="2dp"
+                        android:textColor="@color/hijau_topakuli"
                         android:textSize="10sp"
                         tools:text="Mudah" />
                 </LinearLayout>

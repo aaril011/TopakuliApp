@@ -2,8 +2,8 @@ package com.project.topakuli.ui.resep
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.project.topakuli.R
@@ -12,9 +12,10 @@ import com.project.topakuli.databinding.ItemResepBinding
 
 class ResepAdapter(
     private val onItemClick: (ResepEntity) -> Unit,
-    private val onSaveClick: (ResepEntity) -> Unit
+    private val onSaveClick: (ResepEntity) -> Unit,
+    private val onItemLongClick: ((ResepEntity) -> Unit)? = null
 ) :
-    ListAdapter<ResepEntity, ResepAdapter.ViewHolder>(DIFF_CALLBACK) {
+    PagingDataAdapter<ResepEntity, ResepAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemResepBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,7 +24,9 @@ class ResepAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val resep = getItem(position)
-        holder.bind(resep)
+        if (resep != null) {
+            holder.bind(resep)
+        }
     }
 
     inner class ViewHolder(private val binding: ItemResepBinding) :
@@ -53,6 +56,10 @@ class ResepAdapter(
                     .into(ivResep)
 
                 root.setOnClickListener { onItemClick(resep) }
+                root.setOnLongClickListener {
+                    onItemLongClick?.invoke(resep)
+                    true
+                }
                 btnLihatDetail.setOnClickListener { onItemClick(resep) }
                 ivSave.setOnClickListener { onSaveClick(resep) }
             }

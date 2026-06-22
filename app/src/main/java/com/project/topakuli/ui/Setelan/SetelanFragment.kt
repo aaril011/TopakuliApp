@@ -1,5 +1,6 @@
 package com.project.topakuli.ui.Setelan
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,11 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.project.topakuli.R
+import com.project.topakuli.TopakuliApplication
+import com.project.topakuli.ui.admin.auth.LoginAdminActivity
 
 class SetelanFragment : Fragment() {
+
+    private val viewModel: SetelanViewModel by viewModels {
+        SetelanViewModel.Factory((requireActivity().application as TopakuliApplication).repository)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,6 +34,22 @@ class SetelanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val tvSpesiesCount = view.findViewById<TextView>(R.id.tv_spesies_count)
+        val tvTeridentifikasiCount = view.findViewById<TextView>(R.id.tv_teridentifikasi_count)
+        val tvResepCount = view.findViewById<TextView>(R.id.tv_resep_count)
+
+        viewModel.tanamanCount.observe(viewLifecycleOwner) { count ->
+            tvSpesiesCount.text = count.toString()
+        }
+
+        viewModel.historyCount.observe(viewLifecycleOwner) { count ->
+            tvTeridentifikasiCount.text = count.toString()
+        }
+
+        viewModel.resepCount.observe(viewLifecycleOwner) { count ->
+            tvResepCount.text = count.toString()
+        }
+
         view.findViewById<LinearLayout>(R.id.btn_tips_aman).setOnClickListener {
             findNavController().navigate(R.id.action_setelan_to_tipsAman)
         }
@@ -31,8 +58,17 @@ class SetelanFragment : Fragment() {
             findNavController().navigate(R.id.action_setelan_to_tentang)
         }
 
+        view.findViewById<LinearLayout>(R.id.btn_kontribusi).setOnClickListener {
+            findNavController().navigate(R.id.action_setelan_to_kontribusi)
+        }
+
         view.findViewById<LinearLayout>(R.id.btn_hubungi_kami).setOnClickListener {
             showContactBottomSheet()
+        }
+
+        view.findViewById<LinearLayout>(R.id.btn_pengelola).setOnClickListener {
+            val intent = Intent(requireContext(), LoginAdminActivity::class.java)
+            startActivity(intent)
         }
     }
 

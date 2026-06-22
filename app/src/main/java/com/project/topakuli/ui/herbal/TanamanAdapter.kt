@@ -2,8 +2,8 @@ package com.project.topakuli.ui.herbal
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.project.topakuli.R
@@ -13,7 +13,7 @@ import com.project.topakuli.databinding.ItemTanamanBinding
 class TanamanAdapter(
     private val onItemClick: (TanamanObatEntity) -> Unit,
     private val onFavoriteClick: (TanamanObatEntity) -> Unit
-) : ListAdapter<TanamanObatEntity, TanamanAdapter.ViewHolder>(DIFF_CALLBACK) {
+) : PagingDataAdapter<TanamanObatEntity, TanamanAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemTanamanBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,7 +22,9 @@ class TanamanAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val tanaman = getItem(position)
-        holder.bind(tanaman)
+        if (tanaman != null) {
+            holder.bind(tanaman)
+        }
     }
 
     inner class ViewHolder(private val binding: ItemTanamanBinding) :

@@ -16,11 +16,21 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Delay for 3 seconds before moving to IntroActivity
+        // Delay for 2 seconds before checking navigation
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, IntroActivity::class.java)
-            startActivity(intent)
-            finish()
-        }, 3000)
+            checkFirstInstall()
+        }, 2000)
+    }
+
+    private fun checkFirstInstall() {
+        val sharedPref = getSharedPreferences("topakuli_pref", MODE_PRIVATE)
+        val isFirstInstall = sharedPref.getBoolean("is_first_install", true)
+
+        if (isFirstInstall) {
+            startActivity(Intent(this, IntroActivity::class.java))
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+        finish()
     }
 }

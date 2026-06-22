@@ -313,6 +313,7 @@
                                     android:orientation="vertical"
                                     android:padding="16dp">
                                     <TextView
+                                        android:id="@+id/tv_tanaman_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/poppins_bold"
@@ -346,6 +347,7 @@
                                     android:orientation="vertical"
                                     android:padding="16dp">
                                     <TextView
+                                        android:id="@+id/tv_resep_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/poppins_bold"
@@ -412,6 +414,7 @@
                                     android:orientation="vertical"
                                     android:padding="16dp">
                                     <TextView
+                                        android:id="@+id/tv_history_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/poppins_bold"

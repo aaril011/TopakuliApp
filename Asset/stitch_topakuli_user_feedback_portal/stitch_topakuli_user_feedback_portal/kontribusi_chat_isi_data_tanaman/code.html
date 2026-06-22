@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Kontribusi Tanaman Baru - Topakuli</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#ffb77a",
+                    "tertiary-fixed": "#ffdcc2",
+                    "inverse-surface": "#303031",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#fbf9f8",
+                    "primary-fixed-dim": "#5bde9b",
+                    "on-secondary-fixed": "#171d1b",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#424846",
+                    "on-error": "#ffffff",
+                    "primary": "#006d43",
+                    "on-surface": "#1b1c1c",
+                    "secondary-fixed": "#dee4e0",
+                    "on-surface-variant": "#3d4a41",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#5bde9b",
+                    "on-primary-container": "#00311c",
+                    "surface-container-low": "#f5f3f3",
+                    "surface": "#fbf9f8",
+                    "secondary": "#59605d",
+                    "surface-tint": "#006d43",
+                    "surface-dim": "#dbdad9",
+                    "on-background": "#1b1c1c",
+                    "surface-container-high": "#e9e8e7",
+                    "primary-container": "#00a669",
+                    "on-primary-fixed": "#002111",
+                    "on-secondary-container": "#5e6461",
+                    "background": "#fbf9f8",
+                    "tertiary-container": "#d37c21",
+                    "surface-variant": "#e4e2e2",
+                    "on-tertiary-container": "#432200",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#8f4e00",
+                    "on-tertiary-fixed-variant": "#6d3a00",
+                    "primary-fixed": "#79fbb5",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#c2c8c4",
+                    "surface-container-highest": "#e4e2e2",
+                    "on-tertiary-fixed": "#2e1500",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#dbe1dd",
+                    "inverse-on-surface": "#f2f0f0",
+                    "outline": "#6d7a70",
+                    "on-primary-fixed-variant": "#005231",
+                    "surface-container": "#efeded",
+                    "outline-variant": "#bccabe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "gutter": "12px",
+                    "unit": "4px",
+                    "container-margin": "20px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-bubble-bot {
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble-user {
+            border-bottom-right-radius: 4px;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fbf9f8;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full flex items-center px-container-margin h-16 w-full z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<button aria-label="Kembali" class="mr-4 active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-primary dark:text-primary-fixed">Data Tanaman Baru</h1>
+</header>
+<!-- Main Canvas / Chat Area -->
+<main class="pt-20 pb-24 px-container-margin min-h-screen max-w-2xl mx-auto flex flex-col">
+<!-- Chat History -->
+<div class="flex-1 space-y-lg flex flex-col justify-end">
+<!-- User Message: Previous Selection -->
+<div class="flex flex-col items-end animate-fade-in">
+<div class="chat-bubble-user bg-primary text-on-primary p-md rounded-xl max-w-[85%] shadow-sm">
+<p class="font-body-md text-body-md">Data Tanaman Baru</p>
+</div>
+<span class="mt-xs font-label-sm text-label-sm text-secondary">10:42</span>
+</div>
+<!-- System Message: Prompt -->
+<div class="flex flex-col items-start animate-fade-in" style="animation-delay: 300ms;">
+<div class="flex items-start space-x-sm">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="chat-bubble-bot bg-surface-container-high text-on-surface p-md rounded-xl max-w-[85%] shadow-sm">
+<p class="font-body-md text-body-md leading-relaxed">
+                            Bagus! Mari mulai dengan nama tanaman tersebut. Apa nama lokal atau nama umum tanaman yang ingin Anda ajukan?
+                        </p>
+</div>
+</div>
+<span class="ml-10 mt-xs font-label-sm text-label-sm text-secondary">Baru saja</span>
+</div>
+<!-- Input Step Inline -->
+<div class="mt-lg animate-fade-in" style="animation-delay: 600ms;">
+<div class="bg-white border border-outline-variant rounded-xl p-md shadow-sm">
+<label class="font-label-lg text-label-lg text-secondary mb-sm block" for="plant_name">Masukkan Nama Tanaman</label>
+<div class="relative">
+<input autofocus="" class="w-full bg-surface-container-low border-none rounded-lg py-3 px-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary-container transition-all" id="plant_name" placeholder="Contoh: Kumis Kucing, Jahe Merah..." type="text"/>
+</div>
+<div class="mt-md flex justify-end">
+<button class="bg-primary text-on-primary px-lg py-2 rounded-full font-label-lg text-label-lg flex items-center space-x-2 active:scale-95 transition-transform">
+<span>Lanjut</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Informational Sidebar / Card (Contextual) -->
+<aside class="mt-xl hidden md:block">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed p-lg rounded-xl border border-tertiary-container/20">
+<div class="flex items-center space-x-sm mb-xs">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<h3 class="font-label-lg text-label-lg">Tips Kontribusi</h3>
+</div>
+<p class="font-body-md text-body-md">
+                    Gunakan nama yang paling umum dikenal di desa Pakuli agar mudah divalidasi oleh pakar herbal lokal.
+                </p>
+</div>
+</aside>
+</main>
+<!-- Bottom Action Bar (Contextual/Fixed for Input Focus) -->
+<!-- Note: BottomNavBar is suppressed here as per "Task-Focused" rule in Shared Components Logic -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface p-container-margin border-t border-outline-variant flex items-center space-x-md md:hidden">
+<div class="w-full bg-surface-container-highest rounded-full px-4 h-12 flex items-center">
+<span class="material-symbols-outlined text-outline mr-sm" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-outline font-body-md text-body-md">Mengetik balasan...</span>
+</div>
+</footer>
+<script>
+        // Simple Interaction: Handle Enter Key for Input
+        const plantInput = document.getElementById('plant_name');
+        plantInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                alert('Nama tanaman "' + plantInput.value + '" sedang diproses...');
+                // Logic to push new message would go here
+            }
+        });
+
+        // Simple Fade In Animation for bubbles
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.animate-fade-in');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 500ms ease-out, transform 500ms ease-out';
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, (index * 200) + 100);
+            });
+        });
+    </script>
+</body></html>

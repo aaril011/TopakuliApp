@@ -2,8 +2,6 @@
     <style name="Base.Theme.Topakuli" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">#008F5B</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:enforceStatusBarContrast">false</item>
         <item name="android:windowBackground">@color/app_background</item>
     </style>
 
@@ -28,5 +26,17 @@
         <item name="cornerSizeTopRight">12dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Topakuli.TopRoundedLogin" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeTopRight">32dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
     </style>
 </resources>

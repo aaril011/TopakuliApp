@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Topakuli - Berikan Saran/Koreksi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fbf9f8;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-bubble-system {
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble-user {
+            border-bottom-right-radius: 4px;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#ffb77a",
+                    "tertiary-fixed": "#ffdcc2",
+                    "inverse-surface": "#303031",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#fbf9f8",
+                    "primary-fixed-dim": "#5bde9b",
+                    "on-secondary-fixed": "#171d1b",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed-variant": "#424846",
+                    "on-error": "#ffffff",
+                    "primary": "#006d43",
+                    "on-surface": "#1b1c1c",
+                    "secondary-fixed": "#dee4e0",
+                    "on-surface-variant": "#3d4a41",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#5bde9b",
+                    "on-primary-container": "#00311c",
+                    "surface-container-low": "#f5f3f3",
+                    "surface": "#fbf9f8",
+                    "secondary": "#59605d",
+                    "surface-tint": "#006d43",
+                    "surface-dim": "#dbdad9",
+                    "on-background": "#1b1c1c",
+                    "surface-container-high": "#e9e8e7",
+                    "primary-container": "#00a669",
+                    "on-primary-fixed": "#002111",
+                    "on-secondary-container": "#5e6461",
+                    "background": "#fbf9f8",
+                    "tertiary-container": "#d37c21",
+                    "surface-variant": "#e4e2e2",
+                    "on-tertiary-container": "#432200",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#8f4e00",
+                    "on-tertiary-fixed-variant": "#6d3a00",
+                    "primary-fixed": "#79fbb5",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#c2c8c4",
+                    "surface-container-highest": "#e4e2e2",
+                    "on-tertiary-fixed": "#2e1500",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#dbe1dd",
+                    "inverse-on-surface": "#f2f0f0",
+                    "outline": "#6d7a70",
+                    "on-primary-fixed-variant": "#005231",
+                    "surface-container": "#efeded",
+                    "outline-variant": "#bccabe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "gutter": "12px",
+                    "unit": "4px",
+                    "container-margin": "20px",
+                    "xs": "4px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-lg": ["14px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center px-container-margin h-16 w-full bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline">
+<button class="mr-4 text-primary dark:text-primary-fixed hover:bg-surface-container-low transition-colors rounded-full p-2 active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed">Kontribusi</h1>
+</header>
+<!-- Chat Canvas -->
+<main class="flex-grow pt-20 pb-24 px-container-margin flex flex-col gap-lg overflow-y-auto hide-scrollbar">
+<!-- Previous Interaction -->
+<div class="flex justify-end">
+<div class="chat-bubble-user max-w-[85%] bg-primary text-on-primary rounded-xl rounded-tr-none px-md py-3 shadow-sm">
+<p class="font-body-md text-body-md">Berikan Saran/Koreksi</p>
+</div>
+</div>
+<!-- System Prompt -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[18px]">psychology_alt</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Sistem Pakuli</span>
+</div>
+<div class="chat-bubble-system max-w-[85%] bg-surface-container-highest text-on-surface rounded-xl rounded-tl-none px-md py-3 shadow-sm border border-outline-variant/30">
+<p class="font-body-md text-body-md leading-relaxed">
+                    Data mana yang ingin Anda berikan saran atau koreksi? Anda bisa menyebutkan nama tanaman atau resepnya.
+                </p>
+</div>
+</div>
+<!-- Search Selection Area -->
+<div class="mt-4 flex flex-col gap-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all font-body-md text-body-md" placeholder="Cari tanaman atau resep..." type="text"/>
+</div>
+<!-- Quick Suggestions / Results -->
+<div class="grid grid-cols-1 gap-gutter">
+<p class="font-label-lg text-label-lg text-secondary px-1">Saran populer:</p>
+<button class="flex items-center gap-md p-md bg-white border border-outline-variant rounded-xl hover:bg-primary-container/10 transition-colors text-left group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A macro close-up photograph of vibrant green Temulawak leaves with fine veins visible, set against a soft, sun-drenched rural Pakuli garden background. The lighting is warm and natural, highlighting the organic textures of the medicinal plant. The style is clean and professional, using a fresh green and white palette to evoke a sense of health and authenticity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASairU-aleS7zo9GnBOgYhbN0SH1E2MjWVfZiQE-D6DinBdcU1-HLJsFXPeO2nvPIoV5QRGwW5cfV0OdloGi3Cq2-_2R5uxOlUyXDaBOiH8p4vVbGZP3JjJvYGAt8Zwya992q_rr6yPD6Ws4_HyhQLsZvCmrFzi78l6QfEnosN1-71W4OFLe7E8trLfh-N198kowN89chyhQXets7DAJpkEHe8veHThiVU0I6IH83otSYTwLX1xt36-b2HXDT57PpfSt4ZNELvPjg"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-lg text-label-lg text-on-surface">Temulawak</h4>
+<p class="font-body-md text-body-md text-secondary">Curcuma zanthorrhiza</p>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="flex items-center gap-md p-md bg-white border border-outline-variant rounded-xl hover:bg-primary-container/10 transition-colors text-left group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A detailed botanical illustration of Daun Kelor leaves, featuring delicate small leaflets arranged symmetrically. The image is bright and clean with a high-key lighting setup that emphasizes the vibrant green hues against a pristine white background. The overall aesthetic is minimalist and modern, fitting for a professional medicinal herbarium database." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsbdwuhSJr3MSL3sWWHi1RDhIoggCKz7QuanfQIxAJVknfvradFZod5d7mnG9_r3pqBV7TC0TeIHmLwAWN_JkHa9xxoRL7G6zt_t1L1bFfR2tc9sCzYMmFx1ToetOq3i-tZGyUYP4oJGJW18NwUu1qjevTIIy5mm5Xvu73DzOAcVZrwXgJlVoFEgUbvmxZLa7amqNdm0P87WtAdsNNnZPQ6hP6E8NLXjm31KBCxKjZP565wXb3je4bc7mmMNKsW_6YV0iPK4T5oMk"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-lg text-label-lg text-on-surface">Daun Kelor</h4>
+<p class="font-body-md text-body-md text-secondary">Moringa oleifera</p>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="flex items-center gap-md p-md bg-white border border-outline-variant rounded-xl hover:bg-primary-container/10 transition-colors text-left group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">menu_book</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-label-lg text-label-lg text-on-surface">Ramuan Pelancar ASI</h4>
+<p class="font-body-md text-body-md text-secondary">Resep Tradisional</p>
+</div>
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Bottom Input Bar (Simulating Active Interaction) -->
+<footer class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant/30 px-container-margin py-md flex items-center gap-md shadow-lg z-50">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-secondary hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<div class="flex-grow relative">
+<input class="w-full bg-surface-container rounded-full px-md py-2 text-body-md font-body-md border-none focus:ring-1 focus:ring-primary outline-none" placeholder="Ketik pesan..." type="text"/>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</footer>
+<script>
+        // Simple micro-interaction for input
+        const mainInput = document.querySelector('input[type="text"]');
+        mainInput.addEventListener('focus', () => {
+            // Contextual animation or state change could go here
+        });
+
+        // Toggle focus state for better UX
+        const searchInput = document.querySelectorAll('input')[0];
+        searchInput.focus();
+    </script>
+</body></html>

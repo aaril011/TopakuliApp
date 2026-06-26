@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,16 @@ class AdminAddResepFragment : Fragment() {
     
     private var selectedTanamanIds = mutableListOf<String>()
     private var listTanaman: List<TanamanObatEntity> = emptyList()
+    private var mainImageUri: android.net.Uri? = null
+
+    private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            mainImageUri = it
+            binding.layoutPlaceholder.visibility = View.GONE
+            binding.ivPreview.visibility = View.VISIBLE
+            Glide.with(this).load(it).into(binding.ivPreview)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -153,7 +165,7 @@ class AdminAddResepFragment : Fragment() {
         }
 
         binding.btnPickImage.setOnClickListener {
-            Toast.makeText(requireContext(), "Fitur upload gambar akan segera hadir", Toast.LENGTH_SHORT).show()
+            pickImage.launch("image/*")
         }
 
         binding.btnSelectTanaman.setOnClickListener {
@@ -181,10 +193,39 @@ class AdminAddResepFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val repo = (requireActivity().application as TopakuliApplication).repository
+            val app = (requireActivity().application as TopakuliApplication)
+            val repo = app.repository
+            
+            Toast.makeText(requireContext(), "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
+
             var existingResep: ResepEntity? = null
             if (resepId != null) {
                 existingResep = withContext(Dispatchers.IO) { repo.getResepById(resepId!!) }
+            }
+
+            // Upload image to Supabase if changed
+            var finalImageUrl: String? = null
+            if (mainImageUri != null) {
+                // Delete old image if exists
+                if (resepId != null) {
+                    existingResep?.imageUrl?.let { oldUrl ->
+                        if (oldUrl.contains("supabase")) {
+                            repo.deleteImage(oldUrl, "resep")
+                        }
+                    }
+                }
+
+                finalImageUrl = repo.uploadImage(mainImageUri!!, "resep")
+                if (finalImageUrl == null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "Gagal mengunggah gambar ke Supabase. Periksa koneksi atau pengaturan bucket 'resep'", Toast.LENGTH_LONG).show()
+                    }
+                    // Jika upload gagal, kita batalkan simpan agar data tidak rusak (tanpa gambar)
+                    return@launch
+                }
+                android.util.Log.d("AdminAddResep", "Image uploaded successfully: $finalImageUrl")
+            } else {
+                finalImageUrl = existingResep?.imageUrl
             }
 
             val resep = ResepEntity(
@@ -201,7 +242,7 @@ class AdminAddResepFragment : Fragment() {
                 masaSimpan = simpan,
                 tingkatKesulitan = kesulitan.ifEmpty { "Menengah" },
                 tanamanIds = selectedTanamanIds.joinToString(","),
-                imageUrl = existingResep?.imageUrl, // Keep image if existing
+                imageUrl = finalImageUrl,
                 catatan = catatan,
                 isSaved = existingResep?.isSaved ?: false,
                 lastReadAt = existingResep?.lastReadAt,

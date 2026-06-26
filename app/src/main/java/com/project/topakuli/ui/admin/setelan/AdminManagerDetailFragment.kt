@@ -99,6 +99,17 @@ class AdminManagerDetailFragment : Fragment() {
 
     private fun performDelete() {
         managerUid?.let { uid ->
+            val currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+            if (uid == currentUser?.uid) {
+                Toast.makeText(requireContext(), "Anda tidak dapat menghapus akun sendiri", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (managerEmail == "topakulipro@gmail.com") {
+                Toast.makeText(requireContext(), "Akun administrator utama tidak dapat dihapus", Toast.LENGTH_SHORT).show()
+                return
+            }
+
             firestore.collection("admins").document(uid).delete()
                 .addOnSuccessListener {
                     Toast.makeText(requireContext(), "Pengelola berhasil dihapus", Toast.LENGTH_SHORT).show()

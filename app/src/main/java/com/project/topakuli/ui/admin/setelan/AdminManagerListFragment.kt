@@ -53,8 +53,9 @@ class AdminManagerListFragment : Fragment() {
 
     private fun loadManagers() {
         binding.progressBar.visibility = View.VISIBLE
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        
         firestore.collection("admins")
-            .whereEqualTo("role", "Pengelola")
             .addSnapshotListener { snapshot, e ->
                 if (isAdded) {
                     binding.progressBar.visibility = View.GONE
@@ -65,14 +66,21 @@ class AdminManagerListFragment : Fragment() {
                     }
                     
                     val managers = snapshot?.documents?.mapNotNull { doc ->
+                        val email = doc.getString("email") ?: ""
+                        
+                        // Sembunyikan diri sendiri dari daftar
+                        if (doc.id == currentUserUid) return@mapNotNull null
+                        
+                        // Sembunyikan akun admin utama (topakulipro) agar tidak bisa dihapus siapapun
+                        if (email == "topakulipro@gmail.com") return@mapNotNull null
+
                         ManagerModel(
                             uid = doc.id,
                             name = doc.getString("name") ?: "",
-                            email = doc.getString("email") ?: "",
+                            email = email,
                             phoneNumber = doc.getString("phoneNumber") ?: ""
                         )
                     }?.sortedByDescending { manager -> 
-                        // Sorting locally using the snapshot to get the timestamp
                         snapshot.documents.find { it.id == manager.uid }?.getLong("createdAt") ?: 0L
                     } ?: emptyList()
                     

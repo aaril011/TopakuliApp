@@ -61,6 +61,13 @@ class MainActivity : AppCompatActivity() {
         val firestore = FirebaseFirestore.getInstance()
         val prefs = getSharedPreferences("topakuli_notif_prefs", MODE_PRIVATE)
         
+        // Cek apakah notifikasi diaktifkan oleh user
+        val isEnabled = prefs.getBoolean("notifications_enabled", true)
+        if (!isEnabled) {
+            android.util.Log.d("NotificationListener", "Notifications are disabled by user")
+            return
+        }
+
         // Use a 5-minute buffer for the first check to catch notifications sent just before opening
         val defaultTime = System.currentTimeMillis() - (5 * 60 * 1000)
         var lastCheckTime = prefs.getLong("last_notif_timestamp", defaultTime)

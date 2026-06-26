@@ -15,6 +15,16 @@ class NotifikasiViewModel(private val repository: TopakuliRepository) : ViewMode
     fun syncNotifications() {
         viewModelScope.launch {
             repository.syncNotifications()
+            cleanupOldNotifications()
+        }
+    }
+
+    private fun cleanupOldNotifications() {
+        viewModelScope.launch {
+            // Threshold: 30 hari yang lalu
+            val thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000
+            val threshold = System.currentTimeMillis() - thirtyDaysMillis
+            repository.deleteOldNotifications(threshold)
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.project.topakuli.data.local.entity.ResepEntity
 import com.project.topakuli.data.local.entity.TanamanObatEntity
 import com.project.topakuli.data.repository.TopakuliRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -44,6 +45,7 @@ class BerandaViewModel(private val repository: TopakuliRepository) : ViewModel()
                 repository.syncResep()
                 android.util.Log.d("TopakuliSync", "Sinkronisasi selesai")
             } catch (e: Exception) {
+                if (e is CancellationException) throw e
                 android.util.Log.e("TopakuliSync", "Error saat sinkronisasi: ${e.message}")
             }
         }

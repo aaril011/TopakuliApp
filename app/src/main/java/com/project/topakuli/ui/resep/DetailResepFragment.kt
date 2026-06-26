@@ -84,11 +84,29 @@ class DetailResepFragment : Fragment() {
                         .placeholder(R.drawable.intro_1)
                         .into(ivDetailResep)
 
+                    ivDetailResep.setOnClickListener {
+                        data.imageUrl?.let { showImagePreview(it) }
+                    }
+
                     updateFavoriteIcon(data.isSaved)
                     ivSaveDetail.setOnClickListener {
                         viewModel.toggleSave(data)
                         data.isSaved = !data.isSaved
                         updateFavoriteIcon(data.isSaved)
+                    }
+
+                    ivShareResep.setOnClickListener {
+                        val shareText = "Resep Obat Herbal: ${data.judul}\n\n" +
+                                "Bahan-bahan:\n${data.bahan}\n\n" +
+                                "Cara Pembuatan:\n${data.caraPembuatan}\n\n" +
+                                "Dapatkan resep herbal lainnya di aplikasi Topakuli!"
+                        
+                        val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(android.content.Intent.EXTRA_SUBJECT, "Resep Herbal: ${data.judul}")
+                            putExtra(android.content.Intent.EXTRA_TEXT, shareText)
+                        }
+                        startActivity(android.content.Intent.createChooser(intent, "Bagikan via"))
                     }
 
                     // Setup Tags
@@ -127,6 +145,21 @@ class DetailResepFragment : Fragment() {
         binding.ivSaveDetail.setImageResource(
             if (isSaved) R.drawable.ic_bookmark else R.drawable.ic_bookmark_border
         )
+    }
+
+    private fun showImagePreview(imageUrl: String) {
+        val dialog = android.app.Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_image_preview)
+        
+        val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
+        val btnClose = dialog.findViewById<View>(R.id.btn_close)
+        
+        Glide.with(this).load(imageUrl).into(imageView)
+        
+        // Tap gambar atau tombol close untuk menutup
+        imageView.setOnClickListener { dialog.dismiss() }
+        btnClose.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     private fun setupManfaatTags(manfaat: String) {

@@ -28,7 +28,10 @@ class NotificationAdapter : ListAdapter<NotificationEntity, NotificationAdapter.
         fun bind(item: NotificationEntity) {
             binding.tvNotifTitle.text = item.title
             binding.tvNotifDesc.text = item.content
-            binding.tvNotifTime.text = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(item.timestamp)
+            
+            val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+            binding.tvNotifTime.text = sdf.format(item.timestamp)
+
             binding.unreadDot.visibility = if (item.isRead) View.GONE else View.VISIBLE
 
             // Set icon and color based on type context

@@ -454,6 +454,11 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Extra spacing for small screens to avoid being covered by navbar -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

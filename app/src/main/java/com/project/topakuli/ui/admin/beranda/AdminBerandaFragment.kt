@@ -51,7 +51,7 @@ class AdminBerandaFragment : Fragment() {
         firestore.collection("admins").document(uid).get()
             .addOnSuccessListener { doc ->
                 if (isAdded) {
-                    val name = doc.getString("name") ?: "Admin"
+                    val name = if (doc.exists()) doc.getString("name") ?: "Admin" else "Admin"
                     binding.tvAdminRoleName.text = name
                     
                     // Set avatar initial from name (e.g., "Abdin Mujid" -> "AM")
@@ -89,9 +89,9 @@ class AdminBerandaFragment : Fragment() {
             summarySurvei.apply {
                 ivSummaryIcon.setImageResource(R.drawable.basil_edit_outline)
                 ivSummaryIcon.imageTintList = ContextCompat.getColorStateList(requireContext(), R.color.admin_orange)
-                tvSummaryValue.text = "5"
-                tvSummaryTitle.text = "Masukan"
-                tvSummaryTrend.text = "Perlu tindakan"
+                tvSummaryValue.text = "-"
+                tvSummaryTitle.text = "Daftar Masukan"
+                tvSummaryTrend.text = "Perlu ditinjau"
                 tvSummaryTrend.setTextColor(ContextCompat.getColor(requireContext(), R.color.admin_orange))
             }
             
@@ -180,6 +180,10 @@ class AdminBerandaFragment : Fragment() {
             findNavController().navigate(R.id.admin_navigation_help)
         }
         
+        binding.menuLaporan.root.setOnClickListener {
+            findNavController().navigate(R.id.action_admin_navigation_beranda_to_adminLaporanFragment)
+        }
+        
         binding.tvLihatSemuaActivity.setOnClickListener {
             findNavController().navigate(R.id.action_admin_navigation_beranda_to_adminActivityListFragment)
         }
@@ -215,8 +219,8 @@ class AdminBerandaFragment : Fragment() {
                 launch {
                     viewModel.masukanSummary.collect { data ->
                         binding.summarySurvei.apply {
-                            tvSummaryValue.text = data.total.toString()
-                            tvSummaryTrend.text = if (data.thisMonth > 0) "${data.thisMonth} belum dibaca" else "Semua dibaca"
+                            tvSummaryValue.text = data.total.toString() // Angka besar: TOTAL masukan
+                            tvSummaryTrend.text = if (data.thisMonth > 0) "${data.thisMonth} belum dibaca" else "Semua sudah dibaca"
                             tvSummaryTrend.setTextColor(if (data.thisMonth > 0) ContextCompat.getColor(requireContext(), R.color.admin_red) else ContextCompat.getColor(requireContext(), R.color.admin_orange))
                         }
                     }

@@ -51,7 +51,7 @@
                 android:layout_marginStart="16dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@id/card_avatar"
-                app:layout_constraintEnd_toStartOf="@+id/btn_notification"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/card_avatar"
                 app:layout_constraintTop_toTopOf="@id/card_avatar">
 
@@ -72,26 +72,6 @@
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btn_notification"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                app:cardBackgroundColor="#26FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeWidth="0dp">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="12dp"
-                    android:src="@drawable/notification"
-                    app:tint="@color/white" />
-            </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -300,6 +280,11 @@
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <!-- Extra spacing for small screens to avoid being covered by navbar -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
 
             </LinearLayout>
         </LinearLayout>

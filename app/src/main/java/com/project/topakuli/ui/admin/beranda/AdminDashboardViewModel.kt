@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.project.topakuli.data.remote.model.ContributionForm
+
 class AdminDashboardViewModel(private val repository: TopakuliRepository) : ViewModel() {
 
     private val _tanamanSearchQuery = MutableStateFlow("")
@@ -74,6 +77,7 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
     }
 
     private var isSynced = false
+    private var contributionsListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     fun syncData() {
         if (isSynced) return
@@ -84,21 +88,34 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
                 fetchAdminStats()
                 fetchVisitorStats()
                 fetchRecentActivities()
-                fetchMasukanStats()
+                startContributionsListener()
                 isSynced = true
             } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) throw e
                 e.printStackTrace()
             }
         }
     }
 
-    private fun fetchMasukanStats() {
-        viewModelScope.launch {
-            val contributions = repository.getUserContributions()
-            val total = contributions.size
-            val unread = contributions.count { !it.isReadByAdmin }
-            _masukanSummary.value = SummaryData(total, unread)
-        }
+    private fun startContributionsListener() {
+        contributionsListener?.remove()
+        val firestore = FirebaseFirestore.getInstance()
+        contributionsListener = firestore.collection("user_contributions")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot == null) return@addSnapshotListener
+                
+                val total = snapshot.size()
+                // Hitung manual untuk keakuratan (terutama data lama yang belum punya field isReadByAdmin)
+                val unread = snapshot.documents.count { doc ->
+                    !(doc.getBoolean("isReadByAdmin") ?: false)
+                }
+                _masukanSummary.value = SummaryData(total, unread)
+            }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        contributionsListener?.remove()
     }
 
     fun fetchAdminStats() {

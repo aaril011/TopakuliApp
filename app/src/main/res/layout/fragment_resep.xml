@@ -94,6 +94,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingTop="8dp"
+        android:paddingBottom="80dp"
         android:clipToPadding="false"
         android:clipChildren="false"
         app:layout_constraintBottom_toBottomOf="parent"

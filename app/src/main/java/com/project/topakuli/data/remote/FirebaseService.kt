@@ -4,12 +4,11 @@ import android.net.Uri
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.project.topakuli.data.local.entity.ActivityLog
-import com.project.topakuli.data.local.entity.ChatMessage
 import com.project.topakuli.data.local.entity.NotificationEntity
 import com.project.topakuli.data.local.entity.ResepEntity
 import com.project.topakuli.data.local.entity.TanamanImageEntity
 import com.project.topakuli.data.local.entity.TanamanObatEntity
-import com.project.topakuli.data.local.entity.UserContribution
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
 class FirebaseService {
@@ -34,6 +33,7 @@ class FirebaseService {
                 )
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             emptyList()
         }
     }
@@ -42,6 +42,7 @@ class FirebaseService {
         try {
             firestore.collection("public_notifications").document(notif.id).set(notif).await()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             e.printStackTrace()
         }
     }
@@ -65,6 +66,7 @@ class FirebaseService {
                 )
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             emptyList()
         }
     }
@@ -73,6 +75,7 @@ class FirebaseService {
         try {
             firestore.collection("activity_logs").add(log).await()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             e.printStackTrace()
         }
     }
@@ -81,6 +84,7 @@ class FirebaseService {
         try {
             firestore.collection("activity_logs").document(id).delete().await()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             e.printStackTrace()
         }
     }
@@ -112,6 +116,7 @@ class FirebaseService {
             android.util.Log.d("FirebaseService", "Total tanaman berhasil di-map: ${list.size}")
             list
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             android.util.Log.e("FirebaseService", "Error getTanamanList: ${e.message}")
             emptyList()
         }
@@ -130,6 +135,7 @@ class FirebaseService {
                 )
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             emptyList()
         }
     }
@@ -171,6 +177,7 @@ class FirebaseService {
             android.util.Log.d("FirebaseService", "Total resep berhasil di-map: ${list.size}")
             list
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             android.util.Log.e("FirebaseService", "Error getResepList: ${e.message}")
             emptyList()
         }
@@ -183,6 +190,16 @@ class FirebaseService {
     suspend fun saveTanamanImage(image: TanamanImageEntity) {
         firestore.collection("tanaman_obat").document(image.tanamanId)
             .collection("images").document(image.id).set(image).await()
+    }
+
+    suspend fun deleteTanamanImage(tanamanId: String, imageId: String) {
+        try {
+            firestore.collection("tanaman_obat").document(tanamanId)
+                .collection("images").document(imageId).delete().await()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            e.printStackTrace()
+        }
     }
 
     suspend fun deleteTanaman(id: String) {
@@ -204,6 +221,7 @@ class FirebaseService {
             ref.putFile(imageUri).await()
             ref.downloadUrl.await().toString()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             null
         }
     }
@@ -216,6 +234,7 @@ class FirebaseService {
             )
             firestore.collection("admins").document(uid).set(data, com.google.firebase.firestore.SetOptions.merge()).await()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             e.printStackTrace()
         }
     }
@@ -234,6 +253,7 @@ class FirebaseService {
             
             Pair(total, online)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Pair(0, 0)
         }
     }
@@ -246,6 +266,7 @@ class FirebaseService {
                 .update(field, com.google.firebase.firestore.FieldValue.increment(1))
                 .await()
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             // Document might not exist, create it
             val data = if (origin == "Desa Pakuli") mapOf("pakuli" to 1, "outside" to 0) 
                        else mapOf("pakuli" to 0, "outside" to 1)
@@ -260,72 +281,18 @@ class FirebaseService {
             val outside = doc.getLong("outside")?.toInt() ?: 0
             Pair(pakuli, outside)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Pair(0, 0)
         }
     }
 
-    // Masukan & Chat Management
-    suspend fun getUserContributions(): List<UserContribution> {
+    suspend fun getAllContributions(): List<com.project.topakuli.data.remote.model.ContributionForm> {
         return try {
-            val snapshot = firestore.collection("contributions").get().await()
-            snapshot.documents.mapNotNull { doc ->
-                UserContribution(
-                    id = doc.id,
-                    userId = doc.getString("userId") ?: "",
-                    userName = doc.getString("userName") ?: "Pengguna Anonim",
-                    userEmail = doc.getString("userEmail") ?: "",
-                    userPhone = doc.getString("userPhone") ?: "",
-                    lastMessage = doc.getString("lastMessage") ?: "",
-                    timestamp = doc.getLong("timestamp") ?: 0L,
-                    isReadByAdmin = doc.getBoolean("isReadByAdmin") ?: false
-                )
-            }.sortedByDescending { it.timestamp }
+            val snapshot = firestore.collection("user_contributions").get().await()
+            snapshot.documents.mapNotNull { it.toObject(com.project.topakuli.data.remote.model.ContributionForm::class.java) }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             emptyList()
-        }
-    }
-
-    suspend fun getChatMessages(contributionId: String): List<ChatMessage> {
-        return try {
-            val snapshot = firestore.collection("contributions").document(contributionId)
-                .collection("messages")
-                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.ASCENDING)
-                .get().await()
-            snapshot.documents.mapNotNull { doc ->
-                ChatMessage(
-                    id = doc.id,
-                    senderId = doc.getString("senderId") ?: "",
-                    senderName = doc.getString("senderName") ?: "",
-                    message = doc.getString("message") ?: "",
-                    timestamp = doc.getLong("timestamp") ?: 0L,
-                    senderType = doc.getString("senderType") ?: "user"
-                )
-            }
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
-
-    suspend fun sendChatMessage(contributionId: String, message: ChatMessage) {
-        try {
-            android.util.Log.d("FirebaseService", "Sending message to contribution: $contributionId")
-            val batch = firestore.batch()
-            val msgRef = firestore.collection("contributions").document(contributionId)
-                .collection("messages").document()
-            batch.set(msgRef, message)
-            
-            val contribRef = firestore.collection("contributions").document(contributionId)
-            batch.update(contribRef, mapOf(
-                "lastMessage" to message.message,
-                "timestamp" to message.timestamp,
-                "isReadByAdmin" to (message.senderType == "admin")
-            ))
-            
-            batch.commit().await()
-            android.util.Log.d("FirebaseService", "Batch commit successful for contribution: $contributionId")
-        } catch (e: Exception) {
-            android.util.Log.e("FirebaseService", "Error sending chat message", e)
-            throw e
         }
     }
 }

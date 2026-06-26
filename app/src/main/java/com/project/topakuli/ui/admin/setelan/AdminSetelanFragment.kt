@@ -48,6 +48,10 @@ class AdminSetelanFragment : Fragment() {
             findNavController().navigate(R.id.admin_navigation_help)
         }
 
+        binding.btnLaporan.setOnClickListener {
+            findNavController().navigate(R.id.action_admin_setelan_to_laporan)
+        }
+
         binding.btnTentangApp.setOnClickListener {
             findNavController().navigate(R.id.action_admin_setelan_to_tentang)
         }
@@ -246,23 +250,43 @@ class AdminSetelanFragment : Fragment() {
         firestore.collection("admins").document(uid).get()
             .addOnSuccessListener { doc ->
                 if (isAdded) {
-                    val name = doc.getString("name") ?: "Admin"
-                    currentPhoneNumber = doc.getString("phoneNumber") ?: ""
-                    val role = if (email == "aaril0768@gmail.com") "Administrator" else (doc.getString("role") ?: "Pengelola")
-                    
-                    if (role == "Administrator") {
-                        binding.btnDaftarPengelola.visibility = View.VISIBLE
+                    if (doc.exists()) {
+                        val name = doc.getString("name") ?: "Admin"
+                        currentPhoneNumber = doc.getString("phoneNumber") ?: ""
+                        
+                        // Enforce strictly: Only topakulipro is Administrator
+                        val role = if (email == "topakulipro@gmail.com") "Administrator" else "Pengelola"
+                        
+                        if (role == "Administrator") {
+                            binding.btnDaftarPengelola.visibility = View.VISIBLE
+                            binding.tvLabelAkun.visibility = View.VISIBLE
+                        } else {
+                            binding.btnDaftarPengelola.visibility = View.GONE
+                            binding.tvLabelAkun.visibility = View.GONE
+                        }
+                        binding.tvAdminName.text = name
+                        binding.tvAdminEmailRole.text = "${email.substringBefore("@")} - $role"
+                        
+                        val initials = name.split(" ")
+                            .filter { it.isNotBlank() }
+                            .take(2)
+                            .map { it[0].uppercase() }
+                            .joinToString("")
+                        binding.tvAdminInitial.text = if (initials.isNotEmpty()) initials else "AD"
                     } else {
+                        // Document doesn't exist, use fallback
+                        binding.tvAdminName.text = "Admin"
+                        binding.tvAdminEmailRole.text = email
+                        binding.tvAdminInitial.text = "AD"
                         binding.btnDaftarPengelola.visibility = View.GONE
                     }
-                    binding.tvAdminEmailRole.text = "${email.substringBefore("@")} - $role"
-                    
-                    val initials = name.split(" ")
-                        .filter { it.isNotBlank() }
-                        .take(2)
-                        .map { it[0].uppercase() }
-                        .joinToString("")
-                    binding.tvAdminInitial.text = if (initials.isNotEmpty()) initials else "AD"
+                }
+            }
+            .addOnFailureListener {
+                if (isAdded) {
+                    binding.tvAdminName.text = "Admin"
+                    binding.tvAdminEmailRole.text = email
+                    binding.tvAdminInitial.text = "AD"
                 }
             }
     }

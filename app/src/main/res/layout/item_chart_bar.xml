@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="4dp">
+
+    <!-- Area Batang Grafik -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="bottom|center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_bar_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="0"
+            android:textColor="#374151"
+            android:textSize="10sp" />
+
+        <View
+            android:id="@+id/view_bar"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@drawable/bg_version_pill"
+            android:backgroundTint="@color/hijau_topakuli" />
+    </LinearLayout>
+
+    <!-- Area Label (Tetap di bawah, tidak akan tergeser) -->
+    <TextView
+        android:id="@+id/tv_month_label"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Label"
+        android:textColor="#9CA3AF"
+        android:textSize="10sp" />
+
+</LinearLayout>

@@ -6,25 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.project.topakuli.R
-import com.project.topakuli.TopakuliApplication
-import com.project.topakuli.databinding.FragmentAdminMasukanListBinding
-import com.project.topakuli.ui.admin.beranda.AdminDashboardViewModel
-import kotlinx.coroutines.launch
-
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.project.topakuli.data.local.entity.UserContribution
+import com.google.firebase.firestore.ListenerRegistration
+import com.project.topakuli.data.remote.model.ContributionForm
+import com.project.topakuli.databinding.FragmentAdminMasukanListBinding
 
 class AdminMasukanListFragment : Fragment() {
 
     private var _binding: FragmentAdminMasukanListBinding? = null
     private val binding get() = _binding!!
-    private var listenerRegistration: com.google.firebase.firestore.ListenerRegistration? = null
+    
+    private var firestoreListener: ListenerRegistration? = null
+    private lateinit var contributionAdapter: AdminContributionAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAdminMasukanListBinding.inflate(inflater, container, false)
@@ -34,66 +31,66 @@ class AdminMasukanListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-        setupRealtimeListener()
+        setupListeners()
     }
 
     private fun setupUI() {
-        val adapter = AdminMasukanAdapter { contribution ->
+        contributionAdapter = AdminContributionAdapter { contribution ->
             val bundle = Bundle().apply {
                 putString("CONTRIBUTION_ID", contribution.id)
-                putString("USER_NAME", contribution.userName)
+                putString("CONTRIBUTION_TYPE", contribution.type)
             }
-            findNavController().navigate(R.id.action_adminMasukanListFragment_to_adminMasukanChatFragment, bundle)
+            findNavController().navigate(R.id.action_adminMasukanListFragment_to_adminContributionDetailFragment, bundle)
         }
 
         binding.rvMasukan.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = adapter
+            adapter = contributionAdapter
         }
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                setupListeners() // Reload data for the selected tab
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
     }
 
-    private fun setupRealtimeListener() {
+    private fun setupListeners() {
+        // Remove existing listener if any
+        firestoreListener?.remove()
+
         val firestore = FirebaseFirestore.getInstance()
-        listenerRegistration = firestore.collection("contributions")
+        val filterType = when (binding.tabLayout.selectedTabPosition) {
+            0 -> "resep"
+            1 -> "tanaman"
+            2 -> "koreksi"
+            else -> "resep"
+        }
+
+        firestoreListener = firestore.collection("user_contributions")
+            .whereEqualTo("type", filterType)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    android.util.Log.e("AdminMasukanList", "Firestore error: ${e.message}", e)
-                    if (isAdded) {
-                        Toast.makeText(requireContext(), "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-                    }
+                    if (isAdded) Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                     return@addSnapshotListener
                 }
-                
-                if (snapshot == null) return@addSnapshotListener
-                
-                android.util.Log.d("AdminMasukanList", "Fetched ${snapshot.size()} contribution documents")
-                
-                val contributions = snapshot.documents.mapNotNull { doc ->
+
+                val contributions = snapshot?.documents?.mapNotNull { doc ->
                     try {
-                        UserContribution(
-                            id = doc.id,
-                            userId = doc.getString("userId") ?: "",
-                            userName = doc.getString("userName") ?: "Pengguna Anonim",
-                            userEmail = doc.getString("userEmail") ?: "",
-                            userPhone = doc.getString("userPhone") ?: "",
-                            lastMessage = doc.getString("lastMessage") ?: "Pesan baru",
-                            timestamp = doc.getLong("timestamp") ?: 0L,
-                            isReadByAdmin = doc.getBoolean("isReadByAdmin") ?: false
-                        )
-                    } catch (ex: Exception) {
-                        android.util.Log.e("AdminMasukanList", "Mapping error for doc ${doc.id}", ex)
-                        null
-                    }
-                }.sortedByDescending { it.timestamp }
-                
-                (binding.rvMasukan.adapter as AdminMasukanAdapter).submitList(contributions)
+                        doc.toObject(ContributionForm::class.java)?.copy(id = doc.id)
+                    } catch (ex: Exception) { null }
+                }?.sortedByDescending { it.timestamp } ?: emptyList()
+
+                contributionAdapter.submitList(contributions)
                 binding.tvEmpty.visibility = if (contributions.isEmpty()) View.VISIBLE else View.GONE
             }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        listenerRegistration?.remove()
+        firestoreListener?.remove()
         _binding = null
     }
 }

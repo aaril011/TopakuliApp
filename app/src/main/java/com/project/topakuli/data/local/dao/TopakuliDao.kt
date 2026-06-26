@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.project.topakuli.data.local.entity.HistoryEntity
-import com.project.topakuli.data.local.entity.ChatEntity
 import com.project.topakuli.data.local.entity.NotificationEntity
 import com.project.topakuli.data.local.entity.ResepEntity
 import com.project.topakuli.data.local.entity.TanamanImageEntity
@@ -33,21 +32,8 @@ interface TopakuliDao {
     @Query("SELECT id FROM notifications")
     suspend fun getAllNotificationIds(): List<String>
 
-    // Chats
-    @Query("SELECT * FROM chats ORDER BY timestamp ASC")
-    fun getAllChats(): kotlinx.coroutines.flow.Flow<List<ChatEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertChat(chat: ChatEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertChats(chats: List<ChatEntity>)
-
-    @Query("DELETE FROM chats")
-    suspend fun clearAllChats()
-
-    @Query("DELETE FROM chats WHERE type = :type")
-    suspend fun deleteChatByType(type: String)
+    @Query("DELETE FROM notifications WHERE timestamp < :threshold")
+    suspend fun deleteOldNotifications(threshold: Long)
 
     // History Identifikasi
     @Query("SELECT * FROM identifikasi_history ORDER BY timestamp DESC")

@@ -13,7 +13,16 @@
         <action
             android:id="@+id/action_admin_navigation_beranda_to_adminActivityListFragment"
             app:destination="@id/adminActivityListFragment" />
+        <action
+            android:id="@+id/action_admin_navigation_beranda_to_adminLaporanFragment"
+            app:destination="@id/adminLaporanFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/adminLaporanFragment"
+        android:name="com.project.topakuli.ui.admin.beranda.AdminLaporanFragment"
+        android:label="Laporan Tahunan"
+        tools:layout="@layout/fragment_admin_laporan" />
 
     <fragment
         android:id="@+id/adminActivityListFragment"
@@ -39,20 +48,20 @@
         android:label="Masukan"
         tools:layout="@layout/fragment_admin_masukan_list">
         <action
-            android:id="@+id/action_adminMasukanListFragment_to_adminMasukanChatFragment"
-            app:destination="@id/adminMasukanChatFragment" />
+            android:id="@+id/action_adminMasukanListFragment_to_adminContributionDetailFragment"
+            app:destination="@id/adminContributionDetailFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/adminMasukanChatFragment"
-        android:name="com.project.topakuli.ui.admin.common.AdminMasukanChatFragment"
-        android:label="Detail Masukan"
-        tools:layout="@layout/fragment_admin_masukan_chat">
+        android:id="@+id/adminContributionDetailFragment"
+        android:name="com.project.topakuli.ui.admin.common.AdminContributionDetailFragment"
+        android:label="Detail Ajuan"
+        tools:layout="@layout/fragment_admin_contribution_detail">
         <argument
             android:name="CONTRIBUTION_ID"
             app:argType="string" />
         <argument
-            android:name="USER_NAME"
+            android:name="CONTRIBUTION_TYPE"
             app:argType="string" />
     </fragment>
 
@@ -67,6 +76,9 @@
         <action
             android:id="@+id/action_admin_setelan_to_manager_list"
             app:destination="@id/admin_manager_list" />
+        <action
+            android:id="@+id/action_admin_setelan_to_laporan"
+            app:destination="@id/adminLaporanFragment" />
     </fragment>
 
     <fragment

@@ -98,9 +98,28 @@ class AdminDetailResepFragment : Fragment() {
                         .load(resep.imageUrl)
                         .placeholder(R.drawable.intro_1)
                         .into(ivResepMain)
+
+                    ivResepMain.setOnClickListener {
+                        resep.imageUrl?.let { showImagePreview(it) }
+                    }
                 }
             }
         }
+    }
+
+    private fun showImagePreview(imageUrl: String) {
+        val dialog = android.app.Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_image_preview)
+        
+        val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
+        val btnClose = dialog.findViewById<View>(R.id.btn_close)
+        
+        Glide.with(this).load(imageUrl).into(imageView)
+        
+        // Tap gambar atau tombol close untuk menutup
+        imageView.setOnClickListener { dialog.dismiss() }
+        btnClose.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     inner class RelatedTanamanAdapter(

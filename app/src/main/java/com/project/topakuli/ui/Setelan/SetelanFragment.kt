@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.materialswitch.MaterialSwitch
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -69,6 +70,28 @@ class SetelanFragment : Fragment() {
         view.findViewById<LinearLayout>(R.id.btn_pengelola).setOnClickListener {
             val intent = Intent(requireContext(), LoginAdminActivity::class.java)
             startActivity(intent)
+        }
+
+        setupNotificationSwitch(view)
+    }
+
+    private fun setupNotificationSwitch(view: View) {
+        val switchNotif = view.findViewById<MaterialSwitch>(R.id.switch_notification)
+        val prefs = requireContext().getSharedPreferences("topakuli_notif_prefs", android.content.Context.MODE_PRIVATE)
+        
+        // Set initial state
+        switchNotif.isChecked = prefs.getBoolean("notifications_enabled", true)
+
+        switchNotif.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("notifications_enabled", isChecked).apply()
+            
+            if (isChecked) {
+                Toast.makeText(requireContext(), "Notifikasi diaktifkan", Toast.LENGTH_SHORT).show()
+                // Restart notification listener in MainActivity if needed, 
+                // but usually it requires app restart or a broadcast
+            } else {
+                Toast.makeText(requireContext(), "Notifikasi dimatikan", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -4,13 +4,21 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.project.topakuli.data.local.dao.TopakuliDao
-import com.project.topakuli.data.local.entity.*
+import com.project.topakuli.data.local.entity.ActivityLog
+import com.project.topakuli.data.local.entity.HistoryEntity
+import com.project.topakuli.data.local.entity.NotificationEntity
+import com.project.topakuli.data.local.entity.ResepEntity
+import com.project.topakuli.data.local.entity.TanamanImageEntity
+import com.project.topakuli.data.local.entity.TanamanObatEntity
 import com.project.topakuli.data.remote.FirebaseService
+import com.project.topakuli.data.remote.SupabaseStorageService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class TopakuliRepository(
     private val dao: TopakuliDao,
-    private val firebaseService: FirebaseService
+    private val firebaseService: FirebaseService,
+    private val supabaseStorageService: SupabaseStorageService
 ) {
 
     // Notifications
@@ -33,24 +41,13 @@ class TopakuliRepository(
         firebaseService.postPublicNotification(notif)
     }
 
-    // Chats
-    val allChats: Flow<List<ChatEntity>> = dao.getAllChats()
-    
-    suspend fun insertChat(chat: ChatEntity) {
-        dao.insertChat(chat)
-    }
-    
-    suspend fun clearAllChats() {
-        dao.clearAllChats()
-    }
-
-    suspend fun deleteChatByType(type: String) {
-        dao.deleteChatByType(type)
+    suspend fun deleteOldNotifications(threshold: Long) {
+        dao.deleteOldNotifications(threshold)
     }
 
     // Activity Logs
-    suspend fun getRecentActivities(): List<ActivityLog> {
-        return firebaseService.getRecentActivities()
+    suspend fun getRecentActivities(limit: Long = 50): List<ActivityLog> {
+        return firebaseService.getRecentActivities(limit)
     }
 
     suspend fun logActivity(log: ActivityLog) {
@@ -181,7 +178,27 @@ class TopakuliRepository(
     }
 
     suspend fun deleteTanaman(id: String) {
+        // 1. Get plant data to retrieve image URLs
+        val tanaman = dao.getTanamanById(id)
+        
+        // 2. Delete main image from Supabase
+        tanaman?.imageUrl?.let { url ->
+            if (url.contains("supabase")) {
+                deleteImage(url, "tanaman")
+            }
+        }
+
+        // 3. Delete gallery images from Supabase
+        val galleryImages = dao.getImagesByTanamanId(id).first()
+        for (img in galleryImages) {
+            if (img.imageUrl.contains("supabase")) {
+                deleteImage(img.imageUrl, "tanaman")
+            }
+        }
+
+        // 4. Delete from Database and Firebase
         dao.deleteTanamanById(id)
+        dao.deleteImagesByTanamanId(id)
         firebaseService.deleteTanaman(id)
     }
 
@@ -202,6 +219,11 @@ class TopakuliRepository(
         firebaseService.saveTanamanImage(image)
     }
 
+    suspend fun deleteTanamanImageById(tanamanId: String, imageId: String) {
+        dao.deleteImageById(imageId)
+        firebaseService.deleteTanamanImage(tanamanId, imageId)
+    }
+
     suspend fun getResepById(id: String): ResepEntity? {
         return dao.getResepById(id)
     }
@@ -220,8 +242,28 @@ class TopakuliRepository(
     }
 
     suspend fun deleteResep(id: String) {
+        // 1. Get recipe data to retrieve image URL
+        val resep = dao.getResepById(id)
+        
+        // 2. Delete image from Supabase
+        resep?.imageUrl?.let { url ->
+            if (url.contains("supabase")) {
+                deleteImage(url, "resep")
+            }
+        }
+
+        // 3. Delete from Database and Firebase
         dao.deleteResepById(id)
         firebaseService.deleteResep(id)
+    }
+
+    // Hybrid Storage Methods
+    suspend fun uploadImage(imageUri: android.net.Uri, bucket: String): String? {
+        return supabaseStorageService.uploadImage(imageUri, bucket)
+    }
+
+    suspend fun deleteImage(imageUrl: String, bucket: String) {
+        supabaseStorageService.deleteImage(imageUrl, bucket)
     }
 
     suspend fun getAdminStats(): Pair<Int, Int> {
@@ -240,16 +282,7 @@ class TopakuliRepository(
         return firebaseService.getVisitorStats()
     }
 
-    // Masukan & Chat
-    suspend fun getUserContributions(): List<UserContribution> {
-        return firebaseService.getUserContributions()
-    }
-
-    suspend fun getChatMessages(contributionId: String): List<ChatMessage> {
-        return firebaseService.getChatMessages(contributionId)
-    }
-
-    suspend fun sendChatMessage(contributionId: String, message: ChatMessage) {
-        firebaseService.sendChatMessage(contributionId, message)
+    suspend fun getAllContributions(): List<com.project.topakuli.data.remote.model.ContributionForm> {
+        return firebaseService.getAllContributions()
     }
 }

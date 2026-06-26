@@ -14,8 +14,10 @@ import com.bumptech.glide.Glide
 import com.project.topakuli.R
 import com.project.topakuli.TopakuliApplication
 import com.project.topakuli.data.local.entity.ResepEntity
+import com.project.topakuli.data.local.entity.TanamanImageEntity
 import com.project.topakuli.databinding.FragmentDetailTanamanBinding
 import com.project.topakuli.databinding.ItemResepTerkaitSmallBinding
+import com.project.topakuli.databinding.ItemTanamanPhotoThumbnailBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -68,6 +70,24 @@ class DetailTanamanFragment : Fragment() {
                         .load(data.imageUrl)
                         .placeholder(R.drawable.herbal)
                         .into(ivDetailTanaman)
+                    
+                    ivDetailTanaman.setOnClickListener {
+                        data.imageUrl?.let { showImagePreview(it) }
+                    }
+
+                    // Sync & Load Additional Photos
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        repository.syncTanamanImages(id)
+                        repository.getTanamanImages(id).collect { images ->
+                            if (images.isNotEmpty()) {
+                                cardFotoLainnya.visibility = View.VISIBLE
+                                rvFotoLainnya.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                                rvFotoLainnya.adapter = TanamanGalleryAdapter(images)
+                            } else {
+                                cardFotoLainnya.visibility = View.GONE
+                            }
+                        }
+                    }
 
                     ivFavoriteDetail.setImageResource(
                         if (data.isFavorit) R.drawable.ic_heart else R.drawable.ic_heart_border
@@ -99,6 +119,20 @@ class DetailTanamanFragment : Fragment() {
                             if (data.isFavorit) R.drawable.ic_heart else R.drawable.ic_heart_border
                         )
                     }
+
+                    ivShare.setOnClickListener {
+                        val shareText = "Informasi Tanaman Obat: ${data.nama}\n" +
+                                "Nama Latin: ${data.namaLatin}\n\n" +
+                                "Khasiat: ${data.khasiat}\n\n" +
+                                "Dapatkan informasi lebih lengkap di aplikasi Topakuli!"
+                        
+                        val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(android.content.Intent.EXTRA_SUBJECT, "Detail Tanaman ${data.nama}")
+                            putExtra(android.content.Intent.EXTRA_TEXT, shareText)
+                        }
+                        startActivity(android.content.Intent.createChooser(intent, "Bagikan via"))
+                    }
                 }
             }
         }
@@ -128,6 +162,48 @@ class DetailTanamanFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = items.size
+    }
+
+    inner class TanamanGalleryAdapter(
+        private val items: List<TanamanImageEntity>
+    ) : RecyclerView.Adapter<TanamanGalleryAdapter.ViewHolder>() {
+
+        inner class ViewHolder(private val binding: ItemTanamanPhotoThumbnailBinding) : RecyclerView.ViewHolder(binding.root) {
+            fun bind(item: TanamanImageEntity) {
+                Glide.with(itemView.context).load(item.imageUrl).into(binding.ivThumbnail)
+                binding.btnRemove.visibility = View.GONE // Hide remove button in detail view
+                
+                binding.root.setOnClickListener {
+                    showImagePreview(item.imageUrl)
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val binding = ItemTanamanPhotoThumbnailBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind(items[position])
+        }
+
+        override fun getItemCount(): Int = items.size
+    }
+
+    private fun showImagePreview(imageUrl: String) {
+        val dialog = android.app.Dialog(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_image_preview)
+        
+        val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
+        val btnClose = dialog.findViewById<View>(R.id.btn_close)
+        
+        Glide.with(this).load(imageUrl).into(imageView)
+        
+        // Tap gambar atau tombol close untuk menutup
+        imageView.setOnClickListener { dialog.dismiss() }
+        btnClose.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     override fun onDestroyView() {

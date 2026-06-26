@@ -65,6 +65,18 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // Supabase Storage
+    implementation("io.github.jan-tennert.supabase:storage-kt:3.1.1")
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.1")
+    implementation("io.github.jan-tennert.supabase:auth-kt:3.1.1")
+    implementation("io.github.jan-tennert.supabase:realtime-kt:3.1.1")
+
+    // Ktor (Required by Supabase)
+    implementation("io.ktor:ktor-client-android:3.0.1")
+    implementation("io.ktor:ktor-client-core:3.0.1")
+    implementation("io.ktor:ktor-client-content-negotiation:3.0.1")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.1")
+
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

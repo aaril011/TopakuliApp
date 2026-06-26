@@ -38,6 +38,7 @@ class AdminAddTanamanFragment : Fragment() {
 
     private var mainImageUri: Uri? = null
     private lateinit var additionalPhotosAdapter: AdditionalPhotosAdapter
+    private var initialGalleryImages: List<TanamanImageEntity> = emptyList()
 
     private val pickMainImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
@@ -113,8 +114,8 @@ class AdminAddTanamanFragment : Fragment() {
             }
 
             // Load Additional Images
-            val images = repository.getTanamanImages(id).first()
-            val uris = images.map { Uri.parse(it.imageUrl) }
+            initialGalleryImages = repository.getTanamanImages(id).first()
+            val uris = initialGalleryImages.map { Uri.parse(it.imageUrl) }
             additionalPhotosAdapter.setPhotos(uris)
 
             // Load Related Recipes
@@ -184,16 +185,30 @@ class AdminAddTanamanFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val app = (requireActivity().application as TopakuliApplication)
             val repository = app.repository
-            val firebase = app.firebaseService
             
             Toast.makeText(requireContext(), "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
             
             val currentTanamanId = tanamanId ?: UUID.randomUUID().toString()
             var finalMainImageUrl: String? = null
             
-            // 1. Upload Main Image if changed
+            // 1. Upload Main Image to Supabase if changed
             if (mainImageUri != null) {
-                finalMainImageUrl = firebase.uploadImage(mainImageUri!!, "tanaman")
+                // Delete old image if exists
+                if (tanamanId != null) {
+                    val existing = withContext(Dispatchers.IO) { repository.getTanamanById(tanamanId!!) }
+                    existing?.imageUrl?.let { oldUrl ->
+                        if (oldUrl.contains("supabase")) {
+                            repository.deleteImage(oldUrl, "tanaman")
+                        }
+                    }
+                }
+
+                finalMainImageUrl = repository.uploadImage(mainImageUri!!, "tanaman")
+                if (finalMainImageUrl == null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "Gagal mengunggah gambar utama", Toast.LENGTH_LONG).show()
+                    }
+                }
             } else {
                 // Keep old one if editing
                 if (tanamanId != null) {
@@ -216,11 +231,31 @@ class AdminAddTanamanFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 repository.insertTanaman(tanaman)
                 
-                // 2. Upload Additional Images
+                // 2. Handle Additional Images (Gallery)
                 val currentPhotos = additionalPhotosAdapter.getPhotos()
+                val currentPhotoStrings = currentPhotos.map { it.toString() }
+                
+                // A. Delete removed photos from Supabase and Database
+                initialGalleryImages.forEach { oldImg ->
+                    val isStillPresent = currentPhotoStrings.any { 
+                        it.equals(oldImg.imageUrl, ignoreCase = true) || 
+                        it.contains(oldImg.imageUrl.substringAfterLast("/")) 
+                    }
+                    
+                    if (!isStillPresent) {
+                        android.util.Log.d("AdminAddTanaman", "Removing gallery image from storage & DB: ${oldImg.imageUrl}")
+                        // This image was removed by user
+                        if (oldImg.imageUrl.contains("supabase")) {
+                            repository.deleteImage(oldImg.imageUrl, "tanaman")
+                        }
+                        repository.deleteTanamanImageById(currentTanamanId, oldImg.id)
+                    }
+                }
+
+                // B. Upload new photos
                 currentPhotos.forEach { uri ->
                     if (uri.toString().startsWith("content://")) {
-                        val url = firebase.uploadImage(uri, "tanaman_gallery")
+                        val url = repository.uploadImage(uri, "tanaman")
                         if (url != null) {
                             val imgEntity = TanamanImageEntity(
                                 id = UUID.randomUUID().toString(),
@@ -231,6 +266,9 @@ class AdminAddTanamanFragment : Fragment() {
                         }
                     }
                 }
+                
+                // 3. Log the final URL for debugging
+                android.util.Log.d("AdminAddTanaman", "Final saved URL: $finalMainImageUrl")
 
                 // 3. Link this plant to selected recipes
                 listResep.forEach { resep ->

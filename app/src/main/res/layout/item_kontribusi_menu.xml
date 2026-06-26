@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#E5E7EB"
+    app:strokeWidth="1dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/iv_menu_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#ECFDF5"
+            android:padding="8dp"
+            android:src="@drawable/icoon_book"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/hijau_topakuli" />
+
+        <TextView
+            android:id="@+id/tv_menu_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Ajukan resep baru"
+            android:textColor="#374151"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
+            app:layout_constraintStart_toEndOf="@id/iv_menu_icon"
+            app:layout_constraintTop_toTopOf="@id/iv_menu_icon" />
+
+        <TextView
+            android:id="@+id/tv_menu_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Resep ramuan yang belum ada di aplikasi"
+            android:textColor="#6B7280"
+            android:textSize="11sp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
+            app:layout_constraintStart_toStartOf="@id/tv_menu_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu_title" />
+
+        <ImageView
+            android:id="@+id/iv_chevron"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#D1D5DB" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

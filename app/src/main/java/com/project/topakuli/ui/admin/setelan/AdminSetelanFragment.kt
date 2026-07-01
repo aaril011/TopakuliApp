@@ -233,6 +233,10 @@ class AdminSetelanFragment : Fragment() {
         
         btnConfirm.setOnClickListener {
             dialog.dismiss()
+            // Clear admin session
+            requireContext().getSharedPreferences("topakuli_pref", android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("is_admin_logged_in", false).apply()
+
             auth.signOut()
             val intent = Intent(requireContext(), SplashActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

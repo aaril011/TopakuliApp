@@ -8,14 +8,13 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.firestore.FirebaseFirestore
 import com.project.topakuli.R
 import com.project.topakuli.util.NotificationHelper
 
 class MainActivity : AppCompatActivity() {
-
-    private var notificationListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        setupNotifications()
+        subscribeToNotificationTopic()
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navHostFragment = supportFragmentManager
@@ -55,69 +54,40 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Logic to hide BottomNav when keyboard is visible to prevent shaking and "pushed up" look
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
+            val isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val currentDest = navController.currentDestination?.id
+            
+            // Destinations that should always have NavView GONE are handled by listener above
+            val shouldBeVisible = when (currentDest) {
+                R.id.navigation_identifikasi, R.id.petunjukFragment, 
+                R.id.tipsAmanFragment, R.id.tentangFragment, R.id.kontribusiFragment,
+                R.id.detailTanamanFragment, R.id.detailResepFragment,
+                R.id.historyFragment, R.id.historyDetailFragment -> false
+                else -> true
+            }
+
+            if (shouldBeVisible) {
+                navView.visibility = if (isKeyboardVisible) View.GONE else View.VISIBLE
+            }
+            insets
+        }
     }
 
-    private fun setupNotifications() {
-        val firestore = FirebaseFirestore.getInstance()
-        val prefs = getSharedPreferences("topakuli_notif_prefs", MODE_PRIVATE)
-        
-        // Cek apakah notifikasi diaktifkan oleh user
-        val isEnabled = prefs.getBoolean("notifications_enabled", true)
-        if (!isEnabled) {
-            android.util.Log.d("NotificationListener", "Notifications are disabled by user")
-            return
-        }
-
-        // Use a 5-minute buffer for the first check to catch notifications sent just before opening
-        val defaultTime = System.currentTimeMillis() - (5 * 60 * 1000)
-        var lastCheckTime = prefs.getLong("last_notif_timestamp", defaultTime)
-        
-        android.util.Log.d("NotificationListener", "Starting listener from timestamp: $lastCheckTime")
-        
-        notificationListener = firestore.collection("public_notifications")
-            .whereGreaterThan("timestamp", lastCheckTime)
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    android.util.Log.e("NotificationListener", "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-                
-                if (snapshot == null) return@addSnapshotListener
-                
-                android.util.Log.d("NotificationListener", "Received snapshot with ${snapshot.documentChanges.size} changes")
-                
-                if (snapshot.metadata.hasPendingWrites()) return@addSnapshotListener
-
-                var latestTimestamp = lastCheckTime
-
-                snapshot.documentChanges.forEach { diff ->
-                    if (diff.type == com.google.firebase.firestore.DocumentChange.Type.ADDED) {
-                        val title = diff.document.getString("title") ?: "Pemberitahuan Baru"
-                        val content = diff.document.getString("content") ?: ""
-                        val timestamp = diff.document.getLong("timestamp") ?: 0L
-                        
-                        android.util.Log.d("NotificationListener", "Processing notification: $title (ts: $timestamp)")
-                        
-                        if (timestamp > lastCheckTime) {
-                            val uniqueId = diff.document.id.hashCode()
-                            NotificationHelper.showSystemNotification(this, title, content, uniqueId)
-                            
-                            if (timestamp > latestTimestamp) {
-                                latestTimestamp = timestamp
-                            }
-                        }
-                    }
-                }
-                
-                if (latestTimestamp > lastCheckTime) {
-                    lastCheckTime = latestTimestamp
-                    prefs.edit().putLong("last_notif_timestamp", latestTimestamp).apply()
+    private fun subscribeToNotificationTopic() {
+        com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all_users")
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    android.util.Log.e("MainActivity", "Topic subscription failed")
+                } else {
+                    android.util.Log.d("MainActivity", "Subscribed to all_users topic")
                 }
             }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        notificationListener?.remove()
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
     }
 }

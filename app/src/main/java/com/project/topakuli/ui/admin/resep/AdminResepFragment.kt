@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.topakuli.R
 import com.project.topakuli.TopakuliApplication
 import com.project.topakuli.databinding.FragmentAdminResepBinding
@@ -63,7 +63,7 @@ class AdminResepFragment : Fragment() {
             }
         )
         binding.rvResep.apply {
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = this@AdminResepFragment.adapter
         }
     }

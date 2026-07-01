@@ -11,11 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <View
+        android:id="@+id/v_gradient"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:background="@drawable/bg_gradient_bottom"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -23,12 +26,12 @@
         android:id="@+id/header_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#66000000"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
         android:paddingTop="48dp"
         android:paddingBottom="16dp"
-        android:paddingHorizontal="16dp"
-        android:background="#66000000"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -41,13 +44,13 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginHorizontal="16dp"
+            android:layout_weight="1"
             android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
             android:text="Hasil Identifikasi"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:gravity="center" />
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/btn_share"
@@ -58,11 +61,13 @@
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-24dp"
+        app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="32dp"
-        app:cardElevation="8dp"
-        android:layout_marginBottom="-32dp"
+        app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:strokeWidth="0dp">
 
@@ -72,81 +77,141 @@
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingTop="32dp"
-            android:paddingBottom="64dp">
+            android:paddingTop="12dp"
+            android:paddingBottom="48dp">
 
+            <!-- Drag Handle -->
             <View
                 android:layout_width="40dp"
                 android:layout_height="4dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 android:background="#E5E7EB" />
 
+            <!-- Title & Latin -->
             <TextView
                 android:id="@+id/tv_detail_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_bold"
                 android:textColor="#1F2937"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 tools:text="Mayana" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_detail_latin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginTop="-2dp"
+                android:fontFamily="@font/poppins_italic"
+                android:textColor="#6B7280"
+                android:textSize="14sp"
+                tools:text="Coleus scutellarioides" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_accuracy"
-                    app:tint="@color/hijau_topakuli" />
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="16dp"
+                android:background="#F3F4F6" />
 
-                <TextView
-                    android:id="@+id/tv_detail_accuracy"
-                    android:layout_width="wrap_content"
+            <!-- Info Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/hijau_topakuli"
-                    android:textSize="14sp"
-                    tools:text="Akurasi : 98.5%" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="Nama Daerah"
+                        android:textColor="#9CA3AF"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_detail_daerah"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:textColor="#374151"
+                        android:textSize="13sp"
+                        tools:text="Ati-ati" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#F3F4F6" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="Akurasi"
+                        android:textColor="#9CA3AF"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tvAkurasiTanaman"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/hijau_topakuli"
+                        android:textSize="13sp"
+                        tools:text="98.50%" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_detail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_regular"
-                android:textColor="#6B7280"
-                android:textSize="12sp"
+                android:textColor="#9CA3AF"
+                android:textSize="11sp"
                 tools:text="Hari ini pukul 14:30" />
 
+            <!-- Action Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_see_detail"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="32dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="24dp"
                 android:fontFamily="@font/poppins_bold"
-                android:text="Lihat detail"
+                android:text="Lihat Detail Tanaman"
                 android:textAllCaps="false"
-                app:cornerRadius="16dp"
+                app:backgroundTint="@color/hijau_topakuli"
+                app:cornerRadius="12dp"
                 app:icon="@drawable/ic_description"
                 app:iconGravity="textStart"
-                app:backgroundTint="#0056D2"/>
+                app:iconSize="20dp" />
 
             <TextView
                 android:id="@+id/btn_reidentify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/poppins_semibold"
                 android:padding="8dp"
-                android:text="Identifikasi Tanaman Lainnya"
-                android:textColor="#0056D2"
-                android:textSize="14sp" />
+                android:text="Coba identifikasi lagi"
+                android:textColor="#6B7280"
+                android:textSize="13sp" />
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

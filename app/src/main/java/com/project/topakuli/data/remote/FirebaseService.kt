@@ -1,6 +1,11 @@
 package com.project.topakuli.data.remote
 
 import android.net.Uri
+import com.project.topakuli.data.api.FcmMessage
+import com.project.topakuli.data.api.FcmNotification
+import com.project.topakuli.data.api.FcmRequest
+import com.project.topakuli.data.api.FcmService
+import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.project.topakuli.data.local.entity.ActivityLog
@@ -9,11 +14,39 @@ import com.project.topakuli.data.local.entity.ResepEntity
 import com.project.topakuli.data.local.entity.TanamanImageEntity
 import com.project.topakuli.data.local.entity.TanamanObatEntity
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class FirebaseService {
     private val firestore = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
+
+    private val fcmService: FcmService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://fcm.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(FcmService::class.java)
+    }
+
+    private suspend fun getAccessToken(context: android.content.Context): String? = withContext(Dispatchers.IO) {
+        try {
+            val inputStream = context.assets.open("service-account.json")
+            val googleCredentials = GoogleCredentials
+                .fromStream(inputStream)
+                .createScoped(listOf("https://www.googleapis.com/auth/firebase.messaging"))
+            googleCredentials.refreshIfExpired()
+            "Bearer ${googleCredentials.accessToken.tokenValue}"
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     suspend fun getPublicNotifications(): List<NotificationEntity> {
         return try {
@@ -28,6 +61,7 @@ class FirebaseService {
                     title = doc.getString("title") ?: "",
                     content = doc.getString("content") ?: "",
                     type = doc.getString("type") ?: "update",
+                    targetId = doc.getString("targetId"),
                     timestamp = doc.getLong("timestamp") ?: 0L,
                     isRead = false // Local status
                 )
@@ -293,6 +327,38 @@ class FirebaseService {
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             emptyList()
+        }
+    }
+
+    suspend fun sendPushNotification(context: android.content.Context, title: String, content: String) {
+        try {
+            val accessToken = getAccessToken(context) ?: return
+            val projectId = "topakuli-1998e"
+
+            val dataPayload = mapOf(
+                "title" to title,
+                "content" to content
+            )
+
+            val fcmRequest = FcmRequest(
+                message = FcmMessage(
+                    topic = "all_users",
+                    notification = FcmNotification(
+                        title = title,
+                        body = content
+                    ),
+                    data = dataPayload
+                )
+            )
+
+            val response = fcmService.sendNotification(projectId, accessToken, fcmRequest)
+            if (response.isSuccessful) {
+                android.util.Log.d("FCM", "Notification sent successfully via v1 API")
+            } else {
+                android.util.Log.e("FCM", "Failed to send notification: ${response.errorBody()?.string()}")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

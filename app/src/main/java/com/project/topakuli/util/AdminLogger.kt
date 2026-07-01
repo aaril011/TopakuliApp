@@ -9,7 +9,8 @@ import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
 object AdminLogger {
-    suspend fun log(repository: TopakuliRepository, type: String, target: String, targetName: String) {
+    suspend fun log(context: android.content.Context, repository: TopakuliRepository, type: String, target: String, targetName: String, targetId: String? = null) {
+        val appContext = context.applicationContext
         val user = FirebaseAuth.getInstance().currentUser ?: return
         val firestore = FirebaseFirestore.getInstance()
         
@@ -46,9 +47,10 @@ object AdminLogger {
                     title = notifTitle,
                     content = notifContent,
                     type = if (target == "Resep") "recipe" else if (type == "Tambah") "added" else "update",
+                    targetId = targetId,
                     timestamp = System.currentTimeMillis()
                 )
-                repository.postNotification(publicNotif)
+                repository.postNotification(appContext, publicNotif)
                 android.util.Log.d("AdminLogger", "Posted public notification: $notifTitle")
             }
         } catch (e: Exception) {

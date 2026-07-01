@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F9FAFB">
 
-    <!-- Custom Top Bar -->
+    <!-- Simple Top Bar -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/bg_icon_header_beranda"
+            android:backgroundTint="#26FFFFFF"
             android:padding="8dp"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,5 +50,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/top_bar"
         tools:listitem="@layout/item_notifikasi" />
+
+    <include
+        android:id="@+id/empty_state_notifikasi"
+        layout="@layout/layout_empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

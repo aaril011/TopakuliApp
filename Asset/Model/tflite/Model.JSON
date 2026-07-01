@@ -1,0 +1,32 @@
+{
+  "toga_classes": [
+    {"id": 0, "name": "Bandotan", "local_name": "Bandotan / Rumput Balang", "scientific_name": "Ageratum conyzoides"},
+    {"id": 1, "name": "Bawang Hutan", "local_name": "Bawang Hutan / Bawang Dayak", "scientific_name": "Eleutherine bulbosa"},
+    {"id": 2, "name": "Binahong", "local_name": "Binahong", "scientific_name": "Anredera cordifolia"},
+    {"id": 3, "name": "Daun Sirih", "local_name": "Daun Sirih", "scientific_name": "Piper betle"},
+    {"id": 4, "name": "Daun Ungu", "local_name": "Daun Ungu", "scientific_name": "Graptophyllum pictum"},
+    {"id": 5, "name": "Ganda Rusa", "local_name": "Gandarusa", "scientific_name": "Justicia gendarussa"},
+    {"id": 6, "name": "Jahe", "local_name": "Jahe", "scientific_name": "Zingiber officinale"},
+    {"id": 7, "name": "Kayu Telur", "local_name": "Kayu Telur / Alstonia", "scientific_name": "Alstonia spatulata"},
+    {"id": 8, "name": "Keji Beling", "local_name": "Keji Beling", "scientific_name": "Strobilanthes crispa"},
+    {"id": 9, "name": "Kencana Ungu", "local_name": "Kencana Ungu", "scientific_name": "Ruellia tuberosa"},
+    {"id": 10, "name": "Kumis Kucing", "local_name": "Kumis Kucing", "scientific_name": "Orthosiphon aristatus"},
+    {"id": 11, "name": "Kunyit", "local_name": "Kunyit", "scientific_name": "Curcuma longa"},
+    {"id": 12, "name": "Lengkuas", "local_name": "Lengkuas", "scientific_name": "Alpinia galanga"},
+    {"id": 13, "name": "Mayana", "local_name": "Mayana / Miana", "scientific_name": "Coleus scutellarioides"},
+    {"id": 14, "name": "Meniran", "local_name": "Meniran", "scientific_name": "Phyllanthus niruri"},
+    {"id": 15, "name": "Nanas Keran", "local_name": "Nanas Kerang", "scientific_name": "Tradescantia spathacea"},
+    {"id": 16, "name": "Nilam", "local_name": "Nilam", "scientific_name": "Pogostemon cablin"},
+    {"id": 17, "name": "Paci", "local_name": "Pacar Air / Paci", "scientific_name": "Impatiens balsamina"},
+    {"id": 18, "name": "Pecut Kuda", "local_name": "Pecut Kuda", "scientific_name": "Stachytarpheta jamaicensis"},
+    {"id": 19, "name": "Petikan Kebo", "local_name": "Patikan Kebo", "scientific_name": "Euphorbia hirta"},
+    {"id": 20, "name": "Saga", "local_name": "Saga Pohon / Saga Rambat", "scientific_name": "Abrus precatorius"},
+    {"id": 21, "name": "Sambiloto", "local_name": "Sambiloto", "scientific_name": "Andrographis paniculata"},
+    {"id": 22, "name": "Sambung Nyawa", "local_name": "Sambung Nyawa", "scientific_name": "Gynura procumbens"},
+    {"id": 23, "name": "Serai", "local_name": "Sereh / Serai", "scientific_name": "Cymbopogon citratus"},
+    {"id": 24, "name": "Som Jawa", "local_name": "Gingseng Jawa / Som Jawa", "scientific_name": "Talinum paniculatum"},
+    {"id": 25, "name": "Tapak Lima", "local_name": "Tapak Liman", "scientific_name": "Elephantopus scaber"},
+    {"id": 26, "name": "Tembelerang", "local_name": "Tembelekan / Tembelerang", "scientific_name": "Lantana camara"},
+    {"id": 27, "name": "Temulawak", "local_name": "Temulawak", "scientific_name": "Curcuma zanthorrhiza"}
+  ]
+}

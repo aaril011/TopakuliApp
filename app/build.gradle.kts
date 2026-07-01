@@ -8,6 +8,17 @@ android {
     namespace = "com.project.topakuli"
     compileSdk = 36
 
+    configurations.all {
+        resolutionStrategy {
+            force("io.grpc:grpc-android:1.62.2")
+            force("io.grpc:grpc-okhttp:1.62.2")
+            force("io.grpc:grpc-stub:1.62.2")
+            force("io.grpc:grpc-api:1.62.2")
+            force("io.grpc:grpc-core:1.62.2")
+            force("io.grpc:grpc-protobuf-lite:1.62.2")
+        }
+    }
+
     defaultConfig {
         applicationId = "com.project.topakuli"
         minSdk = 26
@@ -20,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false // Format standar Kotlin DSL
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,13 +47,21 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    packaging {
+        resources {
+            excludes += "**/MANIFEST.MF"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
+        }
+    }
 }
 
 ksp {
     arg("room.generateKotlin", "true")
 }
 
-dependencies {
+    dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
@@ -63,19 +82,27 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
     implementation(libs.kotlinx.coroutines.play.services)
 
+    // Force gRPC dependencies for Firestore compatibility
+    implementation(libs.grpc.android)
+    implementation(libs.grpc.okhttp)
+    implementation(libs.grpc.stub)
+
     // Supabase Storage
-    implementation("io.github.jan-tennert.supabase:storage-kt:3.1.1")
-    implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.1")
-    implementation("io.github.jan-tennert.supabase:auth-kt:3.1.1")
-    implementation("io.github.jan-tennert.supabase:realtime-kt:3.1.1")
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.storage)
+
+    implementation(libs.supabase.postgrest)
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.realtime)
 
     // Ktor (Required by Supabase)
-    implementation("io.ktor:ktor-client-android:3.0.1")
-    implementation("io.ktor:ktor-client-core:3.0.1")
-    implementation("io.ktor:ktor-client-content-negotiation:3.0.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.1")
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     // Room
     implementation(libs.androidx.room.runtime)
@@ -89,6 +116,19 @@ dependencies {
     ksp(libs.glide.compiler)
     implementation(libs.flexbox)
     implementation(libs.shimmer)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging)
+
+    // Google Auth for FCM v1
+    implementation(libs.google.auth.library.oauth2.http) {
+        exclude(group = "io.grpc", module = "grpc-okhttp")
+        exclude(group = "io.opencensus", module = "opencensus-api")
+    }
+    implementation(libs.google.http.client.gson)
+    implementation(libs.google.api.client.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

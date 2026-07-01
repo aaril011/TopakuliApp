@@ -9,6 +9,8 @@ data class NotificationEntity(
     val title: String,
     val content: String,
     val type: String, // "update", "added", "recipe"
+    val targetId: String? = null, // ID Tanaman atau Resep
     val timestamp: Long,
-    var isRead: Boolean = false
+    var isRead: Boolean = false,
+    val isDeletedLocally: Boolean = false
 )

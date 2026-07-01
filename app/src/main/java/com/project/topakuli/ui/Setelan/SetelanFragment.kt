@@ -104,6 +104,42 @@ class SetelanFragment : Fragment() {
             dialog.dismiss()
         }
 
+        // WhatsApp Action
+        bottomSheetView.findViewById<View>(R.id.btn_wa_action).setOnClickListener {
+            val phoneNumber = getString(R.string.contact_whatsapp_val).replace(" ", "").replace("-", "")
+            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                data = android.net.Uri.parse("https://api.whatsapp.com/send?phone=$phoneNumber")
+            }
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Aplikasi WhatsApp tidak ditemukan", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Phone Action
+        bottomSheetView.findViewById<View>(R.id.btn_phone_action).setOnClickListener {
+            val phoneNumber = getString(R.string.contact_phone_val).replace(" ", "").replace("-", "")
+            val intent = android.content.Intent(android.content.Intent.ACTION_DIAL).apply {
+                data = android.net.Uri.parse("tel:$phoneNumber")
+            }
+            startActivity(intent)
+        }
+
+        // Email Action
+        bottomSheetView.findViewById<View>(R.id.btn_email_action).setOnClickListener {
+            val email = getString(R.string.contact_email_val)
+            val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO).apply {
+                data = android.net.Uri.parse("mailto:$email")
+                putExtra(android.content.Intent.EXTRA_SUBJECT, "Pertanyaan Aplikasi Topakuli")
+            }
+            try {
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Aplikasi Email tidak ditemukan", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         dialog.show()
     }
 }

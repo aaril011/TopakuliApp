@@ -22,9 +22,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.project.topakuli.data.remote.model.ContributionForm
-
 class AdminDashboardViewModel(private val repository: TopakuliRepository) : ViewModel() {
 
     private val _tanamanSearchQuery = MutableStateFlow("")
@@ -41,6 +38,15 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
 
     private val _recentActivities = MutableStateFlow<List<ActivityLog>>(emptyList())
     val recentActivities: StateFlow<List<ActivityLog>> = _recentActivities.asStateFlow()
+
+    val topIdentifiedPlants: StateFlow<List<Pair<String, Int>>> = repository.allHistory
+        .map { historyList ->
+            historyList.groupBy { it.namaTanaman }
+                .map { (name, list) -> name to list.size }
+                .sortedByDescending { it.second }
+                .take(3)
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val popularResepStats: StateFlow<List<ResepEntity>> = repository.popularResep
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -77,7 +83,6 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
     }
 
     private var isSynced = false
-    private var contributionsListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     fun syncData() {
         if (isSynced) return
@@ -88,34 +93,12 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
                 fetchAdminStats()
                 fetchVisitorStats()
                 fetchRecentActivities()
-                startContributionsListener()
                 isSynced = true
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) throw e
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun startContributionsListener() {
-        contributionsListener?.remove()
-        val firestore = FirebaseFirestore.getInstance()
-        contributionsListener = firestore.collection("user_contributions")
-            .addSnapshotListener { snapshot, _ ->
-                if (snapshot == null) return@addSnapshotListener
-                
-                val total = snapshot.size()
-                // Hitung manual untuk keakuratan (terutama data lama yang belum punya field isReadByAdmin)
-                val unread = snapshot.documents.count { doc ->
-                    !(doc.getBoolean("isReadByAdmin") ?: false)
-                }
-                _masukanSummary.value = SummaryData(total, unread)
-            }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        contributionsListener?.remove()
     }
 
     fun fetchAdminStats() {

@@ -182,11 +182,12 @@ class AdminAddTanamanFragment : Fragment() {
             return
         }
 
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             val app = (requireActivity().application as TopakuliApplication)
             val repository = app.repository
             
-            Toast.makeText(requireContext(), "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(appContext, "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
             
             val currentTanamanId = tanamanId ?: UUID.randomUUID().toString()
             var finalMainImageUrl: String? = null
@@ -206,7 +207,7 @@ class AdminAddTanamanFragment : Fragment() {
                 finalMainImageUrl = repository.uploadImage(mainImageUri!!, "tanaman")
                 if (finalMainImageUrl == null) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Gagal mengunggah gambar utama", Toast.LENGTH_LONG).show()
+                        Toast.makeText(appContext, "Gagal mengunggah gambar utama", Toast.LENGTH_LONG).show()
                     }
                 }
             } else {
@@ -267,42 +268,25 @@ class AdminAddTanamanFragment : Fragment() {
                     }
                 }
                 
-                // 3. Log the final URL for debugging
-                android.util.Log.d("AdminAddTanaman", "Final saved URL: $finalMainImageUrl")
-
-                // 3. Link this plant to selected recipes
-                listResep.forEach { resep ->
-                    val isSelected = selectedResepIds.contains(resep.id)
-                    val currentPlantIds = resep.tanamanIds?.split(",")?.filter { it.isNotEmpty() }?.toMutableList() ?: mutableListOf()
-                    
-                    var changed = false
-                    if (isSelected) {
-                        if (!currentPlantIds.contains(currentTanamanId)) {
-                            currentPlantIds.add(currentTanamanId)
-                            changed = true
-                        }
-                    } else {
-                        if (currentPlantIds.contains(currentTanamanId)) {
-                            currentPlantIds.remove(currentTanamanId)
-                            changed = true
-                        }
-                    }
-                    
-                    if (changed) {
-                        repository.insertResep(resep.copy(tanamanIds = currentPlantIds.joinToString(",")))
-                    }
-                }
-
-                // 4. Log Activity
+                // 3. Log Activity
                 AdminLogger.log(
+                    appContext,
                     repository,
                     if (tanamanId == null) "Tambah" else "Ubah",
                     "Tanaman",
-                    nama
+                    nama,
+                    currentTanamanId
                 )
             }
-            Toast.makeText(requireContext(), "Tanaman berhasil disimpan", Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
+            
+            com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                requireContext(),
+                "Berhasil Disimpan",
+                "Data tanaman $nama telah berhasil diperbarui di database.",
+                "Kembali ke Daftar"
+            ) {
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -360,14 +344,22 @@ class AdminAddTanamanFragment : Fragment() {
     private fun deleteTanaman() {
         val id = tanamanId ?: return
         val nama = binding.etNama.text.toString()
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val repo = (requireActivity().application as TopakuliApplication).repository
                 repo.deleteTanaman(id)
-                AdminLogger.log(repo, "Hapus", "Tanaman", nama)
+                AdminLogger.log(appContext, repo, "Hapus", "Tanaman", nama)
             }
-            Toast.makeText(requireContext(), "Tanaman berhasil dihapus", Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
+            
+            com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                requireContext(),
+                "Berhasil Dihapus",
+                "Data tanaman $nama telah dihapus secara permanen.",
+                "Selesai"
+            ) {
+                findNavController().navigateUp()
+            }
         }
     }
 

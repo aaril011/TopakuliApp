@@ -301,6 +301,8 @@ class BerandaFragment : Fragment() {
                     putInt("historyId", history.id)
                     putString("tanamanId", history.tanamanId)
                     putString("nama", history.namaTanaman)
+                    putString("namaLatin", history.namaLatin)
+                    putString("namaDaerah", history.namaDaerah)
                     putFloat("akurasi", history.akurasi.toFloat())
                     putLong("timestamp", history.timestamp)
                     putString("imagePath", history.imagePath)

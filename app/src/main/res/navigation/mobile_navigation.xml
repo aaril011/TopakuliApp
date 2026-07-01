@@ -49,6 +49,14 @@
             android:name="nama"
             app:argType="string" />
         <argument
+            android:name="namaLatin"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="namaDaerah"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
             android:name="akurasi"
             app:argType="float" />
         <argument

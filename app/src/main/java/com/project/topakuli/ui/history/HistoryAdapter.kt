@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.project.topakuli.R
 import com.project.topakuli.data.local.entity.HistoryEntity
 import com.project.topakuli.databinding.ItemHistoryBinding
 import java.text.SimpleDateFormat
@@ -54,12 +57,23 @@ class HistoryAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(history: HistoryEntity) {
             with(binding) {
-                tvHistoryName.text = history.namaTanaman
+                val displayName = if (history.namaLatin.isNotEmpty()) {
+                    "${history.namaTanaman} (${history.namaLatin})"
+                } else {
+                    history.namaTanaman
+                }
+                tvHistoryName.text = displayName
                 tvHistoryAccuracy.text = String.format("%.1f%%", history.akurasi)
                 tvHistoryDate.text = formatTimestamp(history.timestamp)
 
-                Glide.with(itemView.context)
+                // Robust Image Loading
+                Glide.with(itemView)
                     .load(history.imagePath)
+                    .apply(RequestOptions()
+                        .placeholder(R.drawable.bg_gradient_bottom) // placeholder sementara
+                        .error(R.drawable.scan) // ikon fallback
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
                     .into(ivHistoryImage)
 
                 // Selection UI

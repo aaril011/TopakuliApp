@@ -49,7 +49,11 @@ class DetailTanamanFragment : Fragment() {
         }
 
         binding.ivBack.setOnClickListener {
-            findNavController().navigateUp()
+            if (arguments?.getBoolean("from_notification") == true && arguments?.getBoolean("is_from_list") == true) {
+                activity?.finish()
+            } else {
+                findNavController().navigateUp()
+            }
         }
     }
 

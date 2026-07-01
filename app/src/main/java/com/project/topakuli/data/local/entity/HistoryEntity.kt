@@ -9,6 +9,8 @@ data class HistoryEntity(
     val id: Int = 0,
     val tanamanId: String?,
     val namaTanaman: String,
+    val namaLatin: String = "",
+    val namaDaerah: String = "",
     val akurasi: Double,
     val imagePath: String, // Lokasi path gambar di storage lokal HP
     val timestamp: Long = System.currentTimeMillis()

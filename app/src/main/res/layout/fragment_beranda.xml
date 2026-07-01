@@ -89,20 +89,20 @@
                             android:src="@drawable/search"
                             app:tint="#9CA3AF" />
 
-                    <EditText
-                        android:id="@+id/et_search"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:fontFamily="@font/poppins_regular"
-                        android:hint="Cari khasiat tanaman..."
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:textColor="#1F2937"
-                        android:textColorHint="#9CA3AF"
-                        android:textSize="14sp" />
+                        <EditText
+                            android:id="@+id/et_search"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:fontFamily="@font/poppins_regular"
+                            android:hint="Cari khasiat tanaman..."
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:textColor="#1F2937"
+                            android:textColorHint="#9CA3AF"
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

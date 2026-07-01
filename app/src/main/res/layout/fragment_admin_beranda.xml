@@ -247,6 +247,18 @@
                             android:textColor="#4B5563"
                             android:textSize="13sp" />
 
+                        <TextView
+                            android:id="@+id/tv_empty_plant_stats"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Belum ada data identifikasi"
+                            android:textColor="#9CA3AF"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:visibility="gone" />
+
                         <include android:id="@+id/plant_stat_1" layout="@layout/item_stats_progress" />
                         <include android:id="@+id/plant_stat_2" layout="@layout/item_stats_progress" />
                         <include android:id="@+id/plant_stat_3" layout="@layout/item_stats_progress" />

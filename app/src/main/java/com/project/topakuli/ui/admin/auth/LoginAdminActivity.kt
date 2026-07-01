@@ -60,9 +60,19 @@ class LoginAdminActivity : AppCompatActivity() {
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                Toast.makeText(this, "Login Berhasil", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, AdminMainActivity::class.java))
-                finish()
+                // Save admin session state
+                getSharedPreferences("topakuli_pref", MODE_PRIVATE)
+                    .edit().putBoolean("is_admin_logged_in", true).apply()
+
+                com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                    this,
+                    "Login Berhasil",
+                    "Selamat datang kembali! Anda sekarang masuk sebagai admin.",
+                    "Masuk ke Dashboard"
+                ) {
+                    startActivity(Intent(this, AdminMainActivity::class.java))
+                    finish()
+                }
             }
             .addOnFailureListener { exception ->
                 showError("Login Gagal: ${exception.message}")

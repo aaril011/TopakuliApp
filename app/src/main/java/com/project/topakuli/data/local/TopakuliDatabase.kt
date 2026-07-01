@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.project.topakuli.data.local.dao.TopakuliDao
 import com.project.topakuli.data.local.entity.*
 
-@Database(entities = [TanamanObatEntity::class, ResepEntity::class, HistoryEntity::class, TanamanImageEntity::class, NotificationEntity::class], version = 12, exportSchema = false)
+@Database(entities = [TanamanObatEntity::class, ResepEntity::class, HistoryEntity::class, TanamanImageEntity::class], version = 15, exportSchema = false)
 abstract class TopakuliDatabase : RoomDatabase() {
     abstract fun topakuliDao(): TopakuliDao
 

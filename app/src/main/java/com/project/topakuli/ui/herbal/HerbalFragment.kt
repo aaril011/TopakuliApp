@@ -31,6 +31,7 @@ class HerbalFragment : Fragment() {
     }
 
     private lateinit var adapter: TanamanAdapter
+    private var isGridView = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +52,27 @@ class HerbalFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
         setupTabs()
+        setupLayoutToggle()
         observeViewModel()
         setupEmptyState()
+    }
+
+    private fun setupLayoutToggle() {
+        binding.btnChangeLayout.setOnClickListener {
+            isGridView = !isGridView
+            updateLayout()
+        }
+    }
+
+    private fun updateLayout() {
+        if (isGridView) {
+            binding.rvTanaman.layoutManager = GridLayoutManager(requireContext(), 3)
+            binding.btnChangeLayout.setImageResource(R.drawable.ic_list_view)
+        } else {
+            binding.rvTanaman.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+            binding.btnChangeLayout.setImageResource(R.drawable.ic_grid_view)
+        }
+        adapter.setViewType(isGridView)
     }
 
     private fun observeViewModel() {
@@ -75,7 +95,7 @@ class HerbalFragment : Fragment() {
                 viewModel.toggleFavorit(tanaman)
             }
         )
-        binding.rvTanaman.layoutManager = GridLayoutManager(requireContext(), 2)
+        updateLayout()
         binding.rvTanaman.adapter = adapter
     }
 

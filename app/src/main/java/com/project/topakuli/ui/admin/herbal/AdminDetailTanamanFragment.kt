@@ -61,7 +61,8 @@ class AdminDetailTanamanFragment : Fragment() {
 
                     Glide.with(this@AdminDetailTanamanFragment)
                         .load(tanaman.imageUrl)
-                        .placeholder(R.drawable.intro_1)
+                        .placeholder(R.drawable.herbal)
+                        .error(R.drawable.herbal)
                         .into(ivTanamanMain)
                     
                     ivTanamanMain.setOnClickListener {

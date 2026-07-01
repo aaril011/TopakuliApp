@@ -25,9 +25,13 @@ class SplashActivity : AppCompatActivity() {
     private fun checkFirstInstall() {
         val sharedPref = getSharedPreferences("topakuli_pref", MODE_PRIVATE)
         val isFirstInstall = sharedPref.getBoolean("is_first_install", true)
+        val isAdminLoggedIn = sharedPref.getBoolean("is_admin_logged_in", false) && 
+                             com.google.firebase.auth.FirebaseAuth.getInstance().currentUser != null
 
         if (isFirstInstall) {
             startActivity(Intent(this, IntroActivity::class.java))
+        } else if (isAdminLoggedIn) {
+            startActivity(Intent(this, com.project.topakuli.ui.admin.AdminMainActivity::class.java))
         } else {
             startActivity(Intent(this, MainActivity::class.java))
         }

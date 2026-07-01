@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -22,13 +23,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.project.topakuli.R
 import com.project.topakuli.TopakuliApplication
+import com.project.topakuli.data.api.ApiConfig
 import com.project.topakuli.data.local.entity.HistoryEntity
+import com.project.topakuli.data.remote.model.TogaResponse
 import com.project.topakuli.data.repository.TopakuliRepository
 import com.project.topakuli.databinding.FragmentIdentifikasiBinding
+import com.project.topakuli.utils.reduceFileImage
+import com.project.topakuli.utils.uriToFile
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,6 +52,7 @@ class IdentifikasiFragment : Fragment() {
     private var isFlashOn = false
     private var currentImageUri: Uri? = null
     private lateinit var repository: TopakuliRepository
+    private var isUiVisible = true
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -75,8 +84,14 @@ class IdentifikasiFragment : Fragment() {
         }
 
         binding.btnBack.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().popBackStack(R.id.navigation_beranda, false)
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack(R.id.navigation_beranda, false)
+            }
+        })
 
         binding.btnCapture.setOnClickListener {
             takePhoto()
@@ -112,6 +127,93 @@ class IdentifikasiFragment : Fragment() {
 
         binding.btnProcess.setOnClickListener {
             processImage()
+        }
+
+        binding.ivPreview.setOnClickListener {
+            if (binding.layoutFailure.visibility == View.VISIBLE) {
+                toggleFailureUiVisibility()
+            }
+        }
+
+        binding.layoutFailure.setOnClickListener {
+            toggleFailureUiVisibility()
+        }
+
+        // Prevent click-through from the card to the background layout
+        binding.cvFailureCard.setOnClickListener { 
+            // Do nothing, just consume the click
+        }
+
+        binding.btnRetry.setOnClickListener {
+            hideFailure()
+            hidePreview()
+        }
+
+        binding.btnFailureInstruction.setOnClickListener {
+            findNavController().navigate(R.id.action_identifikasi_to_petunjuk)
+        }
+    }
+
+    private fun toggleFailureUiVisibility() {
+        isUiVisible = !isUiVisible
+        val duration = 400L
+        val interpolator = android.view.animation.AccelerateDecelerateInterpolator()
+
+        if (isUiVisible) {
+            // Show UI
+            binding.btnBack.animate().translationY(0f).alpha(1f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.btnFlipCamera.animate().translationY(0f).alpha(1f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.btnFlash.animate().translationY(0f).alpha(1f).setDuration(duration).setInterpolator(interpolator).start()
+            
+            binding.cvFailureCard.animate().translationY(0f).alpha(1f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.layoutFailure.animate().alpha(1f).setDuration(duration).start()
+        } else {
+            // Hide UI
+            binding.btnBack.animate().translationY(-200f).alpha(0f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.btnFlipCamera.animate().translationY(-200f).alpha(0f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.btnFlash.animate().translationY(-200f).alpha(0f).setDuration(duration).setInterpolator(interpolator).start()
+
+            binding.cvFailureCard.animate().translationY(binding.cvFailureCard.height.toFloat() + 100f).alpha(0f).setDuration(duration).setInterpolator(interpolator).start()
+            binding.layoutFailure.animate().alpha(0f).setDuration(duration).start()
+        }
+    }
+
+    private fun showFailure() {
+        binding.layoutFailure.visibility = View.VISIBLE
+        binding.layoutFailure.alpha = 1f
+        binding.bottomBar.visibility = View.GONE
+        binding.btnClosePreview.visibility = View.GONE
+        isUiVisible = true
+        
+        // Reset positions if they were animated out
+        binding.btnBack.translationY = 0f
+        binding.btnBack.alpha = 1f
+        binding.btnFlipCamera.translationY = 0f
+        binding.btnFlipCamera.alpha = 1f
+        binding.btnFlash.translationY = 0f
+        binding.btnFlash.alpha = 1f
+        binding.cvFailureCard.translationY = 0f
+        binding.cvFailureCard.alpha = 1f
+    }
+
+    private fun hideFailure() {
+        binding.layoutFailure.visibility = View.GONE
+        if (currentImageUri != null) {
+            binding.btnProcess.visibility = View.VISIBLE
+            binding.btnClosePreview.visibility = View.VISIBLE
+        } else {
+            binding.bottomBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun mapLabelAndNavigate(label: String, latin: String, daerah: String, score: Float) {
+        val accuracy = score * 100.0
+        
+        lifecycleScope.launch {
+            val allTanamanList = withContext(Dispatchers.IO) { repository.allTanaman.first() }
+            val match = allTanamanList.find { it.nama.equals(label, ignoreCase = true) }
+            
+            saveAndNavigate(label, latin, daerah, accuracy, match?.id ?: "")
         }
     }
 
@@ -184,6 +286,8 @@ class IdentifikasiFragment : Fragment() {
     }
 
     private fun hidePreview() {
+        hideFailure()
+        binding.bottomBar.visibility = View.VISIBLE
         binding.ivPreview.visibility = View.GONE
         binding.btnCapture.visibility = View.VISIBLE
         binding.btnProcess.visibility = View.GONE
@@ -198,41 +302,90 @@ class IdentifikasiFragment : Fragment() {
     }
 
     private fun processImage() {
-        if (currentImageUri == null) return
+        val uri = currentImageUri ?: return
         binding.layoutLoading.visibility = View.VISIBLE
+        binding.btnClosePreview.visibility = View.GONE
 
         lifecycleScope.launch {
-            // Dummy processing delay
-            delay(2000)
-            
-            binding.layoutLoading.visibility = View.GONE
-            
-            // Dummy result: Sirih
-            saveAndNavigate("Sirih", 98.5, "id_25")
+            try {
+                val imageFile = withContext(Dispatchers.IO) {
+                    uriToFile(uri, requireContext()).reduceFileImage()
+                }
+
+                val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
+                val multipartBody = MultipartBody.Part.createFormData(
+                    "file",
+                    imageFile.name,
+                    requestImageFile
+                )
+
+                val apiService = ApiConfig.getApiService()
+                val successResponse = apiService.predict(multipartBody)
+
+                withContext(Dispatchers.Main) {
+                    binding.layoutLoading.visibility = View.GONE
+                    if (successResponse.status == "success") {
+                        if (successResponse.confidence >= 0.7) {
+                            mapLabelAndNavigate(
+                                successResponse.namaTanaman,
+                                successResponse.namaLatin,
+                                successResponse.namaDaerah,
+                                successResponse.confidence.toFloat()
+                            )
+                        } else {
+                            showFailure()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Gagal mendapatkan hasil prediksi", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    binding.layoutLoading.visibility = View.GONE
+                    Log.e("IdentifikasiFragment", "Error processing image: ${e.message}")
+                    Toast.makeText(requireContext(), "Gagal memproses gambar: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    private fun saveAndNavigate(name: String, accuracy: Double, tanamanId: String) {
+    private fun saveAndNavigate(name: String, latin: String, daerah: String, accuracy: Double, tanamanId: String) {
         val imagePath = currentImageUri?.toString() ?: ""
+        Log.d("IdentifikasiFragment", "Navigating to detail with: $name, $accuracy, $tanamanId")
 
         val history = HistoryEntity(
             tanamanId = tanamanId,
             namaTanaman = name,
+            namaLatin = latin,
+            namaDaerah = daerah,
             akurasi = accuracy,
             imagePath = imagePath
         )
 
         lifecycleScope.launch {
-            repository.insertHistory(history)
+            try {
+                repository.insertHistory(history)
+                Log.d("IdentifikasiFragment", "History saved successfully")
 
-            val bundle = Bundle().apply {
-                putString("nama", name)
-                putFloat("akurasi", accuracy.toFloat())
-                putLong("timestamp", history.timestamp)
-                putString("imagePath", imagePath)
-                putString("tanamanId", tanamanId)
+                val bundle = Bundle().apply {
+                    putString("nama", name)
+                    putString("namaLatin", latin)
+                    putString("namaDaerah", daerah)
+                    putFloat("akurasi", accuracy.toFloat())
+                    putLong("timestamp", history.timestamp)
+                    putString("imagePath", imagePath)
+                    putString("tanamanId", tanamanId)
+                }
+                
+                // Hide loading before navigation
+                binding.layoutLoading.visibility = View.GONE
+                
+                findNavController().navigate(R.id.historyDetailFragment, bundle)
+            } catch (e: Exception) {
+                Log.e("IdentifikasiFragment", "Error saving history or navigating", e)
+                binding.layoutLoading.visibility = View.GONE
+                Toast.makeText(requireContext(), "Terjadi kesalahan: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-            findNavController().navigate(R.id.historyDetailFragment, bundle)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.project.topakuli.ui.notifikasi
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,8 +26,7 @@ class NotifikasiActivity : AppCompatActivity() {
         setupUI()
         observeViewModel()
         
-        viewModel.syncNotifications()
-        viewModel.markAllAsRead()
+        viewModel.fetchNotifications()
     }
 
     private fun setupUI() {
@@ -41,8 +41,18 @@ class NotifikasiActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            viewModel.allNotifications.collectLatest { list ->
-                (binding.rvNotifikasi.adapter as NotificationAdapter).submitList(list)
+            viewModel.notifications.collectLatest { list ->
+                val isEmpty = list.isEmpty()
+                binding.rvNotifikasi.visibility = if (isEmpty) View.GONE else View.VISIBLE
+                binding.emptyStateNotifikasi.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                
+                if (isEmpty) {
+                    binding.emptyStateNotifikasi.tvEmptyTitle.text = "Belum ada notifikasi"
+                    binding.emptyStateNotifikasi.tvEmptyDesc.text = "Anda akan menerima pemberitahuan jika ada perubahan data dari admin."
+                    binding.emptyStateNotifikasi.btnRetry.visibility = View.GONE
+                }
+                
+                (binding.rvNotifikasi.adapter as? NotificationAdapter)?.submitList(list)
             }
         }
     }

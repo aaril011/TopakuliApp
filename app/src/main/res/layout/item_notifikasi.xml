@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_notifikasi"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
@@ -39,14 +41,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="12dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="Info tanaman diperbarui"
             android:textColor="#1F2937"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/unread_dot"
+            app:layout_constraintEnd_toStartOf="@+id/barrier_action"
             app:layout_constraintStart_toEndOf="@id/card_notif_icon"
-            app:layout_constraintTop_toTopOf="@id/card_notif_icon" />
+            app:layout_constraintTop_toTopOf="@id/card_notif_icon"
+            tools:text="Info tanaman diperbarui" />
 
         <View
             android:id="@+id/unread_dot"
@@ -64,13 +66,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/poppins_regular"
-            android:text="Data manfaat dan dosis Kumis Kucing telah diperbarui berdasarkan referensi terbaru."
             android:textColor="#4B5563"
             android:textSize="12sp"
             android:lineSpacingExtra="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tv_notif_title"
             app:layout_constraintStart_toStartOf="@id/tv_notif_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_notif_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_notif_title"
+            tools:text="Data manfaat dan dosis Kumis Kucing telah diperbarui berdasarkan referensi terbaru." />
 
         <TextView
             android:id="@+id/tv_notif_time"
@@ -78,11 +80,29 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="09:00 AM"
             android:textColor="#9CA3AF"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@id/tv_notif_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_notif_desc" />
+            app:layout_constraintTop_toBottomOf="@id/tv_notif_desc"
+            tools:text="09:00 AM" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="cb_select,unread_dot" />
+
+        <CheckBox
+            android:id="@+id/cb_select"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:buttonTint="@color/hijau_topakuli"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

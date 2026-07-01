@@ -221,8 +221,14 @@ class AdminContributionDetailFragment : Fragment() {
                 repository.logActivity(log)
 
                 if (isAdded) {
-                    Toast.makeText(requireContext(), "Ajuan berhasil dihapus", Toast.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
+                    com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                        requireContext(),
+                        "Ajuan Dihapus",
+                        "Data ajuan kontribusi telah berhasil dihapus secara permanen.",
+                        "Kembali ke Daftar"
+                    ) {
+                        findNavController().navigateUp()
+                    }
                 }
             } catch (e: Exception) {
                 if (isAdded) Toast.makeText(requireContext(), "Gagal menghapus: ${e.message}", Toast.LENGTH_SHORT).show()

@@ -151,15 +151,11 @@ class AdminBerandaFragment : Fragment() {
                 tvActivitySubtext.text = "2 jam lalu"
             }
 
-            plantStat1.apply { tvStatsName.text = "Mayana"; tvStatsCount.text = "201x"; progressStats.progress = 90 }
-            plantStat2.apply { tvStatsName.text = "Meniran"; tvStatsCount.text = "162x"; progressStats.progress = 75 }
-            plantStat3.apply { tvStatsName.text = "Kumis Kucing"; tvStatsCount.text = "98x"; progressStats.progress = 45 }
-
             recipeStat1.root.visibility = View.GONE
             recipeStat2.root.visibility = View.GONE
             recipeStat3.root.visibility = View.GONE
 
-            // Visitor stats will be updated from ViewModel
+            // Stats will be updated from ViewModel
         }
     }
 
@@ -231,6 +227,11 @@ class AdminBerandaFragment : Fragment() {
                     }
                 }
                 launch {
+                    viewModel.topIdentifiedPlants.collect { list ->
+                        updateTopIdentifiedPlantsUI(list)
+                    }
+                }
+                launch {
                     viewModel.popularResepStats.collect { list ->
                         updatePopularResepUI(list)
                     }
@@ -259,6 +260,33 @@ class AdminBerandaFragment : Fragment() {
             tvStatsCount.text = outside.toString()
             progressStats.progress = (outside * 100 / total)
             progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_orange)
+        }
+    }
+
+    private fun updateTopIdentifiedPlantsUI(list: List<Pair<String, Int>>) {
+        val views = listOf(binding.plantStat1, binding.plantStat2, binding.plantStat3)
+        
+        // Hide all first
+        views.forEach { it.root.visibility = View.GONE }
+        
+        if (list.isEmpty()) {
+            binding.tvEmptyPlantStats.visibility = View.VISIBLE
+            return
+        }
+
+        binding.tvEmptyPlantStats.visibility = View.GONE
+        val maxCount = list.first().second.coerceAtLeast(1)
+        
+        list.take(3).forEachIndexed { index, pair ->
+            views[index].apply {
+                root.visibility = View.VISIBLE
+                tvStatsName.text = pair.first
+                tvStatsCount.text = "${pair.second}x"
+                
+                // Calculate progress percentage relative to the top plant
+                progressStats.progress = (pair.second * 100 / maxCount)
+                progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_green)
+            }
         }
     }
 

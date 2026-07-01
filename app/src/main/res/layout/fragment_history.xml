@@ -57,7 +57,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingTop="8dp"
-        android:paddingBottom="80dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@id/layout_delete_actions"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,48 +69,63 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:cardElevation="16dp"
-        app:cardCornerRadius="0dp"
+        app:cardElevation="24dp"
+        app:cardCornerRadius="24dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:strokeWidth="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#F3F4F6"
+        app:cardBackgroundColor="#FFFFFF"
         tools:visibility="visible">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/tv_selected_count"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_medium"
-                android:textColor="#4B5563"
-                android:textSize="14sp"
+                android:fontFamily="@font/poppins_semibold"
+                android:textColor="#1F2937"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="1 data dipilih" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:backgroundTint="#EF4444"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Hapus"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_delete"
+                app:iconSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cancel_selection"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Batal"
                 android:textAllCaps="false"
-                android:textColor="#6B7280" />
+                android:textColor="#6B7280"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_delete_selected"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_delete_selected"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:backgroundTint="#EF4444"
-                android:text="Hapus"
-                android:textAllCaps="false"
-                app:cornerRadius="12dp" />
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <include

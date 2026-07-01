@@ -96,7 +96,8 @@ class AdminDetailResepFragment : Fragment() {
 
                     Glide.with(this@AdminDetailResepFragment)
                         .load(resep.imageUrl)
-                        .placeholder(R.drawable.intro_1)
+                        .placeholder(R.drawable.icoon_book)
+                        .error(R.drawable.icoon_book)
                         .into(ivResepMain)
 
                     ivResepMain.setOnClickListener {

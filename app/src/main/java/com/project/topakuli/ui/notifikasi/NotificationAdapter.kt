@@ -26,13 +26,15 @@ class NotificationAdapter : ListAdapter<NotificationEntity, NotificationAdapter.
 
     class ViewHolder(private val binding: ItemNotifikasiBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: NotificationEntity) {
+            // Click interaction removed as requested
             binding.tvNotifTitle.text = item.title
             binding.tvNotifDesc.text = item.content
             
             val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
             binding.tvNotifTime.text = sdf.format(item.timestamp)
 
-            binding.unreadDot.visibility = if (item.isRead) View.GONE else View.VISIBLE
+            // unreadDot logic removed since we no longer track read status in local DB
+            binding.unreadDot.visibility = View.GONE
 
             // Set icon and color based on type context
             when (item.type) {

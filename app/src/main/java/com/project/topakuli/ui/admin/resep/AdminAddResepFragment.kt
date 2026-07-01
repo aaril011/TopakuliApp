@@ -192,11 +192,12 @@ class AdminAddResepFragment : Fragment() {
             return
         }
 
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             val app = (requireActivity().application as TopakuliApplication)
             val repo = app.repository
             
-            Toast.makeText(requireContext(), "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(appContext, "Sedang menyimpan...", Toast.LENGTH_SHORT).show()
 
             var existingResep: ResepEntity? = null
             if (resepId != null) {
@@ -218,7 +219,7 @@ class AdminAddResepFragment : Fragment() {
                 finalImageUrl = repo.uploadImage(mainImageUri!!, "resep")
                 if (finalImageUrl == null) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Gagal mengunggah gambar ke Supabase. Periksa koneksi atau pengaturan bucket 'resep'", Toast.LENGTH_LONG).show()
+                        Toast.makeText(appContext, "Gagal mengunggah gambar ke Supabase. Periksa koneksi atau pengaturan bucket 'resep'", Toast.LENGTH_LONG).show()
                     }
                     // Jika upload gagal, kita batalkan simpan agar data tidak rusak (tanpa gambar)
                     return@launch
@@ -228,8 +229,9 @@ class AdminAddResepFragment : Fragment() {
                 finalImageUrl = existingResep?.imageUrl
             }
 
+            val finalResepId = resepId ?: UUID.randomUUID().toString()
             val resep = ResepEntity(
-                id = resepId ?: UUID.randomUUID().toString(),
+                id = finalResepId,
                 judul = judul,
                 deskripsi = deskripsi,
                 bahan = bahan,
@@ -253,14 +255,23 @@ class AdminAddResepFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 repo.insertResep(resep)
                 AdminLogger.log(
+                    appContext,
                     repo,
                     if (resepId == null) "Tambah" else "Ubah",
                     "Resep",
-                    judul
+                    judul,
+                    finalResepId
                 )
             }
-            Toast.makeText(requireContext(), "Resep berhasil disimpan", Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
+            
+            com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                requireContext(),
+                "Berhasil Disimpan",
+                "Resep $judul telah berhasil diperbarui di database.",
+                "Kembali ke Daftar"
+            ) {
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -290,14 +301,22 @@ class AdminAddResepFragment : Fragment() {
     private fun deleteResep() {
         val id = resepId ?: return
         val judul = binding.etJudul.text.toString()
+        val appContext = requireContext().applicationContext
         viewLifecycleOwner.lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 val repo = (requireActivity().application as TopakuliApplication).repository
                 repo.deleteResep(id)
-                AdminLogger.log(repo, "Hapus", "Resep", judul)
+                AdminLogger.log(appContext, repo, "Hapus", "Resep", judul)
             }
-            Toast.makeText(requireContext(), "Resep berhasil dihapus", Toast.LENGTH_SHORT).show()
-            findNavController().navigateUp()
+            
+            com.project.topakuli.util.DialogHelper.showSuccessDialog(
+                requireContext(),
+                "Berhasil Dihapus",
+                "Resep $judul telah dihapus secara permanen.",
+                "Selesai"
+            ) {
+                findNavController().navigateUp()
+            }
         }
     }
 

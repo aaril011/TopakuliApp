@@ -21,28 +21,15 @@ class TopakuliRepository(
     private val supabaseStorageService: SupabaseStorageService
 ) {
 
-    // Notifications
-    val allNotifications: Flow<List<NotificationEntity>> = dao.getAllNotifications()
-
-    suspend fun syncNotifications() {
-        val remoteList = firebaseService.getPublicNotifications()
-        if (remoteList.isNotEmpty()) {
-            val localIds = dao.getAllNotificationIds().toSet()
-            val newList = remoteList.map { it.copy(isRead = localIds.contains(it.id)) }
-            dao.insertNotifications(newList)
-        }
+    // Notifications (Fetch directly from Firebase)
+    suspend fun getRemoteNotifications(): List<NotificationEntity> {
+        return firebaseService.getPublicNotifications()
     }
 
-    suspend fun markAllNotificationsAsRead() {
-        dao.markAllNotificationsAsRead()
-    }
-
-    suspend fun postNotification(notif: NotificationEntity) {
+    suspend fun postNotification(context: android.content.Context, notif: NotificationEntity) {
         firebaseService.postPublicNotification(notif)
-    }
-
-    suspend fun deleteOldNotifications(threshold: Long) {
-        dao.deleteOldNotifications(threshold)
+        // Also trigger push notification for background users
+        firebaseService.sendPushNotification(context, notif.title, notif.content)
     }
 
     // Activity Logs

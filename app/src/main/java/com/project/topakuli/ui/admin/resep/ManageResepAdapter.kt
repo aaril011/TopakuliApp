@@ -28,7 +28,12 @@ class ManageResepAdapter(
         fun bind(resep: ResepEntity) {
             binding.apply {
                 tvJudul.text = resep.judul
+                tvDeskripsi.text = resep.deskripsi
                 tvKategori.text = resep.kategori
+                tvTagKesulitan.text = resep.tingkatKesulitan
+
+                val bahanCount = resep.bahan.split("\n").filter { it.isNotBlank() }.size
+                tvTagBahan.text = itemView.context.getString(R.string.format_bahan, bahanCount)
 
                 Glide.with(root.context)
                     .load(resep.imageUrl)
@@ -38,6 +43,7 @@ class ManageResepAdapter(
 
                 btnEdit.setOnClickListener { onEditClick(resep) }
                 root.setOnClickListener { onItemClick(resep) }
+                btnLihatDetail.setOnClickListener { onItemClick(resep) }
             }
         }
     }

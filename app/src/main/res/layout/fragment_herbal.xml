@@ -39,16 +39,20 @@
             android:id="@+id/layout_search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingHorizontal="20dp"
             android:paddingBottom="4dp">
+
             <EditText
                 android:id="@+id/et_search"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="42dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_search_bar"
                 android:drawableStart="@drawable/search"
-                android:drawableTint="#9CA3AF"
                 android:drawablePadding="12dp"
+                android:drawableTint="#9CA3AF"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="Cari tanaman obat..."
                 android:inputType="text"
@@ -56,6 +60,18 @@
                 android:textColor="#333333"
                 android:textColorHint="#9CA3AF"
                 android:textSize="13sp" />
+
+            <ImageButton
+                android:id="@+id/btn_change_layout"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_search_bar"
+                android:contentDescription="Ubah Tampilan"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_list_view"
+                app:tint="@color/hijau_topakuli" />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout

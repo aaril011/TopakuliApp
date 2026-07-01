@@ -53,6 +53,8 @@ class HistoryFragment : Fragment() {
                     putInt("historyId", history.id)
                     putString("tanamanId", history.tanamanId)
                     putString("nama", history.namaTanaman)
+                    putString("namaLatin", history.namaLatin)
+                    putString("namaDaerah", history.namaDaerah)
                     putFloat("akurasi", history.akurasi.toFloat())
                     putLong("timestamp", history.timestamp)
                     putString("imagePath", history.imagePath)
@@ -72,7 +74,7 @@ class HistoryFragment : Fragment() {
             val isEmpty = list.isEmpty()
             binding.rvHistory.visibility = if (isEmpty) View.GONE else View.VISIBLE
             binding.emptyStateHistory.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
-            binding.btnMore.visibility = if (isEmpty) View.GONE else View.VISIBLE
+            binding.btnMore.visibility = View.VISIBLE // Tetap tampilkan titik 3
 
             if (isEmpty) {
                 binding.emptyStateHistory.tvEmptyTitle.text = "Riwayat Kosong"
@@ -122,19 +124,95 @@ class HistoryFragment : Fragment() {
         val popup = PopupMenu(requireContext(), view)
         popup.menuInflater.inflate(R.menu.history_more_menu, popup.menu)
         popup.setOnMenuItemClickListener { item ->
+            val isEmpty = viewModel.allHistory.value.isNullOrEmpty()
+            
             when (item.itemId) {
                 R.id.menu_select_data -> {
-                    enterSelectionMode()
+                    if (isEmpty) {
+                        showNoDataDialog()
+                    } else {
+                        enterSelectionMode()
+                    }
                     true
                 }
                 R.id.menu_delete_all -> {
-                    showDeleteAllDialog()
+                    if (isEmpty) {
+                        showNoDataDialog()
+                    } else {
+                        showDeleteAllDialog()
+                    }
                     true
                 }
                 else -> false
             }
         }
         popup.show()
+    }
+
+    private fun showNoDataDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val cardIcon = dialogView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.card_info_icon)
+        cardIcon.setCardBackgroundColor(android.graphics.Color.parseColor("#F59E0B")) // Orange
+        
+        // Find the ImageView inside the CardView
+        val imageView = cardIcon.getChildAt(0) as? android.widget.ImageView
+        imageView?.setImageResource(R.drawable.info)
+        
+        val title = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_title)
+        val message = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_message)
+        val btnCancel = dialogView.findViewById<View>(R.id.btn_cancel)
+        val btnConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btn_confirm_delete)
+
+        title.text = "Peringatan"
+        title.setTextColor(android.graphics.Color.parseColor("#92400E"))
+        
+        // Change header background color to light orange
+        val header = title.parent as? View
+        header?.setBackgroundColor(android.graphics.Color.parseColor("#FFFBEB"))
+
+        message.text = "Tidak ada data riwayat yang dapat dihapus."
+        btnCancel.visibility = View.GONE
+        btnConfirm.text = "Tutup"
+        btnConfirm.setBackgroundColor(android.graphics.Color.parseColor("#F59E0B"))
+        
+        // Centering the button
+        val params = btnConfirm.layoutParams as android.widget.LinearLayout.LayoutParams
+        params.width = android.widget.LinearLayout.LayoutParams.MATCH_PARENT
+        params.weight = 0f
+        params.marginStart = 0
+        btnConfirm.layoutParams = params
+        
+        btnConfirm.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showSuccessDeleteDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_success_contribution, null)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val title = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_title)
+        val message = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_message)
+        val btnClose = dialogView.findViewById<View>(R.id.btn_close_success)
+
+        title.text = "Berhasil Dihapus"
+        message.text = "Semua riwayat identifikasi telah berhasil dihapus dari perangkat Anda."
+        
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun enterSelectionMode() {
@@ -160,26 +238,50 @@ class HistoryFragment : Fragment() {
 
     private fun showDeleteSelectedDialog() {
         val selectedIds = adapter.getSelectedIds()
-        AlertDialog.Builder(requireContext())
-            .setTitle("Hapus Data")
-            .setMessage("Hapus ${selectedIds.size} data yang dipilih?")
-            .setPositiveButton("Hapus") { _, _ ->
-                selectedIds.forEach { viewModel.deleteHistory(it) }
-                exitSelectionMode()
-            }
-            .setNegativeButton("Batal", null)
-            .show()
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val message = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_message)
+        val btnCancel = dialogView.findViewById<android.view.View>(R.id.btn_cancel)
+        val btnConfirm = dialogView.findViewById<android.view.View>(R.id.btn_confirm_delete)
+
+        message.text = "Hapus ${selectedIds.size} data riwayat yang dipilih?"
+        
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnConfirm.setOnClickListener {
+            selectedIds.forEach { viewModel.deleteHistory(it) }
+            dialog.dismiss()
+            exitSelectionMode()
+            showSuccessDeleteDialog()
+        }
+
+        dialog.show()
     }
 
     private fun showDeleteAllDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Hapus Semua")
-            .setMessage("Apakah Anda yakin ingin menghapus semua riwayat identifikasi?")
-            .setPositiveButton("Hapus") { _, _ ->
-                viewModel.clearAllHistory()
-            }
-            .setNegativeButton("Batal", null)
-            .show()
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(dialogView)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val message = dialogView.findViewById<android.widget.TextView>(R.id.tv_dialog_message)
+        val btnCancel = dialogView.findViewById<android.view.View>(R.id.btn_cancel)
+        val btnConfirm = dialogView.findViewById<android.view.View>(R.id.btn_confirm_delete)
+
+        message.text = "Apakah Anda yakin ingin menghapus semua riwayat identifikasi?"
+        
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnConfirm.setOnClickListener {
+            viewModel.clearAllHistory()
+            dialog.dismiss()
+            showSuccessDeleteDialog()
+        }
+
+        dialog.show()
     }
 
     override fun onDestroyView() {

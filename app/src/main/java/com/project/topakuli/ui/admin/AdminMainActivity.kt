@@ -5,16 +5,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.project.topakuli.R
 import com.project.topakuli.databinding.ActivityAdminMainBinding
-import com.google.android.material.badge.BadgeDrawable
-import com.google.firebase.firestore.FirebaseFirestore
-import com.project.topakuli.data.remote.model.ContributionForm
 
 class AdminMainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminMainBinding
-    private var unreadListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,41 +55,25 @@ class AdminMainActivity : AppCompatActivity() {
             }
         }
 
-        setupUnreadBadge()
-    }
+        // Logic to hide BottomNav when keyboard is visible to prevent shaking and "pushed up" look
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { _, insets ->
+            val isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val currentDest = navController.currentDestination?.id
 
-    private fun setupUnreadBadge() {
-        val firestore = FirebaseFirestore.getInstance()
-        val prefs = getSharedPreferences("topakuli_admin_notif_prefs", MODE_PRIVATE)
-        
-        unreadListener = firestore.collection("user_contributions")
-            .addSnapshotListener { snapshot, _ ->
-                if (snapshot == null) return@addSnapshotListener
-                
-                val isNotifEnabled = prefs.getBoolean("notifications_enabled", true)
-                
-                // Hitung data yang belum dibaca (field isReadByAdmin false atau tidak ada)
-                val unreadCount = snapshot.documents.count { doc ->
-                    !(doc.getBoolean("isReadByAdmin") ?: false)
-                }
-                
-                val badge = binding.adminNavView.getOrCreateBadge(R.id.admin_navigation_survei)
-                if (unreadCount > 0 && isNotifEnabled) {
-                    badge.isVisible = true
-                    // Titik hijau saja tanpa angka sesuai permintaan
-                    badge.backgroundColor = androidx.core.content.ContextCompat.getColor(this, R.color.hijau_topakuli)
-                } else {
-                    badge.isVisible = false
-                }
-
-                // Jika baru pertama kali dengar atau ada perubahan, bisa munculkan system notification juga di sini
-                // Tapi untuk sekarang kita fokus ke badge navbar sesuai permintaan sebelumnya.
+            val shouldBeVisible = when (currentDest) {
+                R.id.admin_navigation_beranda,
+                R.id.admin_navigation_herbal,
+                R.id.admin_navigation_resep,
+                R.id.admin_navigation_survei,
+                R.id.admin_navigation_setelan -> true
+                else -> false
             }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unreadListener?.remove()
+            if (shouldBeVisible) {
+                binding.adminNavView.visibility = if (isKeyboardVisible) View.GONE else View.VISIBLE
+            }
+            insets
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

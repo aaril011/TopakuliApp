@@ -17,7 +17,12 @@ object NotificationHelper {
     private const val CHANNEL_NAME = "Update Tanaman & Resep"
     private const val CHANNEL_DESC = "Pemberitahuan perubahan data dari pengelola"
 
-    fun showSystemNotification(context: Context, title: String, message: String, notificationId: Int = System.currentTimeMillis().toInt()) {
+    fun showSystemNotification(
+        context: Context, 
+        title: String, 
+        message: String, 
+        notificationId: Int = System.currentTimeMillis().toInt()
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
             return
@@ -28,7 +33,7 @@ object NotificationHelper {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent,
+        val pendingIntent = PendingIntent.getActivity(context, notificationId, intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)

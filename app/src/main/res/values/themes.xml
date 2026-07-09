@@ -49,5 +49,16 @@
         <item name="boxCornerRadiusTopEnd">28dp</item>
         <item name="boxCornerRadiusBottomStart">28dp</item>
         <item name="boxCornerRadiusBottomEnd">28dp</item>
+        <item name="boxStrokeColor">@color/hijau_topakuli</item>
+        <item name="hintTextColor">@color/hijau_topakuli</item>
+    </style>
+
+    <style name="AdminOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/hijau_topakuli</item>
+        <item name="hintTextColor">@color/hijau_topakuli</item>
     </style>
 </resources>

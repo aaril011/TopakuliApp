@@ -52,6 +52,10 @@ class AdminSetelanFragment : Fragment() {
             findNavController().navigate(R.id.action_admin_setelan_to_laporan)
         }
 
+        binding.btnKontakApp.setOnClickListener {
+            findNavController().navigate(R.id.action_admin_setelan_to_contact)
+        }
+
         binding.btnTentangApp.setOnClickListener {
             findNavController().navigate(R.id.action_admin_setelan_to_tentang)
         }
@@ -263,9 +267,11 @@ class AdminSetelanFragment : Fragment() {
                         
                         if (role == "Administrator") {
                             binding.btnDaftarPengelola.visibility = View.VISIBLE
+                            binding.btnKontakApp.visibility = View.VISIBLE
                             binding.tvLabelAkun.visibility = View.VISIBLE
                         } else {
                             binding.btnDaftarPengelola.visibility = View.GONE
+                            binding.btnKontakApp.visibility = View.GONE
                             binding.tvLabelAkun.visibility = View.GONE
                         }
                         binding.tvAdminName.text = name

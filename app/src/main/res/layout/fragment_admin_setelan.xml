@@ -89,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
-                android:paddingTop="32dp">
+                android:paddingTop="32dp"
+                android:paddingBottom="40dp">
 
                 <!-- Admin Profile Info (Flat style) -->
                 <LinearLayout
@@ -236,6 +237,38 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_medium"
                         android:text="Laporan Statistik"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="#484C52" />
+                </LinearLayout>
+
+                <!-- Kontak Aplikasi -->
+                <LinearLayout
+                    android:id="@+id/btn_kontak_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingVertical="12dp"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_phone"
+                        app:tint="#484C52" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Kontak Aplikasi"
                         android:textColor="#333333"
                         android:textSize="14sp" />
                     <ImageView

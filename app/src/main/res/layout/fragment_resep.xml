@@ -48,7 +48,7 @@
                 android:id="@+id/et_search_resep"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:background="@drawable/bg_search_bar"
+                android:background="@drawable/bg_search_bar_selector"
                 android:drawableStart="@drawable/search"
                 android:drawableTint="#9CA3AF"
                 android:drawablePadding="12dp"

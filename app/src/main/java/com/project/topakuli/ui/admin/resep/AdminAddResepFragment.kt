@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,7 +65,45 @@ class AdminAddResepFragment : Fragment() {
         }
 
         setupActions()
+        setupCategorySpinner()
         loadTanamanList()
+    }
+
+    private fun setupCategorySpinner() {
+        val categories = arrayOf(
+            "Penyakit Dalam",
+            "Pencernaan",
+            "Pernapasan",
+            "Tulang, Sendi & Otot",
+            "Kulit & Luka",
+            "Kesehatan Wanita & Ibu",
+            "Ginjal & Saluran Kemih",
+            "Kesehatan Umum"
+        )
+
+        val categoryDetails = mapOf(
+            "Penyakit Dalam" to "Contoh: Hipertensi, kolesterol, asam urat, diabetes, anemia",
+            "Pencernaan" to "Contoh: Maag, diare, sembelit, perut kembung, mual, masuk angin",
+            "Pernapasan" to "Contoh: Batuk, pilek, flu, radang tenggorokan, asma ringan",
+            "Tulang, Sendi & Otot" to "Contoh: Rematik, pegal linu, nyeri sendi, sakit pinggang, keseleo",
+            "Kulit & Luka" to "Contoh: Gatal, bisul, luka bakar ringan, luka sayat, kutu air",
+            "Kesehatan Wanita & Ibu" to "Contoh: Nyeri haid, keputihan, nifas, pelancar ASI",
+            "Ginjal & Saluran Kemih" to "Contoh: Batu ginjal, anyang-anyangan, susah buang air kecil",
+            "Kesehatan Umum" to "Contoh: Demam, penambah stamina, daya tahan tubuh, penurun panas"
+        )
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.item_dropdown_category, categories)
+        (binding.etKategori as? AutoCompleteTextView)?.apply {
+            setAdapter(adapter)
+            // Mengatur dropdown agar muncul di bawah input
+            setDropDownBackgroundResource(R.drawable.bg_search_bar)
+
+            setOnItemClickListener { _, _, position, _ ->
+                val selected = categories[position]
+                binding.tvContohKategori.text = categoryDetails[selected]
+                binding.tvContohKategori.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun loadTanamanList() {
@@ -121,7 +161,24 @@ class AdminAddResepFragment : Fragment() {
             if (resep != null) {
                 binding.apply {
                     etJudul.setText(resep.judul)
-                    etKategori.setText(resep.kategori)
+                    etKategori.setText(resep.kategori, false)
+                    
+                    val categoryDetails = mapOf(
+                        "Penyakit Dalam" to "Contoh: Hipertensi, kolesterol, asam urat, diabetes, anemia",
+                        "Pencernaan" to "Contoh: Maag, diare, sembelit, perut kembung, mual, masuk angin",
+                        "Pernapasan" to "Contoh: Batuk, pilek, flu, radang tenggorokan, asma ringan",
+                        "Tulang, Sendi & Otot" to "Contoh: Rematik, pegal linu, nyeri sendi, sakit pinggang, keseleo",
+                        "Kulit & Luka" to "Contoh: Gatal, bisul, luka bakar ringan, luka sayat, kutu air",
+                        "Kesehatan Wanita & Ibu" to "Contoh: Nyeri haid, keputihan, nifas, pelancar ASI",
+                        "Ginjal & Saluran Kemih" to "Contoh: Batu ginjal, anyang-anyangan, susah buang air kecil",
+                        "Kesehatan Umum" to "Contoh: Demam, penambah stamina, daya tahan tubuh, penurun panas"
+                    )
+                    
+                    if (categoryDetails.containsKey(resep.kategori)) {
+                        tvContohKategori.text = categoryDetails[resep.kategori]
+                        tvContohKategori.visibility = View.VISIBLE
+                    }
+
                     etDeskripsi.setText(resep.deskripsi)
                     etManfaat.setText(resep.manfaat)
                     etBahan.setText(resep.bahan)

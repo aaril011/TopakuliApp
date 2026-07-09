@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-06-25T09:36:42.864441500Z">
+        <DropdownSelection timestamp="2026-07-01T15:07:47.513793Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Aril\.android\avd\hp_punya_aril.avd" />

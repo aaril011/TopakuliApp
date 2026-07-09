@@ -109,14 +109,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -169,7 +165,7 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -177,16 +173,35 @@
                 app:boxCornerRadiusBottomStart="12dp"
                 app:boxCornerRadiusTopEnd="12dp"
                 app:boxCornerRadiusTopStart="12dp"
-                app:hintEnabled="false">
+                app:boxStrokeColor="@color/hijau_topakuli"
+                app:hintEnabled="false"
+                app:endIconTint="@color/hijau_topakuli">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <AutoCompleteTextView
                     android:id="@+id/et_kategori"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:hint="Contoh: Penyakit Dalam"
-                    android:inputType="text" />
+                    android:hint="Pilih Kategori Penyakit"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tv_contoh_kategori"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="@color/hijau_topakuli"
+                android:textSize="11sp"
+                android:alpha="0.8"
+                android:visibility="gone"
+                tools:text="Contoh: Hipertensi, Kolesterol, Asam Urat"
+                tools:visibility="visible" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -198,14 +213,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -230,14 +241,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -259,14 +266,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -291,14 +294,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -323,14 +322,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -361,16 +356,12 @@
                         android:text="Waktu Persiapan"
                         android:textColor="#374151"
                         android:textSize="13sp" />
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp"
-                        app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusTopStart="10dp"
-                        app:hintEnabled="false">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/AdminOutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_waktu"
                             android:layout_width="match_parent"
@@ -393,16 +384,12 @@
                         android:text="Cara Pakai"
                         android:textColor="#374151"
                         android:textSize="13sp" />
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp"
-                        app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusTopStart="10dp"
-                        app:hintEnabled="false">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/AdminOutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_cara_pakai"
                             android:layout_width="match_parent"
@@ -426,16 +413,12 @@
                         android:text="Frekuensi"
                         android:textColor="#374151"
                         android:textSize="13sp" />
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp"
-                        app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusTopStart="10dp"
-                        app:hintEnabled="false">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/AdminOutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_frekuensi"
                             android:layout_width="match_parent"
@@ -459,16 +442,12 @@
                         android:text="Masa Simpan"
                         android:textColor="#374151"
                         android:textSize="13sp" />
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        app:boxCornerRadiusBottomEnd="10dp"
-                        app:boxCornerRadiusBottomStart="10dp"
-                        app:boxCornerRadiusTopEnd="10dp"
-                        app:boxCornerRadiusTopStart="10dp"
-                        app:hintEnabled="false">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/AdminOutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:hintEnabled="false">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_simpan"
                             android:layout_width="match_parent"
@@ -489,14 +468,10 @@
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/AdminOutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText

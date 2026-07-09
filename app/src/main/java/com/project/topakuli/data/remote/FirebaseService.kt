@@ -308,6 +308,37 @@ class FirebaseService {
         }
     }
 
+    suspend fun incrementIdentificationStats(plantName: String) {
+        try {
+            firestore.collection("stats").document("identifications")
+                .update(plantName, com.google.firebase.firestore.FieldValue.increment(1))
+                .await()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            // Field or document might not exist
+            val data = mapOf(plantName to 1)
+            firestore.collection("stats").document("identifications")
+                .set(data, com.google.firebase.firestore.SetOptions.merge())
+                .await()
+        }
+    }
+
+    suspend fun getIdentificationStats(): List<Pair<String, Int>> {
+        return try {
+            val doc = firestore.collection("stats").document("identifications").get().await()
+            if (doc.exists()) {
+                doc.data?.map { (key, value) ->
+                    key to (value as? Long)?.toInt()!!
+                }?.sortedByDescending { it.second } ?: emptyList()
+            } else {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            emptyList()
+        }
+    }
+
     suspend fun getVisitorStats(): Pair<Int, Int> {
         return try {
             val doc = firestore.collection("stats").document("visitors").get().await()

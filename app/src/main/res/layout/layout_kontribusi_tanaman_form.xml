@@ -79,7 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:hint="Contoh: Kumis Kucing"
                         android:padding="12dp"
                         android:textSize="13sp" />
@@ -98,7 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:hint="Contoh: Chani Gahu (Kaili)"
                         android:padding="12dp"
                         android:textSize="13sp" />
@@ -117,7 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:hint="Contoh: Orthosiphon aristatus"
                         android:padding="12dp"
                         android:textSize="13sp" />
@@ -136,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:hint="Jelaskan manfaat tanaman ini"
                         android:padding="12dp"
                         android:textSize="13sp" />
@@ -155,7 +155,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
                         android:layout_marginTop="8dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:gravity="top"
                         android:hint="Jelaskan ciri fisik tanaman..."
                         android:padding="12dp"
@@ -226,7 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:background="@drawable/bg_search_bar"
+                        android:background="@drawable/bg_search_bar_selector"
                         android:hint="Contoh: Buku Herbal, Website, atau Narasumber"
                         android:padding="12dp"
                         android:textSize="13sp" />

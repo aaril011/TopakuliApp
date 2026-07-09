@@ -15,11 +15,17 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.firestore.FirebaseFirestore
 import com.project.topakuli.R
 import com.project.topakuli.TopakuliApplication
 import com.project.topakuli.ui.admin.auth.LoginAdminActivity
 
 class SetelanFragment : Fragment() {
+
+    private val firestore = FirebaseFirestore.getInstance()
+    private var waAdmin: String? = null
+    private var phoneAdmin: String? = null
+    private var emailAdmin: String? = null
 
     private val viewModel: SetelanViewModel by viewModels {
         SetelanViewModel.Factory((requireActivity().application as TopakuliApplication).repository)
@@ -100,13 +106,37 @@ class SetelanFragment : Fragment() {
         val dialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialogTheme)
         dialog.setContentView(bottomSheetView)
 
+        val tvWa = bottomSheetView.findViewById<TextView>(R.id.contact_whatsapp_val)
+        val tvPhone = bottomSheetView.findViewById<TextView>(R.id.contact_phone_val)
+        val tvEmail = bottomSheetView.findViewById<TextView>(R.id.contact_email_val)
+
+        // Pre-fill with defaults from strings.xml
+        tvWa?.text = getString(R.string.contact_whatsapp_val)
+        tvPhone?.text = getString(R.string.contact_phone_val)
+        tvEmail?.text = getString(R.string.contact_email_val)
+
+        // Fetch from Firestore
+        firestore.collection("settings").document("contacts").get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    waAdmin = doc.getString("wa_admin")
+                    phoneAdmin = doc.getString("phone_admin")
+                    emailAdmin = doc.getString("email_admin")
+
+                    waAdmin?.let { tvWa?.text = it }
+                    phoneAdmin?.let { tvPhone?.text = it }
+                    emailAdmin?.let { tvEmail?.text = it }
+                }
+            }
+
         bottomSheetView.findViewById<ImageView>(R.id.btn_close).setOnClickListener {
             dialog.dismiss()
         }
 
         // WhatsApp Action
         bottomSheetView.findViewById<View>(R.id.btn_wa_action).setOnClickListener {
-            val phoneNumber = getString(R.string.contact_whatsapp_val).replace(" ", "").replace("-", "")
+            val rawPhone = waAdmin ?: getString(R.string.contact_whatsapp_val)
+            val phoneNumber = rawPhone.replace(" ", "").replace("-", "").replace("+", "")
             val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                 data = android.net.Uri.parse("https://api.whatsapp.com/send?phone=$phoneNumber")
             }
@@ -119,7 +149,8 @@ class SetelanFragment : Fragment() {
 
         // Phone Action
         bottomSheetView.findViewById<View>(R.id.btn_phone_action).setOnClickListener {
-            val phoneNumber = getString(R.string.contact_phone_val).replace(" ", "").replace("-", "")
+            val rawPhone = phoneAdmin ?: getString(R.string.contact_phone_val)
+            val phoneNumber = rawPhone.replace(" ", "").replace("-", "").replace("+", "")
             val intent = android.content.Intent(android.content.Intent.ACTION_DIAL).apply {
                 data = android.net.Uri.parse("tel:$phoneNumber")
             }
@@ -128,7 +159,7 @@ class SetelanFragment : Fragment() {
 
         // Email Action
         bottomSheetView.findViewById<View>(R.id.btn_email_action).setOnClickListener {
-            val email = getString(R.string.contact_email_val)
+            val email = emailAdmin ?: getString(R.string.contact_email_val)
             val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO).apply {
                 data = android.net.Uri.parse("mailto:$email")
                 putExtra(android.content.Intent.EXTRA_SUBJECT, "Pertanyaan Aplikasi Topakuli")

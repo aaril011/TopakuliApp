@@ -115,6 +115,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/contact_whatsapp_val"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -188,6 +189,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/contact_phone_val"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
@@ -261,6 +263,7 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/contact_email_val"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"

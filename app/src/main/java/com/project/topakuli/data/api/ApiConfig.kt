@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
-    private const val BASE_URL = "http://192.168.1.214:8000/"
+    private const val BASE_URL = "https://hairullabri-api-topakuli.hf.space/"
 
     fun getApiService(): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor().apply {

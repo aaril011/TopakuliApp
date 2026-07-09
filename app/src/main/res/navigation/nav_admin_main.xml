@@ -79,7 +79,16 @@
         <action
             android:id="@+id/action_admin_setelan_to_laporan"
             app:destination="@id/adminLaporanFragment" />
+        <action
+            android:id="@+id/action_admin_setelan_to_contact"
+            app:destination="@id/admin_navigation_contact" />
     </fragment>
+
+    <fragment
+        android:id="@+id/admin_navigation_contact"
+        android:name="com.project.topakuli.ui.admin.setelan.AdminContactFragment"
+        android:label="Kontak Aplikasi"
+        tools:layout="@layout/fragment_admin_contact" />
 
     <fragment
         android:id="@+id/admin_manager_list"

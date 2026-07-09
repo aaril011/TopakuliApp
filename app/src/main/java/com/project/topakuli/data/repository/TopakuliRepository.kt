@@ -269,6 +269,14 @@ class TopakuliRepository(
         return firebaseService.getVisitorStats()
     }
 
+    suspend fun incrementIdentificationStats(plantName: String) {
+        firebaseService.incrementIdentificationStats(plantName)
+    }
+
+    suspend fun getIdentificationStats(): List<Pair<String, Int>> {
+        return firebaseService.getIdentificationStats()
+    }
+
     suspend fun getAllContributions(): List<com.project.topakuli.data.remote.model.ContributionForm> {
         return firebaseService.getAllContributions()
     }

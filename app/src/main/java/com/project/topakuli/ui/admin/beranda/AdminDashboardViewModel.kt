@@ -39,14 +39,8 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
     private val _recentActivities = MutableStateFlow<List<ActivityLog>>(emptyList())
     val recentActivities: StateFlow<List<ActivityLog>> = _recentActivities.asStateFlow()
 
-    val topIdentifiedPlants: StateFlow<List<Pair<String, Int>>> = repository.allHistory
-        .map { historyList ->
-            historyList.groupBy { it.namaTanaman }
-                .map { (name, list) -> name to list.size }
-                .sortedByDescending { it.second }
-                .take(3)
-        }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    private val _topIdentifiedPlants = MutableStateFlow<List<Pair<String, Int>>>(emptyList())
+    val topIdentifiedPlants: StateFlow<List<Pair<String, Int>>> = _topIdentifiedPlants.asStateFlow()
 
     val popularResepStats: StateFlow<List<ResepEntity>> = repository.popularResep
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -80,6 +74,8 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
         fetchAdminStats()
         fetchRecentActivities()
         fetchVisitorStats()
+        fetchIdentificationStats()
+        fetchMasukanSummary()
     }
 
     private var isSynced = false
@@ -92,6 +88,8 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
                 repository.syncResep()
                 fetchAdminStats()
                 fetchVisitorStats()
+                fetchIdentificationStats()
+                fetchMasukanSummary()
                 fetchRecentActivities()
                 isSynced = true
             } catch (e: Exception) {
@@ -112,6 +110,22 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
         viewModelScope.launch {
             val stats = repository.getVisitorStats()
             _visitorSummary.value = stats
+        }
+    }
+
+    fun fetchIdentificationStats() {
+        viewModelScope.launch {
+            val stats = repository.getIdentificationStats()
+            _topIdentifiedPlants.value = stats.take(3)
+        }
+    }
+
+    fun fetchMasukanSummary() {
+        viewModelScope.launch {
+            val list = repository.getAllContributions()
+            val total = list.size
+            val unread = list.count { !it.isReadByAdmin }
+            _masukanSummary.value = SummaryData(total, unread)
         }
     }
 

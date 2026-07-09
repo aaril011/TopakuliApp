@@ -365,7 +365,8 @@ class IdentifikasiFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 repository.insertHistory(history)
-                Log.d("IdentifikasiFragment", "History saved successfully")
+                repository.incrementIdentificationStats(name)
+                Log.d("IdentifikasiFragment", "History and global stats saved successfully")
 
                 val bundle = Bundle().apply {
                     putString("nama", name)

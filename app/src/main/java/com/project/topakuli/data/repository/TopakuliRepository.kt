@@ -121,7 +121,13 @@ class TopakuliRepository(
     suspend fun syncTanaman() {
         val remoteList = firebaseService.getTanamanList()
         if (remoteList.isNotEmpty()) {
+            val remoteIds = remoteList.map { it.id }
             val localFavorites = dao.getFavoriteTanamanIds().toSet()
+            
+            // 1. Hapus data lokal yang sudah tidak ada di Cloud
+            dao.deleteOldTanaman(remoteIds)
+            
+            // 2. Update/Insert data terbaru
             val updatedList = remoteList.map { tanaman ->
                 tanaman.copy(isFavorit = localFavorites.contains(tanaman.id))
             }
@@ -133,10 +139,15 @@ class TopakuliRepository(
     suspend fun syncResep() {
         val remoteList = firebaseService.getResepList()
         if (remoteList.isNotEmpty()) {
+            val remoteIds = remoteList.map { it.id }
             val localSaved = dao.getSavedResepIds().toSet()
             // Ambil history lokal agar tidak hilang saat sync
             val localHistory = dao.getAllResepList().associate { it.id to it.lastReadAt }
             
+            // 1. Hapus data lokal yang sudah tidak ada di Cloud
+            dao.deleteOldResep(remoteIds)
+            
+            // 2. Update/Insert data terbaru
             val updatedList = remoteList.map { resep ->
                 resep.copy(
                     isSaved = localSaved.contains(resep.id),
@@ -279,5 +290,9 @@ class TopakuliRepository(
 
     suspend fun getAllContributions(): List<com.project.topakuli.data.remote.model.ContributionForm> {
         return firebaseService.getAllContributions()
+    }
+
+    suspend fun runDataMaintenance() {
+        firebaseService.cleanupOldData()
     }
 }

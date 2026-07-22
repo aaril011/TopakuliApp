@@ -50,6 +50,8 @@ class HistoryDetailFragment : Fragment() {
 
         Glide.with(this)
             .load(imagePath)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .into(binding.ivDetailImage)
 
         // Logika Animasi Toggle saat Gambar diklik

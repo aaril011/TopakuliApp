@@ -86,6 +86,10 @@ class AdminDashboardViewModel(private val repository: TopakuliRepository) : View
             try {
                 repository.syncTanaman()
                 repository.syncResep()
+                
+                // Jalankan pembersihan data > 30 hari
+                repository.runDataMaintenance()
+
                 fetchAdminStats()
                 fetchVisitorStats()
                 fetchIdentificationStats()

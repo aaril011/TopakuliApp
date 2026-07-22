@@ -72,20 +72,21 @@ class DetailResepFragment : Fragment() {
             resep?.let { data ->
                 with(binding) {
                     tvDetailJudul.text = data.judul
-                    tvDetailResepDeskripsi.text = data.deskripsi
-                    tvDetailBahan.text = data.bahan
-                    tvDetailCara.text = data.caraPembuatan
+                    tvDetailResepDeskripsi.text = formatListText(data.deskripsi)
+                    tvDetailBahan.text = formatListText(data.bahan)
+                    tvDetailCara.text = formatListText(data.caraPembuatan)
                     tvInfoWaktu.text = data.waktuPersiapan.ifEmpty { "-" }
                     tvInfoCara.text = data.caraPakai.ifEmpty { "-" }
                     tvInfoFrekuensi.text = data.frekuensi.ifEmpty { "-" }
                     tvInfoSimpan.text = data.masaSimpan.ifEmpty { "-" }
                     
-                    tvDetailCatatan.text = data.catatan
+                    tvDetailCatatan.text = formatListText(data.catatan ?: "")
                     cardWarning.visibility = if (data.catatan.isNullOrEmpty()) View.GONE else View.VISIBLE
 
                     Glide.with(this@DetailResepFragment)
                         .load(data.imageUrl)
-                        .placeholder(R.drawable.intro_1)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(ivDetailResep)
 
                     ivDetailResep.setOnClickListener {
@@ -158,7 +159,11 @@ class DetailResepFragment : Fragment() {
         val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
         val btnClose = dialog.findViewById<View>(R.id.btn_close)
         
-        Glide.with(this).load(imageUrl).into(imageView)
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(imageView)
         
         // Tap gambar atau tombol close untuk menutup
         imageView.setOnClickListener { dialog.dismiss() }
@@ -196,6 +201,42 @@ class DetailResepFragment : Fragment() {
         }
     }
 
+    private fun formatListText(text: String): CharSequence {
+        val lines = text.split("\n")
+        val builder = android.text.SpannableStringBuilder()
+        
+        lines.forEachIndexed { index, line ->
+            if (line.isBlank()) return@forEachIndexed
+            
+            val start = builder.length
+            builder.append(line)
+            val end = builder.length
+            
+            // Check if line starts with a list marker (e.g., "1. ", "• ", "- ", "* ")
+            val isNumbered = Regex("^\\d+\\.\\s").containsMatchIn(line)
+            val isBulleted = Regex("^[•\\-\\*]\\s").containsMatchIn(line)
+            
+            if (isNumbered || isBulleted) {
+                // Apply hanging indent (LeadingMarginSpan)
+                // first: margin for the first line
+                // rest: margin for the subsequent lines
+                // We want the rest to be indented more than the first
+                val indent = 48 // adjust as needed
+                builder.setSpan(
+                    android.text.style.LeadingMarginSpan.Standard(0, indent),
+                    start,
+                    end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            
+            if (index < lines.size - 1) {
+                builder.append("\n")
+            }
+        }
+        return builder
+    }
+
     inner class RelatedTanamanAdapter(
         private val items: List<TanamanObatEntity>,
         private val onClick: (TanamanObatEntity) -> Unit
@@ -205,7 +246,7 @@ class DetailResepFragment : Fragment() {
             fun bind(item: TanamanObatEntity) {
                 binding.tvNama.text = item.nama
                 binding.tvLatin.text = item.namaLatin
-                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.herbal).into(binding.ivTanaman)
+                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(binding.ivTanaman)
                 binding.root.setOnClickListener { onClick(item) }
             }
         }

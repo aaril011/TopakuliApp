@@ -30,6 +30,7 @@ class TentangFragment : Fragment() {
 
         val tvTanamanCount = view.findViewById<TextView>(R.id.tv_tanaman_count)
         val tvResepCount = view.findViewById<TextView>(R.id.tv_resep_count)
+        val tvAdminCount = view.findViewById<TextView>(R.id.tv_admin_count)
         val tvHistoryCount = view.findViewById<TextView>(R.id.tv_history_count)
 
         viewModel.tanamanCount.observe(viewLifecycleOwner) { count ->
@@ -38,6 +39,10 @@ class TentangFragment : Fragment() {
 
         viewModel.resepCount.observe(viewLifecycleOwner) { count ->
             tvResepCount.text = count.toString()
+        }
+
+        viewModel.adminCount.observe(viewLifecycleOwner) { count ->
+            tvAdminCount.text = count.toString()
         }
 
         viewModel.historyCount.observe(viewLifecycleOwner) { count ->

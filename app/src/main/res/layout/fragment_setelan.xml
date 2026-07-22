@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_setelan_content"
             android:orientation="vertical"
-            android:paddingBottom="32dp">
+            android:paddingBottom="12dp">
 
             <!-- Stats Row -->
             <LinearLayout
@@ -452,11 +452,6 @@
                         android:src="@drawable/ic_chevron_right"
                         app:tint="#484C52" />
                 </LinearLayout>
-
-                <!-- Extra spacing for small screens to avoid being covered by navbar -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp" />
 
             </LinearLayout>
         </LinearLayout>

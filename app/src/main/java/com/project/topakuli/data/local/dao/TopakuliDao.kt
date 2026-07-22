@@ -44,6 +44,9 @@ interface TopakuliDao {
     @Query("SELECT COUNT(*) FROM tanaman_obat")
     fun getTanamanCount(): Flow<Int>
 
+    @Query("DELETE FROM tanaman_obat WHERE id NOT IN (:remainingIds)")
+    suspend fun deleteOldTanaman(remainingIds: List<String>)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTanaman(tanaman: List<TanamanObatEntity>)
 
@@ -77,6 +80,9 @@ interface TopakuliDao {
 
     @Query("SELECT COUNT(*) FROM resep")
     fun getResepCount(): Flow<Int>
+
+    @Query("DELETE FROM resep WHERE id NOT IN (:remainingIds)")
+    suspend fun deleteOldResep(remainingIds: List<String>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertResep(resep: List<ResepEntity>)

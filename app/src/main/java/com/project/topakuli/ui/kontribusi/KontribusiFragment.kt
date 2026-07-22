@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import androidx.activity.result.contract.ActivityResultContracts
-import com.project.topakuli.data.remote.SupabaseStorageService
 import android.net.Uri
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -61,7 +60,11 @@ class KontribusiFragment : Fragment() {
             
             ivPreview?.let { iv ->
                 iv.visibility = View.VISIBLE
-                Glide.with(this).load(it).into(iv)
+                Glide.with(this)
+                    .load(it)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(iv)
                 layoutPlaceholder?.visibility = View.GONE
             }
         }
@@ -76,7 +79,11 @@ class KontribusiFragment : Fragment() {
 
             ivPreview?.let { iv ->
                 iv.visibility = View.VISIBLE
-                Glide.with(this).load(it).into(iv)
+                Glide.with(this)
+                    .load(it)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(iv)
                 layoutPlaceholder?.visibility = View.GONE
             }
         }
@@ -103,7 +110,9 @@ class KontribusiFragment : Fragment() {
                         findNavController().navigateUp()
                     }
                 }
-                R.id.root_layout_kontribusi_koreksi -> showMenuContribution()
+                R.id.root_layout_kontribusi_koreksi,
+                R.id.root_layout_kontribusi_resep,
+                R.id.root_layout_kontribusi_tanaman -> showMenuContribution()
                 // Jika di form resep, tanaman, atau koreksi, kembali ke menu
                 else -> {
                     showMenuContribution()
@@ -111,6 +120,7 @@ class KontribusiFragment : Fragment() {
             }
         }
         loadUserIdentity()
+        setupKeyboardScrolling()
         
         if (userName.isEmpty() || userPhone.isEmpty() || userEmail.isEmpty()) {
             showIdentityForm(fromMenu = false)
@@ -185,13 +195,15 @@ class KontribusiFragment : Fragment() {
             val phone = formBinding.etNomorTelepon.text.toString().trim()
             val email = formBinding.etEmail.text.toString().trim()
             
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
-                Toast.makeText(requireContext(), "Mohon lengkapi semua data", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            when {
+                name.isEmpty() -> formBinding.etNamaLengkap.error = "Nama lengkap harus diisi"
+                phone.isEmpty() -> formBinding.etNomorTelepon.error = "Nomor WhatsApp harus diisi"
+                email.isEmpty() -> formBinding.etEmail.error = "Email harus diisi"
+                else -> {
+                    saveUserIdentity(name, phone, email, currentSelectedRole)
+                    showMenuContribution()
+                }
             }
-
-            saveUserIdentity(name, phone, email, currentSelectedRole)
-            showMenuContribution()
         }
     }
 
@@ -262,35 +274,45 @@ class KontribusiFragment : Fragment() {
             val shelfLife = formBinding.etShelfLife.text.toString().trim()
             val sideEffects = formBinding.etSideEffects.text.toString().trim()
 
-            if (name.isEmpty() || desc.isEmpty() || keluhan.isEmpty() || bahanText.isEmpty() || langkahText.isEmpty() ||
-                prepTime.isEmpty() || usage.isEmpty() || frequency.isEmpty() || shelfLife.isEmpty() || sideEffects.isEmpty() || ref.isEmpty() || selectedRecipeImageUri == null) {
-                Toast.makeText(requireContext(), "Mohon lengkapi semua data", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            binding.progressBar.visibility = View.VISIBLE
-            lifecycleScope.launch {
-                val supabase = (requireActivity().application as TopakuliApplication).supabaseStorageService
-                val imageUrl = selectedRecipeImageUri?.let { supabase.uploadImage(it, "pengajuan_resep") }
-                
-                submitContribution(ContributionForm(
-                    id = UUID.randomUUID().toString(),
-                    userId = auth.currentUser?.uid ?: "anonymous",
-                    userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
-                    type = "resep", 
-                    recipeName = name, 
-                    recipeSymptoms = keluhan,
-                    recipeDescription = desc,
-                    recipeIngredientsText = bahanText,
-                    recipeStepsText = langkahText,
-                    recipePrepTime = prepTime, 
-                    recipeUsage = usage,
-                    recipeFrequency = frequency,
-                    recipeShelfLife = shelfLife,
-                    recipeSideEffects = sideEffects,
-                    recipeReference = ref,
-                    recipeImageUrl = imageUrl
-                ))
+            when {
+                name.isEmpty() -> formBinding.etNamaResep.error = "Nama resep harus diisi"
+                keluhan.isEmpty() -> formBinding.etKeluhan.error = "Keluhan harus diisi"
+                desc.isEmpty() -> formBinding.etDeskripsiResep.error = "Deskripsi harus diisi"
+                bahanText.isEmpty() -> formBinding.etBahan.error = "Bahan-bahan harus diisi"
+                langkahText.isEmpty() -> formBinding.etLangkah.error = "Langkah-langkah harus diisi"
+                prepTime.isEmpty() -> formBinding.etPrepTime.error = "Waktu persiapan harus diisi"
+                usage.isEmpty() -> formBinding.etUsageMode.error = "Cara pakai harus diisi"
+                frequency.isEmpty() -> formBinding.etFrequency.error = "Frekuensi harus diisi"
+                shelfLife.isEmpty() -> formBinding.etShelfLife.error = "Masa simpan harus diisi"
+                sideEffects.isEmpty() -> formBinding.etSideEffects.error = "Efek samping harus diisi"
+                ref.isEmpty() -> formBinding.etSumberResep.error = "Sumber referensi harus diisi"
+                selectedRecipeImageUri == null -> Toast.makeText(requireContext(), "Mohon unggah foto resep", Toast.LENGTH_SHORT).show()
+                else -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    lifecycleScope.launch {
+                        val supabase = (requireActivity().application as TopakuliApplication).supabaseStorageService
+                        val imageUrl = selectedRecipeImageUri?.let { supabase.uploadImage(it, "pengajuan_resep") }
+                        
+                        submitContribution(ContributionForm(
+                            id = UUID.randomUUID().toString(),
+                            userId = auth.currentUser?.uid ?: "anonymous",
+                            userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
+                            type = "resep", 
+                            recipeName = name, 
+                            recipeSymptoms = keluhan,
+                            recipeDescription = desc,
+                            recipeIngredientsText = bahanText,
+                            recipeStepsText = langkahText,
+                            recipePrepTime = prepTime, 
+                            recipeUsage = usage,
+                            recipeFrequency = frequency,
+                            recipeShelfLife = shelfLife,
+                            recipeSideEffects = sideEffects,
+                            recipeReference = ref,
+                            recipeImageUrl = imageUrl
+                        ))
+                    }
+                }
             }
         }
     }
@@ -357,35 +379,42 @@ class KontribusiFragment : Fragment() {
             val desc = formBinding.etDeskripsiTanaman.text.toString().trim()
             val ref = formBinding.etSumberReferensi.text.toString().trim()
 
-            if (name.isEmpty() || localName.isEmpty() || latin.isEmpty() || benefits.isEmpty() || desc.isEmpty() || ref.isEmpty() || selectedPlantImageUri == null) {
-                Toast.makeText(requireContext(), "Mohon lengkapi semua data", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            
-            binding.progressBar.visibility = View.VISIBLE
-            lifecycleScope.launch {
-                val supabase = (requireActivity().application as TopakuliApplication).supabaseStorageService
-                val imageUrl = selectedPlantImageUri?.let { supabase.uploadImage(it, "pengajuan_tanamanoabat") }
+            when {
+                name.isEmpty() -> formBinding.etNamaTanaman.error = "Nama tanaman harus diisi"
+                localName.isEmpty() -> formBinding.etNamaDaerah.error = "Nama daerah harus diisi"
+                latin.isEmpty() -> formBinding.etNamaLatin.error = "Nama latin harus diisi"
+                benefits.isEmpty() -> formBinding.etKhasiatTanaman.error = "Khasiat harus diisi"
+                desc.isEmpty() -> formBinding.etDeskripsiTanaman.error = "Deskripsi harus diisi"
+                ref.isEmpty() -> formBinding.etSumberReferensi.error = "Sumber referensi harus diisi"
+                selectedPlantImageUri == null -> Toast.makeText(requireContext(), "Mohon unggah foto tanaman", Toast.LENGTH_SHORT).show()
+                else -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    lifecycleScope.launch {
+                        val supabase = (requireActivity().application as TopakuliApplication).supabaseStorageService
+                        val imageUrl = selectedPlantImageUri?.let { supabase.uploadImage(it, "pengajuan_tanamanoabat") }
 
-                submitContribution(ContributionForm(
-                    id = UUID.randomUUID().toString(),
-                    userId = auth.currentUser?.uid ?: "anonymous",
-                    userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
-                    type = "tanaman", 
-                    plantName = name, 
-                    plantLocalName = localName,
-                    plantLatin = latin,
-                    plantBenefits = benefits, 
-                    plantDescription = desc,
-                    plantReference = ref,
-                    plantImageUrl = imageUrl
-                ))
+                        submitContribution(ContributionForm(
+                            id = UUID.randomUUID().toString(),
+                            userId = auth.currentUser?.uid ?: "anonymous",
+                            userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
+                            type = "tanaman", 
+                            plantName = name, 
+                            plantLocalName = localName,
+                            plantLatin = latin,
+                            plantBenefits = benefits, 
+                            plantDescription = desc,
+                            plantReference = ref,
+                            plantImageUrl = imageUrl
+                        ))
+                    }
+                }
             }
         }
     }
 
     private fun showCorrectionForm() {
         isAccessingFromMenu = false
+        selectedTargetItem = null // Reset pilihan saat masuk form
         val formBinding = LayoutKontribusiKoreksiFormBinding.inflate(layoutInflater, binding.containerKontribusi, false)
         binding.containerKontribusi.removeAllViews()
         binding.containerKontribusi.addView(formBinding.root)
@@ -408,7 +437,7 @@ class KontribusiFragment : Fragment() {
             adapter = searchAdapter
         }
 
-        formBinding.etSearchKoreksi.setOnEditorActionListener { v, actionId, event ->
+        formBinding.etSearchKoreksi.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
                 val query = formBinding.etSearchKoreksi.text.toString().trim()
                 if (query.length >= 2) {
@@ -430,6 +459,13 @@ class KontribusiFragment : Fragment() {
                     searchAdapter.submitList(emptyList())
                     formBinding.rvSearchResultsKoreksi.visibility = View.GONE
                     formBinding.tvNoResults.visibility = View.GONE
+                } else if (query.length >= 2) {
+                    // Pencarian reaktif saat mengetik
+                    performDataSearch(query) { results ->
+                        searchAdapter.submitList(results)
+                        formBinding.rvSearchResultsKoreksi.visibility = if (results.isNotEmpty()) View.VISIBLE else View.GONE
+                        formBinding.tvNoResults.visibility = if (results.isEmpty() && query.length > 3) View.VISIBLE else View.GONE
+                    }
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -445,18 +481,33 @@ class KontribusiFragment : Fragment() {
             val note = formBinding.etPenjelasanKoreksi.text.toString().trim()
             val reference = formBinding.etSumberKoreksi.text.toString().trim()
             
-            if (selectedTargetItem == null || part.isEmpty() || note.isEmpty() || reference.isEmpty()) {
-                Toast.makeText(requireContext(), "Mohon lengkapi semua data", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            when {
+                selectedTargetItem == null -> {
+                    Toast.makeText(requireContext(), "Pilih data (tanaman/resep) yang ingin dikoreksi", Toast.LENGTH_SHORT).show()
+                }
+                part.isEmpty() -> {
+                    formBinding.etBagianKoreksi.error = "Bagian yang dikoreksi harus diisi"
+                    formBinding.etBagianKoreksi.requestFocus()
+                }
+                note.isEmpty() -> {
+                    formBinding.etPenjelasanKoreksi.error = "Penjelasan koreksi harus diisi"
+                    formBinding.etPenjelasanKoreksi.requestFocus()
+                }
+                reference.isEmpty() -> {
+                    formBinding.etSumberKoreksi.error = "Sumber referensi harus diisi"
+                    formBinding.etSumberKoreksi.requestFocus()
+                }
+                else -> {
+                    submitContribution(ContributionForm(
+                        id = UUID.randomUUID().toString(),
+                        userId = auth.currentUser?.uid ?: "anonymous",
+                        userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
+                        type = "koreksi", targetItemId = selectedTargetItem?.id, targetItemName = selectedTargetItem?.name,
+                        targetItemType = selectedTargetItem?.type, correctionPart = part, correctionNote = note,
+                        correctionReference = reference
+                    ))
+                }
             }
-            submitContribution(ContributionForm(
-                id = UUID.randomUUID().toString(),
-                userId = auth.currentUser?.uid ?: "anonymous",
-                userName = userName, userEmail = userEmail, userPhone = userPhone, userRole = userRole,
-                type = "koreksi", targetItemId = selectedTargetItem?.id, targetItemName = selectedTargetItem?.name,
-                targetItemType = selectedTargetItem?.type, correctionPart = part, correctionNote = note,
-                correctionReference = reference
-            ))
         }
     }
 
@@ -503,6 +554,63 @@ class KontribusiFragment : Fragment() {
         
         dialog.setCancelable(false)
         dialog.show()
+    }
+
+    private var isKeyboardVisible = false
+    private var lastFocusedView: View? = null
+
+    private fun setupKeyboardScrolling() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            if (_binding == null) return@addOnGlobalLayoutListener
+
+            val r = android.graphics.Rect()
+            binding.root.getWindowVisibleDisplayFrame(r)
+            val screenHeight = binding.root.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            val nowVisible = keypadHeight > screenHeight * 0.15
+            val currentFocus = activity?.currentFocus
+
+            if (nowVisible) {
+                // Keyboard muncul atau pindah fokus antar EditText
+                if (!isKeyboardVisible || (currentFocus != null && currentFocus != lastFocusedView)) {
+                    isKeyboardVisible = true
+                    lastFocusedView = currentFocus
+                    
+                    if (currentFocus is EditText) {
+                        val scrollView = findNestedScrollView(binding.containerKontribusi)
+                        scrollView?.post {
+                            val rect = android.graphics.Rect()
+                            currentFocus.getDrawingRect(rect)
+                            scrollView.offsetDescendantRectToMyCoords(currentFocus, rect)
+                            // Scroll ke posisi EditText dengan offset agar nyaman di mata
+                            scrollView.smoothScrollTo(0, Math.max(0, rect.top - 150))
+                        }
+                    }
+                }
+            } else {
+                // Keyboard tertutup
+                if (isKeyboardVisible) {
+                    isKeyboardVisible = false
+                    lastFocusedView = null
+                    val scrollView = findNestedScrollView(binding.containerKontribusi)
+                    // Sesuai permintaan: kembali ke posisi awal saat keyboard hilang
+                    scrollView?.smoothScrollTo(0, 0)
+                }
+            }
+        }
+    }
+
+    private fun findNestedScrollView(view: ViewGroup): androidx.core.widget.NestedScrollView? {
+        for (i in 0 until view.childCount) {
+            val child = view.getChildAt(i)
+            if (child is androidx.core.widget.NestedScrollView) return child
+            if (child is ViewGroup) {
+                val found = findNestedScrollView(child)
+                if (found != null) return found
+            }
+        }
+        return null
     }
 
     override fun onDestroyView() { super.onDestroyView(); _binding = null }

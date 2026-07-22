@@ -70,8 +70,8 @@ class HistoryAdapter(
                 Glide.with(itemView)
                     .load(history.imagePath)
                     .apply(RequestOptions()
-                        .placeholder(R.drawable.bg_gradient_bottom) // placeholder sementara
-                        .error(R.drawable.scan) // ikon fallback
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL))
                     .into(ivHistoryImage)

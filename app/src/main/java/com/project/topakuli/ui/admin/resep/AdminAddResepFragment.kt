@@ -1,11 +1,13 @@
 package com.project.topakuli.ui.admin.resep
 
 import android.os.Bundle
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,13 +38,19 @@ class AdminAddResepFragment : Fragment() {
     private var selectedTanamanIds = mutableListOf<String>()
     private var listTanaman: List<TanamanObatEntity> = emptyList()
     private var mainImageUri: android.net.Uri? = null
+    private var isKeyboardVisible = false
+    private var lastFocusedView: View? = null
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             mainImageUri = it
             binding.layoutPlaceholder.visibility = View.GONE
             binding.ivPreview.visibility = View.VISIBLE
-            Glide.with(this).load(it).into(binding.ivPreview)
+            Glide.with(this)
+                .load(it)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
+                .into(binding.ivPreview)
         }
     }
 
@@ -66,7 +74,44 @@ class AdminAddResepFragment : Fragment() {
 
         setupActions()
         setupCategorySpinner()
+        setupKeyboardScrolling()
         loadTanamanList()
+    }
+
+    private fun setupKeyboardScrolling() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            if (_binding == null) return@addOnGlobalLayoutListener
+
+            val r = android.graphics.Rect()
+            binding.root.getWindowVisibleDisplayFrame(r)
+            val screenHeight = binding.root.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            val nowVisible = keypadHeight > screenHeight * 0.15
+            val currentFocus = activity?.currentFocus
+
+            if (nowVisible) {
+                if (!isKeyboardVisible || (currentFocus != null && currentFocus != lastFocusedView)) {
+                    isKeyboardVisible = true
+                    lastFocusedView = currentFocus
+                    
+                    if (currentFocus is EditText) {
+                        binding.scrollViewAdminResep.post {
+                            val rect = android.graphics.Rect()
+                            currentFocus.getDrawingRect(rect)
+                            binding.scrollViewAdminResep.offsetDescendantRectToMyCoords(currentFocus, rect)
+                            binding.scrollViewAdminResep.smoothScrollTo(0, Math.max(0, rect.top - 150))
+                        }
+                    }
+                }
+            } else {
+                if (isKeyboardVisible) {
+                    isKeyboardVisible = false
+                    lastFocusedView = null
+                    binding.scrollViewAdminResep.smoothScrollTo(0, 0)
+                }
+            }
+        }
     }
 
     private fun setupCategorySpinner() {
@@ -203,7 +248,11 @@ class AdminAddResepFragment : Fragment() {
                     if (!resep.imageUrl.isNullOrEmpty()) {
                         layoutPlaceholder.visibility = View.GONE
                         ivPreview.visibility = View.VISIBLE
-                        Glide.with(requireContext()).load(resep.imageUrl).into(ivPreview)
+                        Glide.with(requireContext())
+                            .load(resep.imageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(ivPreview)
                     }
                 }
             }
@@ -228,6 +277,59 @@ class AdminAddResepFragment : Fragment() {
         binding.btnSelectTanaman.setOnClickListener {
             showMultiSelectTanaman()
         }
+
+        setupAutoList(binding.etBahan)
+        setupAutoList(binding.etCara)
+    }
+
+    private fun setupAutoList(editText: android.widget.EditText) {
+        editText.addTextChangedListener(object : android.text.TextWatcher {
+            private var isInternalChange = false
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isInternalChange) return
+                
+                // Detect newline addition (Enter pressed)
+                // In onTextChanged, if 1 character is added and it's \n
+                if (count == 1 && before == 0 && s?.get(start) == '\n') {
+                    val text = s.toString()
+                    
+                    // Find the start of the line that was JUST finished (the line before the \n)
+                    val lastLineEnd = start
+                    var lastLineStart = text.lastIndexOf('\n', lastLineEnd - 1) + 1
+                    if (lastLineStart < 0) lastLineStart = 0
+                    
+                    val lastLine = text.substring(lastLineStart, lastLineEnd)
+                    
+                    // Check if last line was a list item
+                    val numberedMatch = Regex("^(\\d+)\\.\\s").find(lastLine)
+                    val bulletMatch = Regex("^[•\\-\\*]\\s").find(lastLine)
+
+                    if (numberedMatch != null || bulletMatch != null) {
+                        // If user pressed Enter on a line that ONLY has the symbol, end the list
+                        if (lastLine.trim() == numberedMatch?.value?.trim() || lastLine.trim() == bulletMatch?.value?.trim()) {
+                            isInternalChange = true
+                            editText.text.delete(lastLineStart, start + 1)
+                            isInternalChange = false
+                            return
+                        }
+
+                        val nextSymbol = if (numberedMatch != null) {
+                            val nextNum = numberedMatch.groupValues[1].toInt() + 1
+                            "$nextNum. "
+                        } else {
+                            bulletMatch?.value ?: "• "
+                        }
+
+                        isInternalChange = true
+                        editText.text.insert(start + 1, nextSymbol)
+                        isInternalChange = false
+                    }
+                }
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 
     private fun saveResep() {

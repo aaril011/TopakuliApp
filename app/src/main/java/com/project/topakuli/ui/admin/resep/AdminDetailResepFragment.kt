@@ -53,10 +53,10 @@ class AdminDetailResepFragment : Fragment() {
                     tvJudul.text = resep.judul
                     tvKategori.text = "Kategori: ${resep.kategori}"
                     tvKesulitan.text = "Kesulitan: ${resep.tingkatKesulitan}"
-                    tvDeskripsi.text = resep.deskripsi
-                    tvManfaat.text = resep.manfaat
-                    tvBahan.text = resep.bahan
-                    tvCara.text = resep.caraPembuatan
+                    tvDeskripsi.text = formatListText(resep.deskripsi)
+                    tvManfaat.text = formatListText(resep.manfaat)
+                    tvBahan.text = formatListText(resep.bahan)
+                    tvCara.text = formatListText(resep.caraPembuatan)
                     tvInfoWaktu.text = resep.waktuPersiapan.ifEmpty { "-" }
                     tvInfoCara.text = resep.caraPakai.ifEmpty { "-" }
                     tvInfoFrekuensi.text = resep.frekuensi.ifEmpty { "-" }
@@ -64,7 +64,7 @@ class AdminDetailResepFragment : Fragment() {
                     
                     if (!resep.catatan.isNullOrEmpty()) {
                         cardCatatan.visibility = View.VISIBLE
-                        tvCatatan.text = resep.catatan
+                        tvCatatan.text = formatListText(resep.catatan)
                     } else {
                         cardCatatan.visibility = View.GONE
                     }
@@ -96,8 +96,8 @@ class AdminDetailResepFragment : Fragment() {
 
                     Glide.with(this@AdminDetailResepFragment)
                         .load(resep.imageUrl)
-                        .placeholder(R.drawable.icoon_book)
-                        .error(R.drawable.icoon_book)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(ivResepMain)
 
                     ivResepMain.setOnClickListener {
@@ -115,7 +115,11 @@ class AdminDetailResepFragment : Fragment() {
         val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
         val btnClose = dialog.findViewById<View>(R.id.btn_close)
         
-        Glide.with(this).load(imageUrl).into(imageView)
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(imageView)
         
         // Tap gambar atau tombol close untuk menutup
         imageView.setOnClickListener { dialog.dismiss() }
@@ -132,7 +136,7 @@ class AdminDetailResepFragment : Fragment() {
             fun bind(item: TanamanObatEntity) {
                 binding.tvNama.text = item.nama
                 binding.tvLatin.text = item.namaLatin
-                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.herbal).into(binding.ivTanaman)
+                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(binding.ivTanaman)
                 binding.root.setOnClickListener { onClick(item) }
             }
         }
@@ -158,6 +162,37 @@ class AdminDetailResepFragment : Fragment() {
             }
             findNavController().navigate(R.id.admin_add_resep, bundle)
         }
+    }
+
+    private fun formatListText(text: String): CharSequence {
+        val lines = text.split("\n")
+        val builder = android.text.SpannableStringBuilder()
+
+        lines.forEachIndexed { index, line ->
+            if (line.isBlank()) return@forEachIndexed
+
+            val start = builder.length
+            builder.append(line)
+            val end = builder.length
+
+            val isNumbered = Regex("^\\d+\\.\\s").containsMatchIn(line)
+            val isBulleted = Regex("^[•\\-\\*]\\s").containsMatchIn(line)
+
+            if (isNumbered || isBulleted) {
+                val indent = 48
+                builder.setSpan(
+                    android.text.style.LeadingMarginSpan.Standard(0, indent),
+                    start,
+                    end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+            if (index < lines.size - 1) {
+                builder.append("\n")
+            }
+        }
+        return builder
     }
 
     override fun onDestroyView() {

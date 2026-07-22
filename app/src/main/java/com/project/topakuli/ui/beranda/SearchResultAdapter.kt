@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.topakuli.R
 import com.project.topakuli.databinding.ItemResepHomeBinding
 
 class SearchResultAdapter(
@@ -37,6 +38,8 @@ class SearchResultAdapter(
             
             Glide.with(itemView.context)
                 .load(item.imageUrl)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(binding.ivResep)
                 
             binding.root.setOnClickListener { onItemClick(item.id, item.type) }

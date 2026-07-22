@@ -98,6 +98,121 @@ class AdminLaporanFragment : Fragment() {
                 viewModel.laporanData.collect { data ->
                     updateSummaryCards(data)
                     updateChart(data.categoryStats)
+                    updatePopularItemsUI(data)
+                    updateUsageStatsUI(data)
+                }
+            }
+        }
+    }
+
+    private fun updateUsageStatsUI(data: AdminLaporanViewModel.LaporanData) {
+        // Visitor Section
+        val totalVisitor = (data.visitorsPakuli + data.visitorsOutside).coerceAtLeast(1)
+        com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageVisitor1.root).apply {
+            tvStatsName.text = "Masyarakat Desa Pakuli"
+            tvStatsCount.text = data.visitorsPakuli.toString()
+            progressStats.progress = (data.visitorsPakuli * 100 / totalVisitor)
+            progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_orange)
+        }
+        com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageVisitor2.root).apply {
+            tvStatsName.text = "Masyarakat Luar Desa Pakuli"
+            tvStatsCount.text = data.visitorsOutside.toString()
+            progressStats.progress = (data.visitorsOutside * 100 / totalVisitor)
+            progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_orange)
+        }
+
+        // Identification Section
+        val identViews = listOf(
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageIdent1.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageIdent2.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageIdent3.root)
+        )
+        identViews.forEach { it.root.visibility = View.GONE }
+        if (data.topIdentified.isNotEmpty()) {
+            val maxIdent = data.topIdentified.first().second.coerceAtLeast(1)
+            data.topIdentified.forEachIndexed { index, pair ->
+                if (index < identViews.size) {
+                    identViews[index].apply {
+                        root.visibility = View.VISIBLE
+                        tvStatsName.text = pair.first
+                        tvStatsCount.text = "${pair.second}x"
+                        progressStats.progress = (pair.second * 100 / maxIdent)
+                        progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_green)
+                    }
+                }
+            }
+        }
+
+        // Views Section
+        val viewViews = listOf(
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageView1.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageView2.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportUsageView3.root)
+        )
+        viewViews.forEach { it.root.visibility = View.GONE }
+        if (data.topViewed.isNotEmpty()) {
+            val maxView = data.topViewed.first().second.coerceAtLeast(1)
+            data.topViewed.forEachIndexed { index, pair ->
+                if (index < viewViews.size) {
+                    viewViews[index].apply {
+                        root.visibility = View.VISIBLE
+                        tvStatsName.text = pair.first
+                        tvStatsCount.text = "${pair.second} tayangan"
+                        progressStats.progress = (pair.second * 100 / maxView)
+                        progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_blue)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updatePopularItemsUI(data: AdminLaporanViewModel.LaporanData) {
+        // Plants Section
+        val plantViews = listOf(
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportPlantStat1.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportPlantStat2.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportPlantStat3.root)
+        )
+        
+        plantViews.forEach { it.root.visibility = View.GONE }
+        
+        if (data.topPlants.isEmpty()) {
+            binding.tvEmptyPlantReport.visibility = View.VISIBLE
+        } else {
+            binding.tvEmptyPlantReport.visibility = View.GONE
+            val maxPlant = data.topPlants.first().second.coerceAtLeast(1)
+            data.topPlants.take(3).forEachIndexed { index, pair ->
+                plantViews[index].apply {
+                    root.visibility = View.VISIBLE
+                    tvStatsName.text = pair.first
+                    tvStatsCount.text = "${pair.second} aktivitas"
+                    progressStats.progress = (pair.second * 100 / maxPlant)
+                    progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_green)
+                }
+            }
+        }
+
+        // Recipes Section
+        val recipeViews = listOf(
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportRecipeStat1.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportRecipeStat2.root),
+            com.project.topakuli.databinding.ItemStatsProgressBinding.bind(binding.reportRecipeStat3.root)
+        )
+        
+        recipeViews.forEach { it.root.visibility = View.GONE }
+
+        if (data.topRecipes.isEmpty()) {
+            binding.tvEmptyRecipeReport.visibility = View.VISIBLE
+        } else {
+            binding.tvEmptyRecipeReport.visibility = View.GONE
+            val maxRecipe = data.topRecipes.first().second.coerceAtLeast(1)
+            data.topRecipes.take(3).forEachIndexed { index, pair ->
+                recipeViews[index].apply {
+                    root.visibility = View.VISIBLE
+                    tvStatsName.text = pair.first
+                    tvStatsCount.text = "${pair.second} aktivitas"
+                    progressStats.progress = (pair.second * 100 / maxRecipe)
+                    progressStats.progressDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.bg_progress_stats_blue)
                 }
             }
         }
@@ -115,6 +230,9 @@ class AdminLaporanFragment : Fragment() {
 
         binding.tvCountPengajuan.text = data.pengajuanData.toString()
         binding.tvDeletedPengajuan.text = "${data.pengajuanDihapus} dihapus"
+
+        binding.tvCountWargaPakuli.text = data.visitorsPakuli.toString()
+        binding.tvCountWargaLuar.text = data.visitorsOutside.toString()
     }
 
     private fun updateChart(categoryData: List<AdminLaporanViewModel.CategoryActivity>) {

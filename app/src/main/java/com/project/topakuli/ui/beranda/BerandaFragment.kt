@@ -204,6 +204,8 @@ class BerandaFragment : Fragment() {
         }
     }
 
+    private var searchJob: kotlinx.coroutines.Job? = null
+
     private fun setupSearch() {
         searchAdapter = SearchResultAdapter { id, type ->
             val bundle = Bundle().apply {
@@ -223,15 +225,25 @@ class BerandaFragment : Fragment() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString()
-                if (query.isNotEmpty()) performFuzzySearch(query) else hideSearchResults()
+                val query = s.toString().trim()
+                
+                searchJob?.cancel()
+                if (query.isEmpty()) {
+                    hideSearchResults()
+                } else {
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        kotlinx.coroutines.delay(300) // Debounce 300ms
+                        performFuzzySearch(query)
+                    }
+                }
             }
             override fun afterTextChanged(s: Editable?) {}
         })
 
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                performFuzzySearch(binding.etSearch.text.toString())
+                searchJob?.cancel()
+                performFuzzySearch(binding.etSearch.text.toString().trim())
                 true
             } else false
         }
@@ -240,29 +252,65 @@ class BerandaFragment : Fragment() {
     private fun performFuzzySearch(query: String) {
         val allTanaman = viewModel.allTanaman.value
         val allResep = viewModel.allResep.value
-        val results = mutableListOf<SearchResultAdapter.SearchItem>()
+        
+        val q = query.lowercase().trim()
+        if (q.isEmpty()) return
 
-        allTanaman.forEach { tanaman ->
-            if (FuzzySearchHelper.isSimilar(query, tanaman.nama) ||
-                FuzzySearchHelper.isSimilar(query, tanaman.namaDaerah) ||
-                FuzzySearchHelper.isSimilar(query, tanaman.khasiat)
-            ) {
-                results.add(SearchResultAdapter.SearchItem(tanaman.id, tanaman.nama, tanaman.namaDaerah, tanaman.imageUrl, "Tanaman"))
+        viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+            val tanamanResults = mutableListOf<SearchResultAdapter.SearchItem>()
+            val resepResults = mutableListOf<SearchResultAdapter.SearchItem>()
+            
+            var isPlantNameQuery = false
+
+            // 1. Cari di Tanaman
+            allTanaman.forEach { tanaman ->
+                val isDirectNameMatch = tanaman.nama.contains(q, ignoreCase = true) || 
+                                       tanaman.namaDaerah.contains(q, ignoreCase = true)
+                
+                val nameMatch = isDirectNameMatch || 
+                               FuzzySearchHelper.isSimilar(query, tanaman.nama) || 
+                               FuzzySearchHelper.isSimilar(query, tanaman.namaDaerah)
+                
+                val benefitMatch = tanaman.khasiat.contains(q, ignoreCase = true) ||
+                                  FuzzySearchHelper.isSimilar(query, tanaman.khasiat) || 
+                                  FuzzySearchHelper.isSimilar(query, tanaman.deskripsi)
+                
+                if (nameMatch || benefitMatch) {
+                    tanamanResults.add(SearchResultAdapter.SearchItem(tanaman.id, tanaman.nama, tanaman.namaDaerah, tanaman.imageUrl, "Tanaman"))
+                    if (isDirectNameMatch) isPlantNameQuery = true
+                }
+            }
+
+            // 2. Cari di Resep
+            allResep.forEach { resep ->
+                val titleMatch = resep.judul.contains(q, ignoreCase = true) || 
+                                FuzzySearchHelper.isSimilar(query, resep.judul)
+                
+                val symptomMatch = resep.manfaat.contains(q, ignoreCase = true) ||
+                                  FuzzySearchHelper.isSimilar(query, resep.manfaat) ||
+                                  resep.deskripsi.contains(q, ignoreCase = true) ||
+                                  FuzzySearchHelper.isSimilar(query, resep.deskripsi)
+                
+                if (titleMatch || symptomMatch) {
+                    resepResults.add(SearchResultAdapter.SearchItem(resep.id, resep.judul, resep.kategori, resep.imageUrl, "Resep"))
+                }
+            }
+
+            val finalResults = if (isPlantNameQuery) {
+                tanamanResults + resepResults
+            } else {
+                resepResults + tanamanResults
+            }
+
+            launch(kotlinx.coroutines.Dispatchers.Main) {
+                if (_binding != null) {
+                    showSearchResults()
+                    searchAdapter.submitList(finalResults)
+                    binding.tvSearchQueryTitle.text = if (finalResults.isNotEmpty()) 
+                        "Hasil pencarian untuk \"$query\"" else "Tidak ditemukan hasil untuk \"$query\""
+                }
             }
         }
-
-        allResep.forEach { resep ->
-            if (FuzzySearchHelper.isSimilar(query, resep.judul) ||
-                FuzzySearchHelper.isSimilar(query, resep.manfaat) ||
-                FuzzySearchHelper.isSimilar(query, resep.deskripsi)
-            ) {
-                results.add(SearchResultAdapter.SearchItem(resep.id, resep.judul, resep.kategori, resep.imageUrl, "Resep"))
-            }
-        }
-
-        showSearchResults()
-        searchAdapter.submitList(results)
-        binding.tvSearchQueryTitle.text = if (results.isNotEmpty()) "Hasil pencarian untuk \"$query\"" else "Tidak ditemukan hasil untuk \"$query\""
     }
 
     private fun showSearchResults() {

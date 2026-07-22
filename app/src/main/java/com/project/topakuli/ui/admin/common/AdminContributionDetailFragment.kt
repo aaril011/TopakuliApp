@@ -114,7 +114,11 @@ class AdminContributionDetailFragment : Fragment() {
                     
                     if (!data.recipeImageUrl.isNullOrEmpty()) {
                         cardDetailImage.visibility = View.VISIBLE
-                        Glide.with(this@AdminContributionDetailFragment).load(data.recipeImageUrl).into(ivDetailImage)
+                        Glide.with(this@AdminContributionDetailFragment)
+                            .load(data.recipeImageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(ivDetailImage)
                     } else {
                         cardDetailImage.visibility = View.GONE
                     }
@@ -131,7 +135,11 @@ class AdminContributionDetailFragment : Fragment() {
 
                     if (!data.plantImageUrl.isNullOrEmpty()) {
                         cardDetailImage.visibility = View.VISIBLE
-                        Glide.with(this@AdminContributionDetailFragment).load(data.plantImageUrl).into(ivDetailImage)
+                        Glide.with(this@AdminContributionDetailFragment)
+                            .load(data.plantImageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(ivDetailImage)
                     } else {
                         cardDetailImage.visibility = View.GONE
                     }

@@ -381,10 +381,11 @@
                                     android:orientation="vertical"
                                     android:padding="16dp">
                                     <TextView
+                                        android:id="@+id/tv_admin_count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/poppins_bold"
-                                        android:text="8"
+                                        android:text="-"
                                         android:textColor="#7B1FA2"
                                         android:textSize="28sp" />
                                     <TextView

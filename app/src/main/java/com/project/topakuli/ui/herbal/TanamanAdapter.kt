@@ -67,6 +67,8 @@ class TanamanAdapter(
 
                         Glide.with(itemView.context)
                             .load(tanaman.imageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
                             .into(ivTanaman)
 
                         root.setOnClickListener { onItemClick(tanaman) }
@@ -99,6 +101,8 @@ class TanamanAdapter(
 
                         Glide.with(itemView.context)
                             .load(tanaman.imageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
                             .into(ivTanaman)
 
                         root.setOnClickListener { onItemClick(tanaman) }

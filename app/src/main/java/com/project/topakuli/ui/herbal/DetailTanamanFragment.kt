@@ -67,12 +67,13 @@ class DetailTanamanFragment : Fragment() {
                     tvDetailNama.text = data.nama
                     tvDetailNamaDaerah.text = data.namaDaerah
                     tvDetailNamaLatin.text = data.namaLatin
-                    tvDetailDeskripsi.text = data.deskripsi
-                    tvDetailKhasiat.text = data.khasiat
+                    tvDetailDeskripsi.text = formatListText(data.deskripsi)
+                    tvDetailKhasiat.text = formatListText(data.khasiat)
 
                     Glide.with(this@DetailTanamanFragment)
                         .load(data.imageUrl)
-                        .placeholder(R.drawable.herbal)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(ivDetailTanaman)
                     
                     ivDetailTanaman.setOnClickListener {
@@ -151,7 +152,7 @@ class DetailTanamanFragment : Fragment() {
             fun bind(item: ResepEntity) {
                 binding.tvJudul.text = item.judul
                 binding.tvKategori.text = item.kategori
-                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.book).into(binding.ivResep)
+                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(binding.ivResep)
                 binding.root.setOnClickListener { onClick(item) }
             }
         }
@@ -174,7 +175,11 @@ class DetailTanamanFragment : Fragment() {
 
         inner class ViewHolder(private val binding: ItemTanamanPhotoThumbnailBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(item: TanamanImageEntity) {
-                Glide.with(itemView.context).load(item.imageUrl).into(binding.ivThumbnail)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(binding.ivThumbnail)
                 binding.btnRemove.visibility = View.GONE // Hide remove button in detail view
                 
                 binding.root.setOnClickListener {
@@ -202,12 +207,50 @@ class DetailTanamanFragment : Fragment() {
         val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
         val btnClose = dialog.findViewById<View>(R.id.btn_close)
         
-        Glide.with(this).load(imageUrl).into(imageView)
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(imageView)
         
         // Tap gambar atau tombol close untuk menutup
         imageView.setOnClickListener { dialog.dismiss() }
         btnClose.setOnClickListener { dialog.dismiss() }
         dialog.show()
+    }
+
+    private fun formatListText(text: String): CharSequence {
+        val lines = text.split("\n")
+        val builder = android.text.SpannableStringBuilder()
+
+        lines.forEachIndexed { index, line ->
+            if (line.isBlank()) {
+                if (index < lines.size - 1) builder.append("\n")
+                return@forEachIndexed
+            }
+
+            val start = builder.length
+            builder.append(line)
+            val end = builder.length
+
+            val isNumbered = Regex("^\\d+\\.\\s").containsMatchIn(line)
+            val isBulleted = Regex("^[•\\-\\*]\\s").containsMatchIn(line)
+
+            if (isNumbered || isBulleted) {
+                val indent = 48
+                builder.setSpan(
+                    android.text.style.LeadingMarginSpan.Standard(0, indent),
+                    start,
+                    end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+            if (index < lines.size - 1) {
+                builder.append("\n")
+            }
+        }
+        return builder
     }
 
     override fun onDestroyView() {

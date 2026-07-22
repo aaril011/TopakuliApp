@@ -53,6 +53,8 @@ class ResepAdapter(
 
                 Glide.with(itemView.context)
                     .load(resep.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(ivResep)
 
                 root.setOnClickListener { onItemClick(resep) }

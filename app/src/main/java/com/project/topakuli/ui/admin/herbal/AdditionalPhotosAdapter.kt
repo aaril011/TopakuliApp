@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.topakuli.R
 import com.project.topakuli.databinding.ItemTanamanPhotoThumbnailBinding
 
 class AdditionalPhotosAdapter(
@@ -51,6 +52,8 @@ class AdditionalPhotosAdapter(
         fun bind(uri: Uri, position: Int) {
             Glide.with(binding.root.context)
                 .load(uri)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(binding.ivThumbnail)
 
             binding.btnRemove.setOnClickListener {

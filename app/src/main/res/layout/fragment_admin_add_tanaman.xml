@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
+    android:fitsSystemWindows="true"
     tools:context=".ui.admin.herbal.AdminAddTanamanFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -25,9 +26,11 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view_admin_tanaman"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:isScrollContainer="true"
         android:overScrollMode="always"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -35,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="100dp"
             android:focusableInTouchMode="true"
             android:descendantFocusability="beforeDescendants">
 

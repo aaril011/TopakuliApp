@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:rowCount="2">
+                android:rowCount="3">
 
                 <!-- Tanaman Card -->
                 <com.google.android.material.card.MaterialCardView
@@ -293,6 +293,86 @@
                             android:textSize="9sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+                <!-- Warga Pakuli Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Warga Pakuli"
+                            android:textColor="#6B7280"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tv_count_warga_pakuli"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="0"
+                            android:textColor="@color/hijau_topakuli"
+                            android:textSize="24sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Total kunjungan"
+                            android:textColor="#9CA3AF"
+                            android:textSize="9sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Warga Luar Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeWidth="0dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Warga Luar"
+                            android:textColor="#6B7280"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tv_count_warga_luar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="0"
+                            android:textColor="@color/admin_teal"
+                            android:textSize="24sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="Total kunjungan"
+                            android:textColor="#9CA3AF"
+                            android:textSize="9sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
             </GridLayout>
 
             <!-- Chart Section -->
@@ -333,6 +413,151 @@
                         <include android:id="@+id/bar4" layout="@layout/item_chart_bar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" />
 
                     </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Popular Stats in Report -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Statistik Item Terpopuler (Periode)"
+                android:textColor="#1F2937"
+                android:textSize="16sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Tanaman Paling Sering Dikelola"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_empty_plant_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="Tidak ada aktivitas tanaman pada periode ini"
+                        android:textColor="#9CA3AF"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
+                    <include android:id="@+id/report_plant_stat_1" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_plant_stat_2" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_plant_stat_3" layout="@layout/item_stats_progress" />
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6" android:layout_marginVertical="20dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Resep Paling Sering Dikelola"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tv_empty_recipe_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="Tidak ada aktivitas resep pada periode ini"
+                        android:textColor="#9CA3AF"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:visibility="gone" />
+
+                    <include android:id="@+id/report_recipe_stat_1" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_recipe_stat_2" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_recipe_stat_3" layout="@layout/item_stats_progress" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Usage Stats Section (Like Dashboard) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Statistik Penggunaan Masyarakat (Periode)"
+                android:textColor="#1F2937"
+                android:textSize="16sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Asal Pengguna (Total Kumulatif)"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <include android:id="@+id/report_usage_visitor_1" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_usage_visitor_2" layout="@layout/item_stats_progress" />
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6" android:layout_marginVertical="20dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Paling Banyak Diidentifikasi"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <include android:id="@+id/report_usage_ident_1" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_usage_ident_2" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_usage_ident_3" layout="@layout/item_stats_progress" />
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#F3F4F6" android:layout_marginVertical="20dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Resep Paling Sering Diakses"
+                        android:textColor="#4B5563"
+                        android:textSize="13sp" />
+
+                    <include android:id="@+id/report_usage_view_1" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_usage_view_2" layout="@layout/item_stats_progress" />
+                    <include android:id="@+id/report_usage_view_3" layout="@layout/item_stats_progress" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

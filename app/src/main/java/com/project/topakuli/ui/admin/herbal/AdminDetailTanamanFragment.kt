@@ -56,13 +56,13 @@ class AdminDetailTanamanFragment : Fragment() {
                     tvNama.text = tanaman.nama
                     tvNamaDaerah.text = tanaman.namaDaerah
                     tvNamaLatin.text = tanaman.namaLatin
-                    tvDeskripsi.text = tanaman.deskripsi
-                    tvKhasiat.text = tanaman.khasiat
+                    tvDeskripsi.text = formatListText(tanaman.deskripsi)
+                    tvKhasiat.text = formatListText(tanaman.khasiat)
 
                     Glide.with(this@AdminDetailTanamanFragment)
                         .load(tanaman.imageUrl)
-                        .placeholder(R.drawable.herbal)
-                        .error(R.drawable.herbal)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
                         .into(ivTanamanMain)
                     
                     ivTanamanMain.setOnClickListener {
@@ -115,7 +115,7 @@ class AdminDetailTanamanFragment : Fragment() {
             fun bind(item: ResepEntity) {
                 binding.tvJudul.text = item.judul
                 binding.tvKategori.text = item.kategori
-                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.book).into(binding.ivResep)
+                Glide.with(itemView.context).load(item.imageUrl).placeholder(R.drawable.placeholder).error(R.drawable.placeholder).into(binding.ivResep)
                 binding.root.setOnClickListener { onClick(item) }
             }
         }
@@ -138,7 +138,11 @@ class AdminDetailTanamanFragment : Fragment() {
 
         inner class ViewHolder(private val binding: ItemTanamanPhotoThumbnailBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(item: TanamanImageEntity) {
-                Glide.with(itemView.context).load(item.imageUrl).into(binding.ivThumbnail)
+                Glide.with(itemView.context)
+                    .load(item.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(binding.ivThumbnail)
                 binding.btnRemove.visibility = View.GONE // Hide remove button in detail view
                 
                 binding.root.setOnClickListener {
@@ -166,7 +170,11 @@ class AdminDetailTanamanFragment : Fragment() {
         val imageView = dialog.findViewById<android.widget.ImageView>(R.id.iv_full_preview)
         val btnClose = dialog.findViewById<View>(R.id.btn_close)
         
-        Glide.with(this).load(imageUrl).into(imageView)
+        Glide.with(this)
+            .load(imageUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(imageView)
         
         // Tap gambar atau tombol close untuk menutup
         imageView.setOnClickListener { dialog.dismiss() }
@@ -183,6 +191,40 @@ class AdminDetailTanamanFragment : Fragment() {
             }
             findNavController().navigate(R.id.admin_add_tanaman, bundle)
         }
+    }
+
+    private fun formatListText(text: String): CharSequence {
+        val lines = text.split("\n")
+        val builder = android.text.SpannableStringBuilder()
+
+        lines.forEachIndexed { index, line ->
+            if (line.isBlank()) {
+                if (index < lines.size - 1) builder.append("\n")
+                return@forEachIndexed
+            }
+
+            val start = builder.length
+            builder.append(line)
+            val end = builder.length
+
+            val isNumbered = Regex("^\\d+\\.\\s").containsMatchIn(line)
+            val isBulleted = Regex("^[•\\-\\*]\\s").containsMatchIn(line)
+
+            if (isNumbered || isBulleted) {
+                val indent = 48
+                builder.setSpan(
+                    android.text.style.LeadingMarginSpan.Standard(0, indent),
+                    start,
+                    end,
+                    android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+
+            if (index < lines.size - 1) {
+                builder.append("\n")
+            }
+        }
+        return builder
     }
 
     override fun onDestroyView() {

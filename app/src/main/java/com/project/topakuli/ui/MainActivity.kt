@@ -77,14 +77,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeToNotificationTopic() {
-        com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all_users")
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    android.util.Log.e("MainActivity", "Topic subscription failed")
-                } else {
-                    android.util.Log.d("MainActivity", "Subscribed to all_users topic")
+        val prefs = getSharedPreferences("topakuli_notif_prefs", MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        
+        if (notificationsEnabled) {
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all_users")
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        android.util.Log.e("MainActivity", "Topic subscription failed")
+                    } else {
+                        android.util.Log.d("MainActivity", "Subscribed to all_users topic")
+                    }
                 }
-            }
+        } else {
+            com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("all_users")
+        }
     }
 
     override fun onNewIntent(intent: android.content.Intent) {

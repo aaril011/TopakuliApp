@@ -15,6 +15,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         
+        // Check user preference before showing notification
+        val prefs = getSharedPreferences("topakuli_notif_prefs", MODE_PRIVATE)
+        val notificationsEnabled = prefs.getBoolean("notifications_enabled", true)
+        
+        if (!notificationsEnabled) {
+            Log.d(TAG, "Notifications are disabled by user. Skipping notification display.")
+            return
+        }
+
         Log.d(TAG, "From: ${remoteMessage.from}")
 
         // Handle data payload

@@ -92,10 +92,10 @@ class SetelanFragment : Fragment() {
             prefs.edit().putBoolean("notifications_enabled", isChecked).apply()
             
             if (isChecked) {
+                com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic("all_users")
                 Toast.makeText(requireContext(), "Notifikasi diaktifkan", Toast.LENGTH_SHORT).show()
-                // Restart notification listener in MainActivity if needed, 
-                // but usually it requires app restart or a broadcast
             } else {
+                com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic("all_users")
                 Toast.makeText(requireContext(), "Notifikasi dimatikan", Toast.LENGTH_SHORT).show()
             }
         }

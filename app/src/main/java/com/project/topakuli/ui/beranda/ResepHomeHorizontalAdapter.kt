@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.topakuli.R
 import com.project.topakuli.data.local.entity.ResepEntity
 import com.project.topakuli.databinding.ItemResepHorizontalBinding
 
@@ -35,6 +36,8 @@ class ResepHomeHorizontalAdapter(
 
                 Glide.with(itemView.context)
                     .load(resep.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(ivResep)
 
                 root.setOnClickListener { onItemClick(resep) }

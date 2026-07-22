@@ -37,7 +37,8 @@ class ManageResepAdapter(
 
                 Glide.with(root.context)
                     .load(resep.imageUrl)
-                    .placeholder(R.drawable.intro_1)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .thumbnail(0.1f)
                     .into(ivResep)
 

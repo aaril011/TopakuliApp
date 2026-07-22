@@ -97,7 +97,7 @@
                             android:layout_weight="1"
                             android:background="@null"
                             android:fontFamily="@font/poppins_regular"
-                            android:hint="Cari khasiat tanaman..."
+                            android:hint="Cari berdasarkan gejala..."
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:textColor="#1F2937"

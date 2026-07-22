@@ -248,6 +248,37 @@ class FirebaseService {
         firestore.collection("resep").document(id).delete().await()
     }
 
+    suspend fun cleanupOldData() {
+        try {
+            val thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000)
+            
+            // 1. Bersihkan Log Aktivitas > 30 hari
+            val oldLogs = firestore.collection("activity_logs")
+                .whereLessThan("timestamp", thirtyDaysAgo)
+                .get()
+                .await()
+            
+            for (doc in oldLogs.documents) {
+                doc.reference.delete()
+            }
+
+            // 2. Bersihkan Notifikasi Publik > 30 hari
+            val oldNotifs = firestore.collection("public_notifications")
+                .whereLessThan("timestamp", thirtyDaysAgo)
+                .get()
+                .await()
+
+            for (doc in oldNotifs.documents) {
+                doc.reference.delete()
+            }
+            
+            android.util.Log.d("FirebaseService", "Cleanup: Berhasil menghapus data lama (>30 hari)")
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            android.util.Log.e("FirebaseService", "Cleanup Error: ${e.message}")
+        }
+    }
+
     suspend fun uploadImage(imageUri: Uri, folder: String): String? {
         val fileName = "${System.currentTimeMillis()}.jpg"
         val ref = storage.reference.child("$folder/$fileName")

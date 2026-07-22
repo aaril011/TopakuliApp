@@ -1,10 +1,12 @@
 package com.project.topakuli.ui.admin.herbal
 
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -39,6 +41,8 @@ class AdminAddTanamanFragment : Fragment() {
     private var mainImageUri: Uri? = null
     private lateinit var additionalPhotosAdapter: AdditionalPhotosAdapter
     private var initialGalleryImages: List<TanamanImageEntity> = emptyList()
+    private var isKeyboardVisible = false
+    private var lastFocusedView: View? = null
 
     private val pickMainImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
@@ -83,7 +87,44 @@ class AdminAddTanamanFragment : Fragment() {
         }
 
         setupActions()
+        setupKeyboardScrolling()
         loadResepList()
+    }
+
+    private fun setupKeyboardScrolling() {
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            if (_binding == null) return@addOnGlobalLayoutListener
+
+            val r = android.graphics.Rect()
+            binding.root.getWindowVisibleDisplayFrame(r)
+            val screenHeight = binding.root.rootView.height
+            val keypadHeight = screenHeight - r.bottom
+
+            val nowVisible = keypadHeight > screenHeight * 0.15
+            val currentFocus = activity?.currentFocus
+
+            if (nowVisible) {
+                if (!isKeyboardVisible || (currentFocus != null && currentFocus != lastFocusedView)) {
+                    isKeyboardVisible = true
+                    lastFocusedView = currentFocus
+                    
+                    if (currentFocus is EditText) {
+                        binding.scrollViewAdminTanaman.post {
+                            val rect = android.graphics.Rect()
+                            currentFocus.getDrawingRect(rect)
+                            binding.scrollViewAdminTanaman.offsetDescendantRectToMyCoords(currentFocus, rect)
+                            binding.scrollViewAdminTanaman.smoothScrollTo(0, Math.max(0, rect.top - 150))
+                        }
+                    }
+                }
+            } else {
+                if (isKeyboardVisible) {
+                    isKeyboardVisible = false
+                    lastFocusedView = null
+                    binding.scrollViewAdminTanaman.smoothScrollTo(0, 0)
+                }
+            }
+        }
     }
 
     private fun loadResepList() {
@@ -108,7 +149,11 @@ class AdminAddTanamanFragment : Fragment() {
                     if (!tanaman.imageUrl.isNullOrEmpty()) {
                         layoutPlaceholder.visibility = View.GONE
                         ivPreview.visibility = View.VISIBLE
-                        Glide.with(requireContext()).load(tanaman.imageUrl).into(ivPreview)
+                        Glide.with(requireContext())
+                            .load(tanaman.imageUrl)
+                            .placeholder(R.drawable.placeholder)
+                            .error(R.drawable.placeholder)
+                            .into(ivPreview)
                     }
                 }
             }

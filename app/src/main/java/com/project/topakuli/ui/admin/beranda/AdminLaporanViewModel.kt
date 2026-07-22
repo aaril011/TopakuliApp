@@ -25,7 +25,13 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
         val resepDihapus: Int = 0,
         val koreksiDihapus: Int = 0,
         val pengajuanDihapus: Int = 0,
-        val categoryStats: List<CategoryActivity> = emptyList()
+        val visitorsPakuli: Int = 0,
+        val visitorsOutside: Int = 0,
+        val categoryStats: List<CategoryActivity> = emptyList(),
+        val topPlants: List<Pair<String, Int>> = emptyList(),
+        val topRecipes: List<Pair<String, Int>> = emptyList(),
+        val topIdentified: List<Pair<String, Int>> = emptyList(),
+        val topViewed: List<Pair<String, Int>> = emptyList()
     )
 
     data class CategoryActivity(
@@ -43,19 +49,18 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
     fun fetchLaporanData(month: Int, year: Int) {
         viewModelScope.launch {
             try {
-                // Increase limit to 500 to ensure we get enough data for monthly statistics
-                val logs = repository.getRecentActivities(500)
+                // Increase limit to 1000 to ensure we get enough data for monthly statistics
+                val logs = repository.getRecentActivities(1000)
                 
                 // Ambil data kontribusi untuk statistik
                 val contributions = repository.getAllContributions()
 
+                // Filter logs for the selected month
+                val monthlyLogs = logs.filter { isTargetMonth(it.timestamp, month, year) }
+
                 // Calculate summaries for SELECTED MONTH
-                val tanamanBaru = logs.count { 
-                    it.type == "Tambah" && it.target == "Tanaman" && isTargetMonth(it.timestamp, month, year)
-                }
-                val resepBaru = logs.count { 
-                    it.type == "Tambah" && it.target == "Resep" && isTargetMonth(it.timestamp, month, year)
-                }
+                val tanamanBaru = monthlyLogs.count { it.type == "Tambah" && it.target == "Tanaman" }
+                val resepBaru = monthlyLogs.count { it.type == "Tambah" && it.target == "Resep" }
                 
                 // Hitung berdasarkan type di user_contributions
                 val koreksiMasuk = contributions.count { 
@@ -66,18 +71,38 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
                 }
 
                 // Deleted Counts (from logs)
-                val tanamanDihapus = logs.count {
-                    it.type == "Hapus" && it.target == "Tanaman" && isTargetMonth(it.timestamp, month, year)
-                }
-                val resepDihapus = logs.count {
-                    it.type == "Hapus" && it.target == "Resep" && isTargetMonth(it.timestamp, month, year)
-                }
-                val koreksiDihapus = logs.count {
-                    it.type == "Hapus" && it.target == "Koreksi" && isTargetMonth(it.timestamp, month, year)
-                }
-                val pengajuanDihapus = logs.count {
-                    it.type == "Hapus" && it.target == "Ajuan" && isTargetMonth(it.timestamp, month, year)
-                }
+                val tanamanDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Tanaman" }
+                val resepDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Resep" }
+                val koreksiDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Koreksi" }
+                val pengajuanDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Ajuan" }
+
+                // Visitor Stats (Note: Currently Firestore only stores total counts)
+                // For a true periodic report, we would need to store monthly stats in Firestore.
+                // For now, we fetch the current totals as "data real".
+                val visitorStats = repository.getVisitorStats()
+
+                // Popular Items for the month based on activity logs (Pengelolaan)
+                val topPlants = monthlyLogs.filter { it.target == "Tanaman" && it.targetName.isNotEmpty() }
+                    .groupBy { it.targetName }
+                    .map { it.key to it.value.size }
+                    .sortedByDescending { it.second }
+                    .take(3)
+
+                val topRecipes = monthlyLogs.filter { it.target == "Resep" && it.targetName.isNotEmpty() }
+                    .groupBy { it.targetName }
+                    .map { it.key to it.value.size }
+                    .sortedByDescending { it.second }
+                    .take(3)
+
+                // Usage stats based on history/logs if available
+                // Since identifications are saved in global stats, we'll fetch them here.
+                val topIdentified = repository.getIdentificationStats().take(3)
+                
+                // For top viewed, we use the local DB data which was synced from Firebase
+                val topViewed = repository.getAllResepList()
+                    .sortedByDescending { it.viewCount }
+                    .take(3)
+                    .map { it.judul to it.viewCount }
 
                 // Prepare Category Stats for Chart
                 val rawStats = listOf(
@@ -95,7 +120,9 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
                 _laporanData.value = LaporanData(
                     tanamanBaru, resepBaru, koreksiMasuk, pengajuanData,
                     tanamanDihapus, resepDihapus, koreksiDihapus, pengajuanDihapus,
-                    categoryStats
+                    visitorStats.first, visitorStats.second,
+                    categoryStats, topPlants, topRecipes,
+                    topIdentified, topViewed
                 )
             } catch (e: Exception) {
                 if (e is CancellationException) throw e

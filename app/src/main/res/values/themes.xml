@@ -50,7 +50,9 @@
         <item name="boxCornerRadiusBottomStart">28dp</item>
         <item name="boxCornerRadiusBottomEnd">28dp</item>
         <item name="boxStrokeColor">@color/hijau_topakuli</item>
-        <item name="hintTextColor">@color/hijau_topakuli</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="android:clipToOutline">true</item>
     </style>
 
     <style name="AdminOutlinedBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">

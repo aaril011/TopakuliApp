@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.project.topakuli.R
 import com.project.topakuli.data.local.entity.TanamanObatEntity
 import com.project.topakuli.databinding.ItemTanamanHomeBinding
 
@@ -33,6 +34,8 @@ class TanamanHomeAdapter(
 
                 Glide.with(itemView.context)
                     .load(tanaman.imageUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(ivTanaman)
 
                 root.setOnClickListener { onItemClick(tanaman) }

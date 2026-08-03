@@ -8,6 +8,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -55,8 +56,20 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
                 // Ambil data kontribusi untuk statistik
                 val contributions = repository.getAllContributions()
 
+                // Ambil daftar tanaman dan resep yang AKTIF saat ini (untuk filter data terhapus)
+                val activePlants = repository.allTanaman.first().map { it.nama }.toSet()
+                val activeRecipes = repository.allResep.first().map { it.judul }.toSet()
+
                 // Filter logs for the selected month
                 val monthlyLogs = logs.filter { isTargetMonth(it.timestamp, month, year) }
+
+                // Fetch Periodic Visitor Stats
+                val visitorStats = repository.getPeriodicVisitorStats(month, year)
+                
+                // Fetch Periodic Identification Stats and FILTER by active plants
+                val topIdentified = repository.getPeriodicIdentificationStats(month, year)
+                    .filter { activePlants.contains(it.first) }
+                    .take(3)
 
                 // Calculate summaries for SELECTED MONTH
                 val tanamanBaru = monthlyLogs.count { it.type == "Tambah" && it.target == "Tanaman" }
@@ -76,30 +89,22 @@ class AdminLaporanViewModel(private val repository: TopakuliRepository) : ViewMo
                 val koreksiDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Koreksi" }
                 val pengajuanDihapus = monthlyLogs.count { it.type == "Hapus" && it.target == "Ajuan" }
 
-                // Visitor Stats (Note: Currently Firestore only stores total counts)
-                // For a true periodic report, we would need to store monthly stats in Firestore.
-                // For now, we fetch the current totals as "data real".
-                val visitorStats = repository.getVisitorStats()
-
-                // Popular Items for the month based on activity logs (Pengelolaan)
-                val topPlants = monthlyLogs.filter { it.target == "Tanaman" && it.targetName.isNotEmpty() }
+                // Popular Items for the month based on activity logs (FILTER by active items)
+                val topPlants = monthlyLogs.filter { it.target == "Tanaman" && it.targetName.isNotEmpty() && activePlants.contains(it.targetName) }
                     .groupBy { it.targetName }
                     .map { it.key to it.value.size }
                     .sortedByDescending { it.second }
                     .take(3)
 
-                val topRecipes = monthlyLogs.filter { it.target == "Resep" && it.targetName.isNotEmpty() }
+                val topRecipes = monthlyLogs.filter { it.target == "Resep" && it.targetName.isNotEmpty() && activeRecipes.contains(it.targetName) }
                     .groupBy { it.targetName }
                     .map { it.key to it.value.size }
                     .sortedByDescending { it.second }
                     .take(3)
 
-                // Usage stats based on history/logs if available
-                // Since identifications are saved in global stats, we'll fetch them here.
-                val topIdentified = repository.getIdentificationStats().take(3)
-                
-                // For top viewed, we use the local DB data which was synced from Firebase
-                val topViewed = repository.getAllResepList()
+                // For top viewed resep (FILTER by active recipes)
+                val topViewed = repository.allResep.first()
+                    .filter { it.viewCount > 0 && activeRecipes.contains(it.judul) }
                     .sortedByDescending { it.viewCount }
                     .take(3)
                     .map { it.judul to it.viewCount }

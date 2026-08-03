@@ -33,22 +33,38 @@ object FuzzySearchHelper {
      * Mengecek apakah string target mengandung atau mirip dengan query.
      * Menggunakan threshold untuk menentukan tingkat kemiripan.
      */
-    fun isSimilar(query: String, target: String, threshold: Double = 0.3): Boolean {
+    fun isSimilar(query: String, target: String, threshold: Double = 0.45): Boolean {
         val q = query.lowercase().trim()
         val t = target.lowercase().trim()
 
-        // Jika mengandung kata kunci secara langsung
-        if (t.contains(q)) return true
+        // 1. Cek mengandung kata kunci secara langsung (Sub-string match)
+        if (t.contains(q) || q.contains(t)) return true
 
-        // Cek kemiripan per kata (untuk menangani kalimat seperti "sakit kepala")
-        val queryWords = q.split(" ").filter { it.length > 2 }
-        val targetWords = t.split(" ", ",", "\n").filter { it.length > 2 }
+        val queryWords = q.split(" ").filter { it.length >= 2 }
+        val targetWords = t.split(" ", ",", "\n", ".", "(", ")", "-").filter { it.length >= 2 }
 
         for (qw in queryWords) {
+            // 2. Cek Prefix Match (misal: "flur" match "flu")
+            if (targetWords.any { it.startsWith(qw) || qw.startsWith(it) }) return true
+
             for (tw in targetWords) {
+                // 3. Levenshtein Distance (Fuzzy Match)
                 val distance = levenshteinDistance(qw, tw)
-                val similarity = 1.0 - (distance.toDouble() / maxOf(qw.length, tw.length))
+                val maxLength = maxOf(qw.length, tw.length)
+                val similarity = 1.0 - (distance.toDouble() / maxLength)
+                
                 if (similarity >= (1.0 - threshold)) return true
+
+                // 4. Vowel-blind comparison (untuk typo huruf vokal/konsonan seperti "batuk" -> "bitok")
+                if (qw.length >= 3 && tw.length >= 3) {
+                    val qwNoVowels = qw.replace(Regex("[aeiou]"), "")
+                    val twNoVowels = tw.replace(Regex("[aeiou]"), "")
+                    
+                    if (qwNoVowels == twNoVowels) return true
+                    
+                    // Allow 1 char difference even without vowels for longer words
+                    if (qwNoVowels.length >= 3 && levenshteinDistance(qwNoVowels, twNoVowels) <= 1) return true
+                }
             }
         }
 

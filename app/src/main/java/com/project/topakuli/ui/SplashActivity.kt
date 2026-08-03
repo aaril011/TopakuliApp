@@ -24,6 +24,13 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkFirstInstall() {
         val sharedPref = getSharedPreferences("topakuli_pref", MODE_PRIVATE)
+        
+        // Initialize install timestamp for notification filtering if not exists
+        val topakuliPrefs = getSharedPreferences("TopakuliPrefs", MODE_PRIVATE)
+        if (!topakuliPrefs.contains("install_timestamp")) {
+            topakuliPrefs.edit().putLong("install_timestamp", System.currentTimeMillis()).apply()
+        }
+
         val isFirstInstall = sharedPref.getBoolean("is_first_install", true)
         val isAdminLoggedIn = sharedPref.getBoolean("is_admin_logged_in", false) && 
                              com.google.firebase.auth.FirebaseAuth.getInstance().currentUser != null

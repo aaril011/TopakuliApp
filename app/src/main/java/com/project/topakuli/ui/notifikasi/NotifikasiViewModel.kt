@@ -15,10 +15,10 @@ class NotifikasiViewModel(private val repository: TopakuliRepository) : ViewMode
     private val _notifications = MutableStateFlow<List<NotificationEntity>>(emptyList())
     val notifications: StateFlow<List<NotificationEntity>> = _notifications.asStateFlow()
 
-    fun fetchNotifications() {
+    fun fetchNotifications(sinceTimestamp: Long = 0L) {
         viewModelScope.launch {
             try {
-                val remoteList = repository.getRemoteNotifications()
+                val remoteList = repository.getRemoteNotifications(sinceTimestamp)
                 _notifications.value = remoteList
             } catch (e: Exception) {
                 e.printStackTrace()

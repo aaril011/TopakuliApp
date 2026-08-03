@@ -257,50 +257,54 @@ class BerandaFragment : Fragment() {
         if (q.isEmpty()) return
 
         viewLifecycleOwner.lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
-            val tanamanResults = mutableListOf<SearchResultAdapter.SearchItem>()
-            val resepResults = mutableListOf<SearchResultAdapter.SearchItem>()
+            val resultsWithScore = mutableListOf<Pair<SearchResultAdapter.SearchItem, Int>>()
             
-            var isPlantNameQuery = false
-
             // 1. Cari di Tanaman
             allTanaman.forEach { tanaman ->
-                val isDirectNameMatch = tanaman.nama.contains(q, ignoreCase = true) || 
-                                       tanaman.namaDaerah.contains(q, ignoreCase = true)
+                var score = 0
+                val isDirectNameMatch = tanaman.nama.equals(q, ignoreCase = true)
+                val isSubNameMatch = tanaman.nama.contains(q, ignoreCase = true)
+                val isDirectLocalNameMatch = tanaman.namaDaerah.equals(q, ignoreCase = true)
+                val isSubLocalNameMatch = tanaman.namaDaerah.contains(q, ignoreCase = true)
                 
-                val nameMatch = isDirectNameMatch || 
-                               FuzzySearchHelper.isSimilar(query, tanaman.nama) || 
-                               FuzzySearchHelper.isSimilar(query, tanaman.namaDaerah)
-                
-                val benefitMatch = tanaman.khasiat.contains(q, ignoreCase = true) ||
-                                  FuzzySearchHelper.isSimilar(query, tanaman.khasiat) || 
-                                  FuzzySearchHelper.isSimilar(query, tanaman.deskripsi)
-                
-                if (nameMatch || benefitMatch) {
-                    tanamanResults.add(SearchResultAdapter.SearchItem(tanaman.id, tanaman.nama, tanaman.namaDaerah, tanaman.imageUrl, "Tanaman"))
-                    if (isDirectNameMatch) isPlantNameQuery = true
+                if (isDirectNameMatch) score = 100
+                else if (isSubNameMatch) score = 95
+                else if (isDirectLocalNameMatch) score = 85
+                else if (isSubLocalNameMatch) score = 80
+                else if (FuzzySearchHelper.isSimilar(query, tanaman.nama)) score = 50 // Skor diturunkan agar resep lebih unggul saat cari gejala
+                else if (FuzzySearchHelper.isSimilar(query, tanaman.namaDaerah)) score = 45
+                else if (tanaman.khasiat.contains(q, ignoreCase = true)) score = 40
+                else if (FuzzySearchHelper.isSimilar(query, tanaman.khasiat)) score = 30
+
+                if (score > 0) {
+                    resultsWithScore.add(SearchResultAdapter.SearchItem(tanaman.id, tanaman.nama, tanaman.namaDaerah, tanaman.imageUrl, "Tanaman") to score)
                 }
             }
 
             // 2. Cari di Resep
             allResep.forEach { resep ->
-                val titleMatch = resep.judul.contains(q, ignoreCase = true) || 
-                                FuzzySearchHelper.isSimilar(query, resep.judul)
+                var score = 0
+                val isDirectTitleMatch = resep.judul.equals(q, ignoreCase = true)
+                val isSubTitleMatch = resep.judul.contains(q, ignoreCase = true)
+                val isDirectManfaatMatch = resep.manfaat.contains(q, ignoreCase = true)
                 
-                val symptomMatch = resep.manfaat.contains(q, ignoreCase = true) ||
-                                  FuzzySearchHelper.isSimilar(query, resep.manfaat) ||
-                                  resep.deskripsi.contains(q, ignoreCase = true) ||
-                                  FuzzySearchHelper.isSimilar(query, resep.deskripsi)
-                
-                if (titleMatch || symptomMatch) {
-                    resepResults.add(SearchResultAdapter.SearchItem(resep.id, resep.judul, resep.kategori, resep.imageUrl, "Resep"))
+                if (isDirectTitleMatch) score = 90
+                else if (isSubTitleMatch) score = 85
+                else if (isDirectManfaatMatch) score = 75
+                else if (FuzzySearchHelper.isSimilar(query, resep.judul)) score = 70
+                else if (FuzzySearchHelper.isSimilar(query, resep.manfaat)) score = 65
+
+                if (score > 0) {
+                    resultsWithScore.add(SearchResultAdapter.SearchItem(resep.id, resep.judul, resep.kategori, resep.imageUrl, "Resep") to score)
                 }
             }
 
-            val finalResults = if (isPlantNameQuery) {
-                tanamanResults + resepResults
-            } else {
-                resepResults + tanamanResults
-            }
+            // Urutkan berdasarkan score tertinggi
+            // Jika ada kecocokan nama tanaman yang kuat, item tanaman akan otomatis naik ke atas karena score-nya (90-100)
+            // lebih tinggi dibanding resep (max 80)
+            val finalResults = resultsWithScore
+                .sortedByDescending { it.second }
+                .map { it.first }
 
             launch(kotlinx.coroutines.Dispatchers.Main) {
                 if (_binding != null) {

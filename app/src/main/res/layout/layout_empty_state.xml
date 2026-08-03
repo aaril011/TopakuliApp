@@ -12,7 +12,7 @@
         android:id="@+id/iv_empty_illustration"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_no_connection" />
+        android:src="@drawable/ic_empty_box" />
 
     <TextView
         android:id="@+id/tv_empty_title"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Data Belum Tersedia"
+        android:text="Belum Ada Data"
         android:textColor="#374151"
         android:textSize="18sp" />
 
@@ -31,7 +31,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_regular"
         android:gravity="center"
-        android:text="Pastikan internet aktif untuk mengunduh data herba dan resep dari server kami."
+        android:text="Data yang Anda cari belum tersedia saat ini."
         android:textColor="#6B7280"
         android:textSize="14sp" />
 

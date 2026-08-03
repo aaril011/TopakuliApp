@@ -21,6 +21,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Calendar
 
 class FirebaseService {
     private val firestore = FirebaseFirestore.getInstance()
@@ -48,9 +49,10 @@ class FirebaseService {
         }
     }
 
-    suspend fun getPublicNotifications(): List<NotificationEntity> {
+    suspend fun getPublicNotifications(sinceTimestamp: Long = 0L): List<NotificationEntity> {
         return try {
             val snapshot = firestore.collection("public_notifications")
+                .whereGreaterThanOrEqualTo("timestamp", sinceTimestamp)
                 .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .limit(20)
                 .get()
@@ -327,30 +329,55 @@ class FirebaseService {
         // origin: "Desa Pakuli" or "Luar Desa Pakuli"
         try {
             val field = if (origin == "Desa Pakuli") "pakuli" else "outside"
+            
+            // 1. Update Global Totals
             firestore.collection("stats").document("visitors")
                 .update(field, com.google.firebase.firestore.FieldValue.increment(1))
                 .await()
+            
+            // 2. Add Detailed Log for Periodic Reports
+            val logData = mapOf(
+                "origin" to origin,
+                "timestamp" to System.currentTimeMillis()
+            )
+            firestore.collection("visitor_logs").add(logData).await()
+
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            // Document might not exist, create it
+            // If global doc doesn't exist
             val data = if (origin == "Desa Pakuli") mapOf("pakuli" to 1, "outside" to 0) 
                        else mapOf("pakuli" to 0, "outside" to 1)
             firestore.collection("stats").document("visitors").set(data).await()
+            
+            // Still add detailed log
+            val logData = mapOf("origin" to origin, "timestamp" to System.currentTimeMillis())
+            firestore.collection("visitor_logs").add(logData)
         }
     }
 
     suspend fun incrementIdentificationStats(plantName: String) {
         try {
+            // 1. Update Global Totals
             firestore.collection("stats").document("identifications")
                 .update(plantName, com.google.firebase.firestore.FieldValue.increment(1))
                 .await()
+            
+            // 2. Add Detailed Log for Periodic Reports
+            val logData = mapOf(
+                "plantName" to plantName,
+                "timestamp" to System.currentTimeMillis()
+            )
+            firestore.collection("identification_logs").add(logData).await()
+
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            // Field or document might not exist
             val data = mapOf(plantName to 1)
             firestore.collection("stats").document("identifications")
                 .set(data, com.google.firebase.firestore.SetOptions.merge())
                 .await()
+            
+            val logData = mapOf("plantName" to plantName, "timestamp" to System.currentTimeMillis())
+            firestore.collection("identification_logs").add(logData)
         }
     }
 
@@ -379,6 +406,65 @@ class FirebaseService {
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             Pair(0, 0)
+        }
+    }
+
+    suspend fun getPeriodicVisitorStats(month: Int, year: Int): Pair<Int, Int> {
+        return try {
+            val startCal = Calendar.getInstance().apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            val endCal = (startCal.clone() as Calendar).apply {
+                add(Calendar.MONTH, 1)
+            }
+
+            val snapshot = firestore.collection("visitor_logs")
+                .whereGreaterThanOrEqualTo("timestamp", startCal.timeInMillis)
+                .whereLessThan("timestamp", endCal.timeInMillis)
+                .get()
+                .await()
+
+            val pakuli = snapshot.documents.count { it.getString("origin") == "Desa Pakuli" }
+            val outside = snapshot.documents.count { it.getString("origin") == "Luar Desa Pakuli" }
+            Pair(pakuli, outside)
+        } catch (e: Exception) {
+            Pair(0, 0)
+        }
+    }
+
+    suspend fun getPeriodicIdentificationStats(month: Int, year: Int): List<Pair<String, Int>> {
+        return try {
+            val startCal = Calendar.getInstance().apply {
+                set(Calendar.YEAR, year)
+                set(Calendar.MONTH, month)
+                set(Calendar.DAY_OF_MONTH, 1)
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            val endCal = (startCal.clone() as Calendar).apply {
+                add(Calendar.MONTH, 1)
+            }
+
+            val snapshot = firestore.collection("identification_logs")
+                .whereGreaterThanOrEqualTo("timestamp", startCal.timeInMillis)
+                .whereLessThan("timestamp", endCal.timeInMillis)
+                .get()
+                .await()
+
+            snapshot.documents.mapNotNull { it.getString("plantName") }
+                .groupBy { it }
+                .map { it.key to it.value.size }
+                .sortedByDescending { it.second }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 

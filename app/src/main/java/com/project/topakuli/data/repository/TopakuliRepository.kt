@@ -22,8 +22,8 @@ class TopakuliRepository(
 ) {
 
     // Notifications (Fetch directly from Firebase)
-    suspend fun getRemoteNotifications(): List<NotificationEntity> {
-        return firebaseService.getPublicNotifications()
+    suspend fun getRemoteNotifications(sinceTimestamp: Long = 0L): List<NotificationEntity> {
+        return firebaseService.getPublicNotifications(sinceTimestamp)
     }
 
     suspend fun postNotification(context: android.content.Context, notif: NotificationEntity) {
@@ -278,6 +278,14 @@ class TopakuliRepository(
 
     suspend fun getVisitorStats(): Pair<Int, Int> {
         return firebaseService.getVisitorStats()
+    }
+
+    suspend fun getPeriodicVisitorStats(month: Int, year: Int): Pair<Int, Int> {
+        return firebaseService.getPeriodicVisitorStats(month, year)
+    }
+
+    suspend fun getPeriodicIdentificationStats(month: Int, year: Int): List<Pair<String, Int>> {
+        return firebaseService.getPeriodicIdentificationStats(month, year)
     }
 
     suspend fun incrementIdentificationStats(plantName: String) {

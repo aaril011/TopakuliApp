@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.project.topakuli.R
 import com.project.topakuli.TopakuliApplication
 import com.project.topakuli.databinding.ActivityNotifikasiBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -26,7 +27,9 @@ class NotifikasiActivity : AppCompatActivity() {
         setupUI()
         observeViewModel()
         
-        viewModel.fetchNotifications()
+        val prefs = getSharedPreferences("TopakuliPrefs", MODE_PRIVATE)
+        val installTime = prefs.getLong("install_timestamp", 0L)
+        viewModel.fetchNotifications(installTime)
     }
 
     private fun setupUI() {
@@ -47,6 +50,7 @@ class NotifikasiActivity : AppCompatActivity() {
                 binding.emptyStateNotifikasi.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 
                 if (isEmpty) {
+                    binding.emptyStateNotifikasi.ivEmptyIllustration.setImageResource(R.drawable.ic_empty_notifications)
                     binding.emptyStateNotifikasi.tvEmptyTitle.text = "Belum ada notifikasi"
                     binding.emptyStateNotifikasi.tvEmptyDesc.text = "Anda akan menerima pemberitahuan jika ada perubahan data dari admin."
                     binding.emptyStateNotifikasi.btnRetry.visibility = View.GONE
